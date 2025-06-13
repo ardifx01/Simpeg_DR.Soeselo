@@ -11,15 +11,8 @@ class Pendidikan extends Model
     /** @use HasFactory<\Database\Factories\PendidikanFactory> */
     use HasFactory;
 
-    protected $fillable = [
-        'pegawai_id',
-        'tingkat',
-        'jurusan',
-        'nama',
-        'tahun_lulus',
-        'no_ijazah',
-        'tanggal_ijazah'
-    ];
+    protected $table = 'pendidikans';
+    protected $guarded = [];
     
     public function pegawai(): BelongsTo
     {

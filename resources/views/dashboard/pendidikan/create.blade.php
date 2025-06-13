@@ -39,8 +39,18 @@
 
                         <div class="row mb-3">
                             <label for="tingkat" class="col-md-4 col-lg-3 col-form-label">2. Tingkat Pendidikan</label>
-                            <div class="col-md-8 col-lg-9">
-                                <input name="tingkat" type="text" class="form-control @error('tingkat') is-invalid @enderror" id="tingkat" value="{{ old('tingkat') }}" required>
+                            <div class="col-md-4 col-lg-3">
+                                <select class="form-select" aria-label="Default select example" name="tingkat" id="tingkat">
+                                    <option selected disabled>-- Pilihan --</option>
+                                    <option value="SD" {{ old('tingkat')=='SD' ? 'selected': '' }} >SD</option>
+                                    <option value="SMP" {{ old('tingkat')=='SMP' ? 'selected': '' }} >SMP</option>
+                                    <option value="SMA" {{ old('tingkat')=='SMA' ? 'selected': '' }} >SMA</option>
+                                    <option value="D3" {{ old('tingkat')=='D3' ? 'selected': '' }} >D3</option>
+                                    <option value="D4" {{ old('tingkat')=='D4' ? 'selected': '' }} >D4</option>
+                                    <option value="S1" {{ old('tingkat')=='S1' ? 'selected': '' }} >S1</option>
+                                    <option value="S2" {{ old('tingkat')=='S2' ? 'selected': '' }} >S2</option>
+                                    <option value="S3" {{ old('tingkat')=='S3' ? 'selected': '' }} >S3</option>
+                                </select>
                                 @error('tingkat')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror

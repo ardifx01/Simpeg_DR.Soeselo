@@ -79,11 +79,6 @@
     <i class="bi bi-layout-text-window-reverse"></i><span>Kepegawaian</span><i class="bi bi-chevron-down ms-auto"></i>
     </a>
     <ul id="kepegawaian-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-        {{-- <li>
-            <a href="/dashboard/opd">
-            <i class="bi bi-circle"></i><span>OPD / SKPD / Unit Kerja</span>
-            </a>
-        </li> --}}
         <li>
             <a href="{{ route('jabatan.index') }}">
             <i class="bi bi-circle"></i><span>Jabatan</span>
@@ -125,41 +120,25 @@
     </ul>
 </li><!-- End Diklat Nav -->
 
-{{-- <li class="nav-item">
-    <a class="nav-link collapsed" data-bs-target="#TPP-nav" data-bs-toggle="collapse" href="#">
-    <i class="bi bi-bar-chart"></i><span>TPP</span><i class="bi bi-chevron-down ms-auto"></i>
+<li class="nav-item">
+    <a class="nav-link collapsed" href="{{ route('statistik.index') }}">
+    <i class="bi bi-bar-chart"></i>
+    <span>Statistik Pegawai</span>
     </a>
-    <ul id="TPP-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-    <li>
-        <a href="/dashboard/input">
-        <i class="bi bi-circle"></i><span>Input</span>
-        </a>
-    </li>
-    <li>
-        <a href="/dashboard/laporan_bulanan">
-        <i class="bi bi-circle"></i><span>Laporan Bulanan</span>
-        </a>
-    </li>
-    </ul>
-</li><!-- End Tpp Nav --> --}}
-
-{{-- <li class="nav-item">
-    <a class="nav-link collapsed" href="/dashboard/notifkgb">
-    <i class="bi bi-person"></i>
-    <span>Notifikasi KGB</span>
-    </a>
-</li><!-- End Notifikasi GKB Nav --> --}}
+</li><!-- End Statistik Pegawai Nav -->
 
 <li class="nav-item">
+    <a class="nav-link collapsed" href="{{ route('dashboard.nominatif.index') }}">
+    <i class="bi bi-list-ul"></i>
+    <span>Nominatif Pegawai</span>
+    </a>
+</li><!-- End Nominatif Pegawai Nav -->
+
+{{-- <li class="nav-item">
     <a class="nav-link collapsed" data-bs-target="#rekapitulasi-nav" data-bs-toggle="collapse" href="#">
     <i class="bi bi-folder2-open"></i><span>Rekapitulasi</span><i class="bi bi-chevron-down ms-auto"></i>
     </a>
     <ul id="rekapitulasi-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-    {{-- <li>
-        <a href="/dashboard/rekap-opd-skpd-unit-kerja">
-        <i class="bi bi-circle"></i><span>OPD / SKPD / Unit Kerja Title</span>
-        </a>
-    </li> --}}
     <li>
         <a href="{{ route('rekap.golongan') }}">
         <i class="bi bi-circle"></i><span>Golongan</span>
@@ -201,40 +180,9 @@
         </a>
     </li>
     </ul>
-</li><!-- End Rekapitulasi Nav -->
+</li><!-- End Rekapitulasi Nav --> --}}
 
-{{-- <li class="nav-item">
-    <a class="nav-link collapsed" data-bs-target="#report-nav" data-bs-toggle="collapse" href="#">
-    <i class="bi bi-printer"></i><span>Report</span><i class="bi bi-chevron-down ms-auto"></i>
-    </a>
-    <ul id="report-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-    <li>
-        <a href="/dashboard/nominatif">
-        <i class="bi bi-circle"></i><span>Nominatif</span>
-        </a>
-    </li>
-    <li>
-        <a href="/dashboard/duk">
-        <i class="bi bi-circle"></i><span>DUK</span>
-        </a>
-    </li>
-    <li>
-        <a href="/dashboard/bezetting">
-        <i class="bi bi-circle"></i><span>Bezetting</span>
-        </a>
-    </li>
-    <li>
-        <a href="/dashboard/keadaanpegawai">
-        <i class="bi bi-circle"></i><span>Keadaan Pegawai</span>
-        </a>
-    </li>
-    <li>
-        <a href="/dashboard/pensiun">
-        <i class="bi bi-circle"></i><span>Pensiun</span>
-        </a>
-    </li>
-    </ul>
-</li><!-- End Report Nav --> --}}
+
 
 {{-- <li class="/dashboard/backup_data">
     <a class="nav-link collapsed" href="users-profile.html">

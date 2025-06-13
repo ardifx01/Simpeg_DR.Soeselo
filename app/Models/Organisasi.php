@@ -11,13 +11,8 @@ class Organisasi extends Model
     /** @use HasFactory<\Database\Factories\OrganisasiFactory> */
     use HasFactory;
 
-    protected $fillable = [
-        'pegawai_id',
-        'jenis',
-        'nama',
-        'jabatan',
-        'tmt'
-    ];
+    protected $table = 'organisasis';
+    protected $guarded = [];
     
     public function pegawai(): BelongsTo
     {

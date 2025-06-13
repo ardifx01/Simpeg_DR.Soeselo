@@ -42,22 +42,23 @@
                 
                         <!-- Jenis Kepegawaian -->
                         <div style="min-width: 180px;">
-                            <select name="jenis_kepegawaian" id="jenis_kepegawaian" class="form-select" onchange="this.form.submit()">
-                                <option selected disabled="">Jenis Kepegawaian</option>
-                                <option value="PNS" {{ request('jenis_kepegawaian') == 'PNS' ? 'selected' : '' }}>PNS</option>
-                                <option value="PPPK" {{ request('jenis_kepegawaian') == 'PPPK' ? 'selected' : '' }}>PPPK</option>
-                                <option value="CPNS" {{ request('jenis_kepegawaian') == 'CPNS' ? 'selected' : '' }}>CPNS</option>
-                                <option value="BLUD" {{ request('jenis_kepegawaian') == 'BLUD' ? 'selected' : '' }}>BLUD</option>
+                            <select name="jenis_kepegawaian" class="form-select" onchange="this.form.submit()">
+                                <option value="">-- Pilihan --</option>
+                                @foreach($jeniskepegawaianList as $jenis)
+                                    <option value="{{ $jenis }}" {{ request('jenis_kepegawaian') == $jenis ? 'selected' : '' }}>
+                                        {{ $jenis }}
+                                    </option>
+                                @endforeach
                             </select>
                         </div>
-                
-                        <!-- Jabatan Fungsional -->
+
+                        <!-- Unit Kerja -->
                         <div style="min-width: 250px;">
-                            <select name="jabatan_fungsional" id="jabatan_fungsional" class="form-select" onchange="this.form.submit()">
-                                <option selected disabled="">Jabatan Fungsional</option>
-                                @foreach($jabatanFungsionalList as $jabatan)
-                                    <option value="{{ $jabatan }}" {{ request('jabatan_fungsional') == $jabatan ? 'selected' : '' }}>
-                                        {{ $jabatan }}
+                            <select name="unit_kerja" class="form-select" onchange="this.form.submit()">
+                                <option value="">-- Pilihan --</option>
+                                @foreach($unitkerjaList as $unit)
+                                    <option value="{{ $unit }}" {{ request('unit_kerja') == $unit ? 'selected' : '' }}>
+                                        {{ $unit }}
                                     </option>
                                 @endforeach
                             </select>
@@ -74,17 +75,10 @@
                         </div>
                     </form>
                 </div>
-                <div class="text-muted small mb-2">
-                    Debug Parameters: 
-                    Search: {{ request('search') }}, 
-                    Jenis Kepegawaian: {{ request('jenis_kepegawaian') }},
-                    jabatan Fungsional: {{ request('jabatan_fungsional') }}
-                    Per Page: {{ request('per_page') }}
-                </div>
                 <div class="table-responsive small">
                     <table class="table table-striped table-bordered table-sm">
                         <thead>
-                            <tr class="text-center">
+                            <tr class="text-center align-middle">
                                 <th>No</th>
                                 <th>Foto</th>
                                 <th>Nama Lengkap</th>
@@ -103,19 +97,21 @@
                             @else
                                 @foreach ($pegawais as $index => $pegawai)
                                 <tr>
-                                    <td>{{ $pegawais->firstItem() + $index }}</td>
-                                    <td>
-                                        @if($pegawai->image)
-                                        <img src="{{ asset('storage/' . $pegawai->image) }}" alt="project-image" class="rounded" height="100px">
-                                        @else
-                                        <img src="{{ asset('assets/img/nophoto.jpg') }}" alt="project-image" class="rounded" height="100px">
-                                        @endif
+                                    <td class="text-center">{{ $pegawais->firstItem() + $index }}</td>
+                                    <td class="text-center align-middle">
+                                        <div class="d-flex justify-content-center align-items-center" style="height: 100%;">
+                                            @if($pegawai->image)
+                                                <img src="{{ asset('storage/' . $pegawai->image) }}" alt="photo-profile" class="rounded" height="64px">
+                                            @else
+                                                <img src="{{ asset('assets/img/nophoto.jpg') }}" alt="photo-profile" class="rounded" height="64px">
+                                            @endif
+                                        </div>
                                     </td>
                                     <td>{{ $pegawai->gelar_depan }} {{ $pegawai->nama }}, {{ $pegawai->gelar_belakang }}</td>
                                     <td>{{ $pegawai->nip }}</td>
                                     <td>{{ $pegawai->jenis_kelamin }}<br>{{ $pegawai->tempat_lahir }}<br>{{ $pegawai->tanggal_lahir }}</td>
-                                    <td>{{ $pegawai->golongan_ruang }}<br>{{ $pegawai->jenis_kepegawaian }}</td>
-                                    <td>{{ $pegawai->jabatan_fungsional }}</td>
+                                    <td>{{ $pegawai->golongan_ruang ?? '-' }}<br>{{ $pegawai->jabatan->jenis_kepegawaian ?? '-' }}</td>
+                                    <td>{{ $pegawai->jabatan->nama ?? '-' }}</td>
                                     <td>
                                         <div class="d-flex justify-content-center">
                                         <a href="{{ route('pegawai.show',['pegawai' => $pegawai->id]) }}" class="btn btn-success btn-sm" title="Detial"><i class="bi bi-eye"></i></a>

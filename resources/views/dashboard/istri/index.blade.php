@@ -55,7 +55,7 @@
                 <div class="table-responsive small">
                     <table class="table table-striped table-bordered table-hover table-sm">
                         <thead>
-                            <tr>
+                            <tr class="text-center align-middle">
                                 <th>No</th>
                                 <th>Pegawai</th>
                                 <th>Nama Suami/Istri</th>
@@ -69,7 +69,7 @@
                         <tbody>
                             @foreach ($istris as $key => $istri)
                             <tr>
-                                <td>{{ $istris->firstItem() + $key }}</td>
+                                <td class="text-center">{{ $istris->firstItem() + $key }}</td>
                                 <td>
                                     {{ $istri->pegawai->nip }} - {{ $istri->pegawai->nama }}
                                 </td>

@@ -35,14 +35,15 @@
                                 <div class="alert alert-info">
                                     <i class="bi bi-info-circle"></i> Pilih komponen yang ingin dicetak pada biodata pegawai
                                 </div>
-                                <div class="d-flex justify-content-center"> <!-- Kontainer utama di tengah -->
-                                    <form action="{{ route('pegawai.print.generate', $pegawai->id) }}" method="POST" target="_blank" class="text-start" style="width: 260px;"> 
+                                <div class="d-flex justify-content-center">
+                                    <form action="{{ route('pegawai.print.preview', $pegawai->id) }}" method="POST" target="_blank" class="text-start" style="width: 260px;">
                                         @csrf
                                         
                                         <div class="mb-3">
                                             <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" name="sections[]" value="biodata" id="check_biodata" checked disabled>
-                                                <label class="form-check-label" for="check_biodata">
+                                                <input class="form-check-input" type="checkbox" checked disabled>
+                                                <input type="hidden" name="sections[]" value="biodata">
+                                                <label class="form-check-label">
                                                     Biodata Pegawai
                                                 </label>
                                             </div>
@@ -128,13 +129,14 @@
                                                 </label>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="submit" class="btn btn-primary">
-                                            <i class="bi bi-printer"></i> Cetak
-                                        </button>
-                                    </div>
-                                </form>
+
+                                        <div class="modal-footer">
+                                            <button type="submit" class="btn btn-primary">
+                                                <i class="bi bi-printer"></i> Cetak
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -143,25 +145,27 @@
         </div>
     </div><!-- End Pegawai Title -->
 
-        <div class="col-xl-10">
-
+        <div class="col-xl-12">
             <div class="card">
                 <div class="card-body pt-3">
                     <!-- Bordered Tabs -->
                     <ul class="nav nav-tabs nav-tabs-bordered">
-        
                         <li class="nav-item">
                         <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#profile-overview"><i class="bi bi-person-fill"></i> Profile</button>
                         </li>
-        
+                        
+                        <li class="nav-item">
+                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#jabatan"><i class="bi bi-person-lines-fill"></i> Jabatan</button>
+                        </li>
+                        
                         <li class="nav-item">
                         <button class="nav-link" data-bs-toggle="tab" data-bs-target="#suami/i"><i class="bi bi-people-fill"></i> Suami/Istri</button>
                         </li>
-        
+
                         <li class="nav-item">
                         <button class="nav-link" data-bs-toggle="tab" data-bs-target="#anak"><i class="bi bi-people-fill"></i> Anak</button>
                         </li>
-        
+                        
                         <li class="nav-item">
                         <button class="nav-link" data-bs-toggle="tab" data-bs-target="#pendidikan"><i class="bi bi-mortarboard-fill"></i> Pendidikan</button>
                         </li>
@@ -181,55 +185,45 @@
                         <li class="nav-item">
                         <button class="nav-link" data-bs-toggle="tab" data-bs-target="#arsip"><i class="bi bi-folder-fill"></i></i> Arsip</button>
                         </li>
-        
                     </ul>
                     <div class="tab-content pt-2">
                         <div class="tab-pane fade show active profile-overview ms-3" id="profile-overview">
-
                             @include('dashboard.partials.profile')
+                        </div>
 
+                        <div class="tab-pane fade jabatan pt-3" id="jabatan">
+                            @include('dashboard.partials.jabatan')
                         </div>
 
                         <div class="tab-pane fade suami/i pt-3" id="suami/i">
-
                             @include('dashboard.partials.istri')
-                        
                         </div>
-        
+
                         <div class="tab-pane fade pt-3" id="anak">
-                        
                             @include('dashboard.partials.anak')
                         </div>
-        
+
                         <div class="tab-pane fade pt-3" id="pendidikan">
-                        
                             @include('dashboard.partials.pendidikan')
                         </div>
-        
+
                         <div class="tab-pane fade pt-3" id="penghargaan">
-                        
                             @include('dashboard.partials.penghargaan')
                         </div>
-        
+
                         <div class="tab-pane fade pt-3" id="organisasi">
-                        
                             @include('dashboard.partials.organisasi')
                         </div>
 
                         <div class="tab-pane fade pt-3" id="diklat">
-                        
                             @include('dashboard.partials.diklat')
                         </div>
 
                         <div class="tab-pane fade pt-3" id="arsip">
-                        
                             @include('dashboard.partials.arsip')
                         </div>
-        
                     </div><!-- End Bordered Tabs -->
-        
-                    </div>
+                </div>
             </div>
-
         </div>
 @endsection

@@ -11,12 +11,10 @@ class Jabatan extends Model
     /** @use HasFactory<\Database\Factories\JabatanFactory> */
     use HasFactory;
 
+    protected $table = 'jabatans';
     protected $fillable = [
-        'pegawai_id',
-        'nama',
-        'skpd',
-        'tmt',
-        'eselon'
+        'pegawai_id', 'skpd', 'unit_kerja', 'nama', 'jenis_kepegawaian', 
+        'jenis_jabatan', 'status', 'tmt', 'eselon'
     ];
     
     public function pegawai(): BelongsTo

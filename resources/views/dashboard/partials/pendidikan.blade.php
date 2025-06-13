@@ -5,21 +5,21 @@
     <div class="table-responsive small">
         <table class="table table-striped table-bordered table-sm">
             <thead>
-                <tr>
-                    <th scope="col" style="width: 17px">No</th>
-                    <th scope="col" style="width: 183px">Tingkat Pendidikan</th>
-                    <th scope="col" style="width: 102px">Jurusan</th>
-                    <th scope="col" style="width: 225px">Nama Sekolah</th>
-                    <th scope="col" style="width: 102px">Tahun Lulus</th>
-                    <th scope="col" style="width: 102px">No Ijazah</th>
-                    <th scope="col" style="width: 102px">Tanggal Ijazah</th>
-                    <th scope="col" style="width: 93px">Action</th>
+                <tr class="text-center align-middle">
+                    <th>No</th>
+                    <th>Tingkat Pendidikan</th>
+                    <th>Jurusan</th>
+                    <th>Nama Sekolah</th>
+                    <th>Tahun Lulus</th>
+                    <th>No Ijazah</th>
+                    <th>Tanggal Ijazah</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach ($pegawai->pendidikans as $key => $pendidikan)
                 <tr>
-                    <td>{{ $loop->iteration }}</td>
+                    <td class="text-center">{{ $loop->iteration }}</td>
                     <td>{{ $pendidikan->tingkat }}</td>
                     <td>{{ $pendidikan->jurusan }}</td>
                     <td>{{ $pendidikan->nama }}</td>
@@ -66,21 +66,21 @@
     <div class="table-responsive small">
         <table class="table table-striped table-bordered table-sm">
             <thead>
-                <tr>
-                    <th scope="col" style="width: 17px">No</th>
-                    <th scope="col" style="width: 183px">Tingkat Pendidikan</th>
-                    <th scope="col" style="width: 102px">Jenis Bantuan</th>
-                    <th scope="col" style="width: 225px">Nama Sekolah</th>
-                    <th scope="col" style="width: 102px">Tahun Lulus</th>
-                    <th scope="col" style="width: 102px">No Ijazah</th>
-                    <th scope="col" style="width: 102px">Tanggal Ijazah</th>
-                    <th scope="col" style="width: 93px">Action</th>
+                <tr class="text-center align-middle">
+                    <th>No</th>
+                    <th>Tingkat Pendidikan</th>
+                    <th>Jenis Bantuan</th>
+                    <th>Nama Sekolah</th>
+                    <th>Tahun Lulus</th>
+                    <th>No Ijazah</th>
+                    <th>Tanggal Ijazah</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach ($pegawai->ijin_belajars as $key => $ijinbelajar)
                 <tr>
-                    <td>{{ $loop->iteration }}</td>
+                    <td class="text-center">{{ $loop->iteration }}</td>
                     <td>{{ $ijinbelajar->tingkat }}</td>
                     <td>{{ $ijinbelajar->jenis }}</td>
                     <td>{{ $ijinbelajar->nama }}</td>

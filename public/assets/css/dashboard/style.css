@@ -832,26 +832,6 @@ h6 {
   background: #ffecdf;
 }
 
-.dashboard .pppk-card .card-icon {
-  color: #4154f1;
-  background: #f6f6fe;
-}
-
-.dashboard .pns-card .card-icon {
-  color: #2eca6a;
-  background: #e0f8e9;
-}
-
-.dashboard .cpns-card .card-icon {
-  color: #0dcaf0;
-  background: #f6f6fe;
-}
-
-.dashboard .blud-card .card-icon {
-  color: #ff771d;
-  background: #ffecdf;
-}
-
 /* Activity */
 .dashboard .activity {
   font-size: 14px;
@@ -1376,4 +1356,15 @@ h6 {
     width: 35px;
     height: 35px;
   }
+
+  .chart-container {
+        position: relative;
+        margin: auto;
+        height: 80vh;
+        width: 80vw;
+    }
+    
+    .chart-container canvas {
+        max-height: 400px;
+    }
 }

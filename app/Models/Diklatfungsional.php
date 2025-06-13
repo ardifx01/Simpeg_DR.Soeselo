@@ -10,13 +10,9 @@ class Diklatfungsional extends Model
 {
     /** @use HasFactory<\Database\Factories\DiklatfungsionalFactory> */
     use HasFactory;
-    protected $fillable = [
-        'pegawai_id',
-        'nama', 
-        'penyelenggara', 
-        'jumlah_jam', 
-        'tanggal_selesai'
-    ];
+    
+    protected $table = 'diklatfungsionals';
+    protected $guarded = [];
 
     public function pegawai(): BelongsTo
     {

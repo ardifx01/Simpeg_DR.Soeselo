@@ -45,7 +45,7 @@
                     @csrf
                     <div class="mb-4">
                         <input type="text" name="username" class="form-control form-control-lg @error('username') is-invalid @enderror"
-                            id="username" placeholder="Username" autofocus required value="{{ old('username') }}">
+                            id="username" placeholder="Username" autofocus required>
                         @error('username')
                             <div class="invalid-feedback">
                                 {{ $message }}

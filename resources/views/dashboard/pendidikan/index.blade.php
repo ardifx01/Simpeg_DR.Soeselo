@@ -55,7 +55,7 @@
                 <div class="table-responsive small">
                     <table class="table table-striped table-bordered table-hover table-sm">
                         <thead>
-                            <tr>
+                            <tr class="text-center align-middle">
                                 <th>No</th>
                                 <th>Nama Pegawai</th>
                                 <th>Tingkat Pendidikan</th>
@@ -70,9 +70,9 @@
                         <tbody>
                             @foreach ($pendidikans as $key => $pendidikan)
                             <tr>
-                                <td>{{ $pendidikans->firstItem() + $key }}</td>
+                                <td class="text-center">{{ $pendidikans->firstItem() + $key }}</td>
                                 <td>
-                                    {{ $pendidikan->pegawai->nip }} - {{ $pendidikan->pegawai->nama }}
+                                    {{ $pendidikan->pegawai->gelar_depan }}. {{ $pendidikan->pegawai->nama }}, {{ $pendidikan->pegawai->gelar_belakang }}
                                 </td>
                                 <td>{{ $pendidikan->tingkat }}</td>
                                 <td>{{ $pendidikan->jurusan }}</td>

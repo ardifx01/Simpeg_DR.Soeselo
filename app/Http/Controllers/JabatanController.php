@@ -59,6 +59,10 @@ class JabatanController extends Controller
             'pegawai_id' => 'required|exists:pegawais,id',
             'nama'=>'required',
             'skpd'=>'required',
+            'unit_kerja'=>'required',
+            'jenis_kepegawaian'=>'required',
+            'jenis_jabatan'=>'required',
+            'status'=>'required',
             'tmt'=>'required',
             'eselon'=>'required'
         ]);
@@ -70,9 +74,11 @@ class JabatanController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Jabatan $jabatan)
+    public function show($id)
     {
-        return redirect()->route('pegawai.show', $jabatan->pegawai_id);
+        $pegawai = Pegawai::with('jabatan')->findOrFail($id);
+        dd($pegawai);
+        return view('pegawai.show', compact('pegawai'));
     }
 
     /**
@@ -94,6 +100,10 @@ class JabatanController extends Controller
             'pegawai_id' => 'required|exists:pegawais,id',
             'nama'=>'required',
             'skpd'=>'required',
+            'unit_kerja'=>'required',
+            'jenis_kepegawaian'=>'required',
+            'jenis_jabatan'=>'required',
+            'status'=>'required',
             'tmt'=>'required',
             'eselon'=>'required'
         ]);
@@ -115,6 +125,24 @@ class JabatanController extends Controller
 
         $jabatan->delete();
         return redirect()->back()->with('success', 'jabatan berhasil dihapus!');
+    }
+
+    public function rekapKepegawaian()
+    {
+        // Ambil jumlah pegawai berdasarkan jabatan
+        $rekap = Jabatan::select('jenis_kepegawaian', DB::raw('count(*) as jumlah'))
+                        ->whereNotNull('jenis_kepegawaian')
+                        ->groupBy('jenis_kepegawaian')
+                        ->orderBy('jenis_kepegawaian', 'desc')
+                        ->get();
+
+        // Hitung jumlah pegawai tanpa jabatan
+        $pegawaiTanpaKepegawaian = Jabatan::whereNull('jenis_kepegawaian')->count();
+
+        // Ambil detail pegawai tanpa jabatan
+        $dataPegawaiTanpaKepegawaian = Jabatan::whereNull('jenis_kepegawaian')->get();
+
+        return view('dashboard.rekapitulasi.kepegawaian', compact('rekap', 'pegawaiTanpaKepegawaian', 'dataPegawaiTanpaKepegawaian'));
     }
 
     public function rekapJabatan()

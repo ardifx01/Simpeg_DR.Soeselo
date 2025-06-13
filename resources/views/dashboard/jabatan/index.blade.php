@@ -55,11 +55,13 @@
                 <div class="table-responsive small">
                     <table class="table table-striped table-bordered table-hover table-sm">
                         <thead>
-                            <tr>
+                            <tr class="text-center">
                                 <th>No</th>
                                 <th>Pegawai</th>
-                                <th>Nama Jabatan</th>
-                                <th>SKPD</th>
+                                <th>Unit Kerja</th>
+                                <th>Pangkat</th>
+                                <th>Jenis jabatan</th>
+                                <th>Jenis Kepegawaian</th>
                                 <th>TMT</th>
                                 <th>Eselon</th>
                                 <th>Action</th>
@@ -68,12 +70,12 @@
                         <tbody>
                             @foreach ($jabatans as $key => $jabatan)
                             <tr>
-                                <td>{{ $jabatans->firstItem() + $key }}</td>
-                                <td>
-                                    {{ $jabatan->pegawai->nip }} - {{ $jabatan->pegawai->nama }}
-                                </td>
+                                <td class="text-center">{{ $jabatans->firstItem() + $key }}</td>
+                                <td>{{ $jabatan->pegawai->nama }}</td>
+                                <td>{{ $jabatan->unit_kerja }}</td>
                                 <td>{{ $jabatan->nama }}</td>
-                                <td>{{ $jabatan->skpd }}</td>
+                                <td>{{ $jabatan->jenis_jabatan }}</td>
+                                <td>{{ $jabatan->jenis_kepegawaian }}</td>
                                 <td>{{ $jabatan->tmt }}</td>
                                 <td>{{ $jabatan->eselon }}</td>
                                 <td>

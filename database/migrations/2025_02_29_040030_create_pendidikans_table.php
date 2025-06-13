@@ -17,8 +17,8 @@ return new class extends Migration
             $table->string('tingkat');
             $table->string('jurusan');
             $table->string('nama');
-            $table->string('tahun_lulus');
-            $table->integer('no_ijazah');
+            $table->date('tahun_lulus');
+            $table->string('no_ijazah');
             $table->date('tanggal_ijazah');
             $table->timestamps();
         });

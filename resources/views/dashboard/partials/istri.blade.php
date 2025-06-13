@@ -3,19 +3,19 @@
     <div class="table-responsive small">
     <table class="table table-striped table-bordered table-sm">
         <thead>
-            <tr>
-                <th scope="col" style="width: 17px">No</th>
-                <th scope="col" style="width: 183px">Nama Suami/Istri</th>
-                <th scope="col" style="width: 120px">TTL</th>
-                <th scope="col" style="width: 102px">Profesi</th>
-                <th scope="col" style="width: 120px">Status</th>
-                <th scope="col" style="width: 93px">Action</th>
+            <tr class="text-center align-middle">
+                <th>No</th>
+                <th>Nama Suami/Istri</th>
+                <th>Tempat<br>Tanggal Lahir</th>
+                <th>Profesi</th>
+                <th>Status</th>
+                <th>Action</th>
             </tr>
         </thead>
         <tbody>
             @foreach($pegawai->istris as $key => $istri)
             <tr>
-                <td>{{ $loop->iteration }}</td>
+                <td class="text-center">{{ $loop->iteration }}</td>
                 <td>{{ $istri->nama }}</td>
                 <td>{{ $istri->tempat_lahir }}<br>{{ $istri->tanggal_lahir }}</td>
                 <td>{{ $istri->profesi }}</td>

@@ -11,14 +11,8 @@ class Ijinbelajar extends Model
     /** @use HasFactory<\Database\Factories\IjinbelajarFactory> */
     use HasFactory;
 
-    protected $fillable = [
-        'pegawai_id',
-        'tingkat', 
-        'jenis', 
-        'nama', 
-        'tahun_lulus', 
-        'no_ijazah',
-        'tanggal_ijazah'];
+    protected $table = 'ijinbelajars';
+    protected $guarded = [];
 
     public function pegawai(): BelongsTo
     {

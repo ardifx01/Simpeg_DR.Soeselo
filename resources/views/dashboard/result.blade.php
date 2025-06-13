@@ -18,19 +18,19 @@
     <div class="table-responsive small">
         <table class="table table-striped table-bordered table-sm">
             <thead>
-                <tr>
-                    <th scope="col" style="width: 17px">No</th>
-                    <th scope="col" style="width: 183px">NIP</th>
-                    <th scope="col" style="width: 250px">Nama</th>
-                    <th scope="col" style="width: 120px">JK / TTL</th>
-                    <th scope="col" style="width: 450px">Golongan / Jenis Kepegawaian</th>
-                    <th scope="col" style="width: 93px">Action</th>
+                <tr class="text-center align-middle">
+                    <th>No</th>
+                    <th>NIP</th>
+                    <th>Nama</th>
+                    <th>Jenis Kelamin<br>Tempat Tanggal Lahir</th>
+                    <th>Golongan<br>Jenis Kepegawaian</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
                 @forelse ($pegawais as $pegawai)
                 <tr>
-                    <td>{{ $loop->iteration }}</td>
+                    <td class="text-center">{{ $loop->iteration }}</td>
                     <td>{{ $pegawai->nip }}</td>
                     <td>{{ $pegawai->gelar_depan }}{{ $pegawai->nama }}, {{ $pegawai->gelar_belakang }}</td>
                     <td>{{ $pegawai->jenis_kelamin }}<br>{{ $pegawai->tempat_lahir }}<br>{{ $pegawai->tanggal_lahir }}</td>

@@ -10,15 +10,9 @@ class Anak extends Model
 {
     /** @use HasFactory<\Database\Factories\AnakFactory> */
     use HasFactory;
-    protected $fillable = [
-        'pegawai_id',
-        'nama',
-        'tempat_lahir',
-        'tanggal_lahir',
-        'status_keluarga',
-        'status_tunjangan',
-        'jenis_kelamin'
-    ];
+
+    protected $table = 'anaks';
+    protected $guarded = [];
 
     public function pegawai(): BelongsTo
     {

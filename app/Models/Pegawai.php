@@ -20,44 +20,11 @@ class Pegawai extends Model
     {
         return Carbon::parse($value)->format('d-m-Y');
     }
-    
-    protected $fillable = [
-        'image',
-        'nip',
-        'nip_lama',
-        'no_karpeg',
-        'no_kpe',
-        'no_ktp',
-        'no_npwp',
-        'nama',
-        'gelar_depan',
-        'gelar_belakang',
-        'tempat_lahir',
-        'tanggal_lahir',
-        'jenis_kelamin',
-        'agama',
-        'status_nikah',
-        'alamat',
-        'telepon',
-        'tingkat_pendidikan',
-        'nama_pendidikan',
-        'nama_sekolah',
-        'tahun_lulus',
-        'pangkat',
-        'golongan_ruang',
-        'tmt_golongan_ruang',
-        'golongan_ruang_cpns',
-        'tmt_golongan_ruang_cpns',
-        'tmt_pns',
-        'jenis_kepegawaian',
-        'status_hukum',
-        'skpd',
-        'jenis_jabatan',
-        'jabatan_fungsional',
-        'tmt_jabatan',
-        'diklat_pimpinan',
-        'tahun_diklat_pimpinan'
-    ];
+
+    public function jabatan(): HasOne
+    {
+        return $this->hasOne(Jabatan::class, 'pegawai_id', 'id');
+    }
 
     public function istris(): HasMany
     {
@@ -92,9 +59,9 @@ class Pegawai extends Model
     {
         return $this->hasMany(Organisasi::class, 'pegawai_id');
     }
-    public function pendidikans(): HasMany
+    public function pendidikans()
     {
-        return $this->hasMany(Pendidikan::class, 'pegawai_id');
+        return $this->hasMany(Pendidikan::class)->orderBy('tingkat', 'desc');
     }
     
     public function ijin_belajars(): HasMany
@@ -107,15 +74,6 @@ class Pegawai extends Model
         return $this->hasMany(Arsip::class, 'pegawai_id');
     }
     
-    public function jabatans(): HasOne
-    {
-        return $this->hasOne(Jabatan::class, 'pegawai_id');
-    }
-    public function opd(): HasOne
-    {
-        return $this->hasOne(OPD::class, 'pegawai_id');
-    }
-
     // public function getRouteKeyName(): string
     // {
     //     return 'slug';

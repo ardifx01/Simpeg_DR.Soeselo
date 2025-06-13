@@ -46,7 +46,7 @@
             <!-- PNS Card -->
             <div class="col-xxl-3 col-md-6">
                 <a href="{{ route('pegawai.index', ['per_page' => 10, 'jenis_kepegawaian' => 'PNS', 'search' => '']) }}">
-                    <div class="card info-card pns-card">
+                    <div class="card info-card opd-card">
                     <div class="card-body">
                         <h5 class="card-title">PNS</h5>
                         <div class="d-flex align-items-center">
@@ -66,7 +66,7 @@
             <!-- PPPK Card -->
             <div class="col-xxl-3 col-md-6">
                 <a href="{{ route('pegawai.index', ['per_page' => 10, 'jenis_kepegawaian' => 'PPPK', 'search' => '']) }}">
-                    <div class="card info-card pppk-card">
+                    <div class="card info-card pegawai-card">
                         <div class="card-body">
                             <h5 class="card-title">PPPK</h5>
                             <div class="d-flex align-items-center">
@@ -87,7 +87,7 @@
             <!-- CPNS Card -->
             <div class="col-xxl-3 col-md-6">
                 <a href="{{ route('pegawai.index', ['per_page' => 10, 'jenis_kepegawaian' => 'CPNS', 'search' => '']) }}">
-                    <div class="card info-card cpns-card">
+                    <div class="card info-card penghargaan-card">
                         <div class="card-body">
                             <h5 class="card-title">CPNS</h5>
                             <div class="d-flex align-items-center">
@@ -108,7 +108,7 @@
             <!-- BLUD Card -->
             <div class="col-xxl-3 col-md-6">
                 <a href="{{ route('pegawai.index', ['per_page' => 10, 'jenis_kepegawaian' => 'BLUD', 'search' => '']) }}">
-                    <div class="card info-card blud-card">
+                    <div class="card info-card diklat-card">
                         <div class="card-body">
                             <h5 class="card-title">BLUD</h5>
                             <div class="d-flex align-items-center">

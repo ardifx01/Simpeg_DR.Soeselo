@@ -19,7 +19,6 @@ class DashboardController extends Controller
     public function index()
     {
         $jumlahPegawai = Pegawai::count();// jumlah Pegawai
-        $jumlahJabatan = Jabatan::count();// jumlah Jabatan
         $jumlahPenghargaan = Penghargaan::count();// jumlah Penghargaan
         $jumlahdiklat = Diklatfungsional::count() + Diklatjabatan::count() + Diklatteknik::count();// jumlah Diklat
 
@@ -36,7 +35,7 @@ class DashboardController extends Controller
             ->groupBy('eselon')
             ->get();
 
-        $rekapKepegawaian = Pegawai::select('jenis_kepegawaian', DB::raw("COUNT(*) as jumlah"))
+        $rekapKepegawaian = Jabatan::select('jenis_kepegawaian', DB::raw("COUNT(*) as jumlah"))
             ->groupBy('jenis_kepegawaian')
             ->get();
 
@@ -56,14 +55,10 @@ class DashboardController extends Controller
             ->groupBy('tingkat')
             ->get();
 
-        $rekapOpd = OPD::select('nama_opd', DB::raw("COUNT(*) as jumlah"))
-            ->groupBy('nama_opd')
-            ->get();
-
         return view('dashboard.index', compact(
-            'jumlahPegawai', 'jumlahJabatan', 'jumlahPenghargaan', 'jumlahdiklat', 'rekapGolongan', 
+            'jumlahPegawai', 'jumlahPenghargaan', 'jumlahdiklat', 'rekapGolongan', 
             'rekapJabatan', 'rekapEselon', 'rekapKepegawaian', 'rekapAgama', 'rekapJenisKelamin', 
-            'rekapStatusNikah', 'rekapPendidikan', 'rekapOpd'
+            'rekapStatusNikah', 'rekapPendidikan'
         ));
     }
 

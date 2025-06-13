@@ -23,7 +23,7 @@
         <section class="section dashboard">
         <div class="row">
 
-            <!-- Pegawai Card -->
+            <!-- E-personal Card -->
             <div class="col-xxl-3 col-md-6">
                 <a href="{{ route('dashboard.epersonal') }}">
                     <div class="card info-card pegawai-card">
@@ -41,26 +41,26 @@
                         </div>
                     </div>
                 </div></a>
-            </div><!-- End Pegawai Card -->
+            </div><!-- End Epersonal Card -->
 
-            <!-- OPD / Unit Kerja Card -->
+            <!-- E-surat Card -->
             <div class="col-xxl-3 col-md-6">
-                <a href="">
+                <a href="{{ route('surat') }}">
                     <div class="card info-card opd-card">
                     <div class="card-body">
-                        <h5 class="card-title">Jabatan</h5>
+                        <h5 class="card-title">E-surat</h5>
                         <div class="d-flex align-items-center">
                             <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
                                 <i class="bi bi-send-fill"></i>
                             </div>
                             <div class="ps-3">
-                                <h6>{{ $jumlahJabatan }}</h6>
-                                <span class="text-muted small pt-2 ps-1">Total Jabatan</span>
+                                <h6></h6>
+                                <span class="text-muted small pt-2 ps-1">Surat Pegawai</span>
                             </div>
                         </div>
                     </div>
                 </div></a>
-            </div><!-- End OPD / Unit Kerja Card -->
+            </div><!-- End E-surat Card -->
 
             <!-- Diklat Card -->
             <div class="col-xxl-3 col-md-6">
@@ -111,7 +111,7 @@
                     </div>
                 </div>
             
-                <div class="col-xxl-6 col-md-6">
+                <div class="col-xxl-12 col-md-6">
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">Statistik Jumlah Pegawai Berdasarkan Jabatan</h5>
@@ -123,8 +123,8 @@
                 <div class="col-xxl-6 col-md-6">
                     <div class="card">
                         <div class="card-body">
-                            <h5 class="card-title">Statistik Jumlah Pegawai Berdasarkan Eselon</h5>
-                            <div id="chartEselon"></div>
+                            <h5 class="card-title">Statistik Jumlah Pegawai Berdasarkan Status Kepegawaian</h5>
+                            <div id="chartKepegawaian"></div>
                         </div>
                     </div>
                 </div>
@@ -132,8 +132,8 @@
                 <div class="col-xxl-6 col-md-6">
                     <div class="card">
                         <div class="card-body">
-                            <h5 class="card-title">Statistik Jumlah Pegawai Berdasarkan Status Kepegawaian</h5>
-                            <div id="chartKepegawaian"></div>
+                            <h5 class="card-title">Statistik Jumlah Pegawai Berdasarkan Eselon</h5>
+                            <div id="chartEselon"></div>
                         </div>
                     </div>
                 </div>
@@ -173,14 +173,7 @@
                         </div>
                     </div>
                 </div>
-                {{-- <div class="col-xxl-6 col-md-6">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">Statistik Jumlah Pegawai Berdasarkan OPD / SKPD / Unit Kerja</h5>
-                            <div id="chartOpd"></div>
-                        </div>
-                    </div>
-                </div> --}}
+                
         </div><!-- End Charts -->
         </section>
         <script>

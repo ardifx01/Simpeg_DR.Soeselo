@@ -11,15 +11,8 @@ class Istri extends Model
     /** @use HasFactory<\Database\Factories\IstriFactory> */
     use HasFactory;
 
-    protected $fillable = [
-        'pegawai_id',
-        'nama', 
-        'tempat_lahir', 
-        'tanggal_lahir', 
-        'profesi', 
-        'tanggal_nikah',
-        'status_hubungan'
-    ];
+    protected $table = 'istris';
+    protected $guarded = [];
 
     public function pegawai(): BelongsTo
     {

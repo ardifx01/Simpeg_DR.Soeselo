@@ -149,11 +149,50 @@
                     placeholder: "-- Pilih Pegawai --",
                     allowClear: true
                 },
-                '#opd_id': {
-                    placeholder: "--",
+                '#jenis_kepegawaian': {
+                    placeholder: "-- Pilihan --",
                     allowClear: true
-                }
-                // Tambahkan lainnya di sini
+                },
+                '#unit_kerja': {
+                    placeholder: "RSUD dr. Soeselo Slawi",
+                    allowClear: true
+                },
+                '#kategori': {
+                    placeholder: "-- Pilihan --",
+                    allowClear: true
+                },
+                '#jenis_jabatan': {
+                    placeholder: "-- Pilihan --",
+                    allowClear: true
+                },
+                '#eselon': {
+                    placeholder: "-- Pilihan --",
+                    allowClear: true
+                },
+                '#jenis_kelamin': {
+                    placeholder: "-- Pilihan --",
+                    allowClear: true
+                },
+                '#agama': {
+                    placeholder: "-- Pilihan --",
+                    allowClear: true
+                },
+                '#tingkat': {
+                    placeholder: "-- Pilihan --",
+                    allowClear: true
+                },
+                '#status': {
+                    placeholder: "-- Pilihan --",
+                    allowClear: true
+                },
+                '#golongan_dari': {
+                    placeholder: "-- Pilihan --",
+                    allowClear: true
+                },
+                '#golongan_sampai': {
+                    placeholder: "-- Pilihan --",
+                    allowClear: true
+                },
             };
             
             // Initialize semua Select2 elements
@@ -161,24 +200,6 @@
                 $(selector).select2({
                     ...config,
                     width: '100%' // Default option tambahan
-                });
-            });
-        });
-
-        $(document).ready(function() {
-            // Inisialisasi Select2 untuk modal tambah
-            $('#addopdModal select.select2').select2({
-                dropdownParent: $('#addopdModal'),
-                placeholder: "-- Pilih Pimpinan --",
-                allowClear: true
-            });
-
-            // Inisialisasi Select2 setiap kali modal edit dibuka
-            $('.modal').on('shown.bs.modal', function () {
-                $(this).find('select.select2').select2({
-                    dropdownParent: $(this),
-                    placeholder: "-- Pilih Pimpinan --",
-                    allowClear: true
                 });
             });
         });

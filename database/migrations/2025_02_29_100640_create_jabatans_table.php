@@ -14,10 +14,14 @@ return new class extends Migration
         Schema::create('jabatans', function (Blueprint $table) {
             $table->id();
             $table->foreignId('pegawai_id')->constrained('pegawais')->onDelete('cascade');
-            $table->string('nama');
             $table->string('skpd');
-            $table->integer('tmt');
-            $table->string('eselon');
+            $table->string('unit_kerja');
+            $table->string('nama');
+            $table->string('jenis_kepegawaian');
+            $table->string('jenis_jabatan');
+            $table->string('status');
+            $table->date('tmt');
+            $table->string('eselon')->nullable();
             $table->timestamps();
         });
     }

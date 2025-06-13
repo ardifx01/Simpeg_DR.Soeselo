@@ -3,20 +3,20 @@
     <div class="table-responsive small">
     <table class="table table-striped table-bordered table-sm">
         <thead>
-            <tr>
-                <th scope="col" style="width: 17px">No</th>
-                <th scope="col" style="width: 183px">Nama Anak</th>
-                <th scope="col" style="width: 120px">TTL</th>
-                <th scope="col" style="width: 100px">Status keluarga</th>
-                <th scope="col" style="width: 100px">Status Tunjangan</th>
-                <th scope="col" style="width: 100px">Jenis Kelamin</th>
-                <th scope="col" style="width: 93px">Action</th>
+            <tr class="text-center align-middle">
+                <th>No</th>
+                <th>Nama Anak</th>
+                <th>Tempat<br>Tanggal Lahir</th>
+                <th>Status keluarga</th>
+                <th>Status Tunjangan</th>
+                <th>Jenis Kelamin</th>
+                <th>Action</th>
             </tr>
         </thead>
         <tbody>
             @foreach($pegawai->anaks as $key => $anak)
             <tr>
-                <td>{{ $loop->iteration }}</td>
+                <td class="text-center">{{ $loop->iteration }}</td>
                 <td>{{ $anak->nama }}</td>
                 <td>{{ $anak->tempat_lahir }}<br>{{ $anak->tanggal_lahir }}</td>
                 <td>{{ $anak->status_keluarga }}</td>

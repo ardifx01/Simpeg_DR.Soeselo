@@ -9,13 +9,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Diklatteknik extends Model
 {
     use HasFactory;
-    protected $fillable = [
-        'pegawai_id',
-        'nama', 
-        'penyelenggara', 
-        'jumlah_jam', 
-        'tanggal_selesai'
-    ];
+    
+    protected $table = 'diklattekniks';
+    protected $guarded = [];
     
     public function pegawai(): BelongsTo
     {

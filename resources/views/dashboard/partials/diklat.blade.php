@@ -5,19 +5,19 @@
     <div class="table-responsive small">
         <table class="table table-striped table-bordered table-sm">
             <thead>
-                <tr>
-                    <th scope="col" style="width: 17px">No</th>
-                    <th scope="col" style="width: 102px">Nama</th>
-                    <th scope="col" style="width: 183px">Penyelenggara</th>
-                    <th scope="col" style="width: 102px">Jumlah Jam</th>
-                    <th scope="col" style="width: 120px">Tanggal Selesai</th>
-                    <th scope="col" style="width: 93px">Action</th>
+                <tr class="text-center align-middle">
+                    <th>No</th>
+                    <th>Nama</th>
+                    <th>Penyelenggara</th>
+                    <th>Jumlah Jam</th>
+                    <th>Tanggal Selesai</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach ($pegawai->diklat_fungsionals as $key => $diklatfungsional)
                 <tr>
-                    <td>{{ $loop->iteration }}</td>
+                    <td class="text-center">{{ $loop->iteration }}</td>
                     <td>{{ $diklatfungsional->nama }}</td>
                     <td>{{ $diklatfungsional->penyelenggara }}</td>
                     <td>{{ $diklatfungsional->jumlah_jam }}</td>
@@ -62,19 +62,19 @@
     <div class="table-responsive small">
         <table class="table table-striped table-bordered table-sm">
             <thead>
-                <tr>
-                    <th scope="col" style="width: 17px">No</th>
-                    <th scope="col" style="width: 102px">Nama</th>
-                    <th scope="col" style="width: 183px">Penyelenggara</th>
-                    <th scope="col" style="width: 102px">Jumlah Jam</th>
-                    <th scope="col" style="width: 120px">Tanggal Selesai</th>
-                    <th scope="col" style="width: 93px">Action</th>
+                <tr class="text-center align-middle">
+                    <th>No</th>
+                    <th>Nama</th>
+                    <th>Penyelenggara</th>
+                    <th>Jumlah Jam</th>
+                    <th>Tanggal Selesai</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach ($pegawai->diklat_jabatans as $key => $diklatjabatan)
                 <tr>
-                    <td>{{ $loop->iteration }}</td>
+                    <td class="text-center">{{ $loop->iteration }}</td>
                     <td>{{ $diklatjabatan->nama }}</td>
                     <td>{{ $diklatjabatan->penyelenggara }}</td>
                     <td>{{ $diklatjabatan->jumlah_jam }}</td>
@@ -119,19 +119,19 @@
     <div class="table-responsive small">
         <table class="table table-striped table-bordered table-sm">
             <thead>
-                <tr>
-                    <th scope="col" style="width: 17px">No</th>
-                    <th scope="col" style="width: 102px">Nama</th>
-                    <th scope="col" style="width: 183px">Penyelenggara</th>
-                    <th scope="col" style="width: 102px">Jumlah Jam</th>
-                    <th scope="col" style="width: 120px">Tanggal Selesai</th>
-                    <th scope="col" style="width: 93px">Action</th>
+                <tr class="text-center align-middle">
+                    <th>No</th>
+                    <th>Nama</th>
+                    <th>Penyelenggara</th>
+                    <th>Jumlah Jam</th>
+                    <th>Tanggal Selesai</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach ($pegawai->diklat_tekniks as $key => $diklatteknik)
                 <tr>
-                    <td>{{ $loop->iteration }}</td>
+                    <td class="text-center">{{ $loop->iteration }}</td>
                     <td>{{ $diklatteknik->nama }}</td>
                     <td>{{ $diklatteknik->penyelenggara }}</td>
                     <td>{{ $diklatteknik->jumlah_jam }}</td>

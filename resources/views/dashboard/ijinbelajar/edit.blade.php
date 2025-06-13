@@ -74,7 +74,7 @@
                         <div class="row mb-3">
                             <label for="tahun_lulus" class="col-md-4 col-lg-3 col-form-label">5. Tahun Lulus</label>
                             <div class="col-md-4 col-lg-3">
-                                <div class="input-group mb-3">
+                                <div class="input-group">
                                     <input name="tahun_lulus" type="text" class="form-control @error('tahun_lulus') is-invalid @enderror" id="tahun_lulus" aria-label="Recipient's username" aria-describedby="button-addon2" value="{{ old('tahun_lulus') ?? $ijinbelajar->tahun_lulus }}" required>
                                     <button class="btn btn-outline-secondary" type="button" for="tahun_lulus" id="button-addon2"><i class="bi bi-calendar3"></i></button>
                                     @error('tahun_lulus')

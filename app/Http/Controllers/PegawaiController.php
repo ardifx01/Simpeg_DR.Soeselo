@@ -15,16 +15,20 @@ class PegawaiController extends Controller
      */
     public function index(Request $request)
     {            
-        $query = Pegawai::query();
+        $query = Pegawai::with('jabatan'); // eager load relasi jabatans
 
         // Filter berdasarkan jenis kepegawaian
         if ($request->filled('jenis_kepegawaian')) {
-            $query->where('jenis_kepegawaian', $request->jenis_kepegawaian);
+            $query->whereHas('jabatan', function ($q) use ($request) {
+                $q->where('jenis_kepegawaian', $request->jenis_kepegawaian);
+            });
         }
-        
-        // Filter berdasarkan jabatan fungsional
-        if ($request->filled('jabatan_fungsional')) {
-            $query->where('jabatan_fungsional', $request->jabatan_fungsional);
+
+        // Filter berdasarkan unit kerja dari relasi jabatan
+        if ($request->filled('unit_kerja')) {
+            $query->whereHas('jabatan', function ($q) use ($request) {
+                $q->where('unit_kerja', $request->unit_kerja);
+            });
         }
 
         // Pencarian
@@ -33,9 +37,7 @@ class PegawaiController extends Controller
             $query->where(function ($q) use ($search) {
                 $q->where('nama', 'like', "%$search%")
                 ->orWhere('nip', 'like', "%$search%")
-                ->orWhere('jenis_kelamin', 'like', "%$search%")
-                ->orWhere('golongan_ruang', 'like', "%$search%")
-                ->orWhere('jenis_kepegawaian', 'like', "%$search%");
+                ->orWhere('jenis_kelamin', 'like', "%$search%");
             });
         }
 
@@ -43,22 +45,23 @@ class PegawaiController extends Controller
         $perPage = $request->input('per_page', 10);
         $pegawais = $query->paginate($perPage)->appends($request->query());
 
-        // Ambil daftar jabatan fungsional dari pegawai
-        $jabatanFungsionalList = Pegawai::select('jabatan_fungsional')
-            ->distinct() // Menghapus duplikat, sehingga hanya nilai-nilai unik dari jabatan fungsional yang diambil
-            ->orderBy('jabatan_fungsional')
-            ->pluck('jabatan_fungsional') // Mengambil kolom jabatan fungsional sebagai Collection 1 dimensi
-            ->filter()
-            ->values();
+        // Data untuk filter
+        $jeniskepegawaianList = \App\Models\Jabatan::distinct()->pluck('jenis_kepegawaian');
+        $unitkerjaList = \App\Models\Jabatan::distinct()->pluck('unit_kerja');
 
-        // jika request berupa ajax 
+        // Jika request berupa AJAX
         if ($request->ajax()) {
             return response()->json([
                 'html' => view('dashboard.pegawai.index', compact('pegawais'))->render()
             ]);
         }
 
-        return view('dashboard.pegawai.index', compact('pegawais', 'jabatanFungsionalList'));
+        // Return view dengan semua data
+        return view('dashboard.pegawai.index', compact(
+            'pegawais',
+            'unitkerjaList',
+            'jeniskepegawaianList'
+        ));
     }
 
     /**
@@ -92,32 +95,28 @@ class PegawaiController extends Controller
             'jenis_kelamin' => 'required',
             'agama' => 'required',
             'status_nikah' => 'required',
-            'alamat' => 'required',
+            'alamat' => 'nullable',
+            'rt' => 'nullable',
+            'rw' => 'nullable',
+            'desa' => 'nullable',
+            'kecamatan' => 'nullable',
+            'kabupaten' => 'nullable',
+            'provinsi' => 'nullable',
+            'pos' => 'nullable',
             'telepon' => 'required',
-            'tingkat_pendidikan' => 'nullable',
-            'nama_pendidikan' => 'nullable',
-            'nama_sekolah' => 'nullable',
-            'tahun_lulus' => 'nullable',
-            'pangkat' => 'nullable',
             'golongan_ruang' => 'nullable',
             'tmt_golongan_ruang' => 'nullable',
             'golongan_ruang_cpns' => 'nullable',
             'tmt_golongan_ruang_cpns' => 'nullable',
-            'tmt_pns' => 'nullable',     
-            'jenis_kepegawaian' => 'required',
-            'status_hukum' => 'nullable',
-            'skpd' => 'nullable',
-            'jenis_jabatan' => 'nullable',
-            'jabatan_fungsional' => 'nullable',
-            'tmt_jabatan' => 'nullable',
-            'diklat_pimpinan' => 'nullable',
-            'tahun_diklat_pimpinan' => 'nullable'
+            'tmt_pns' => 'nullable'
         ]);
 
         //upload image
-        if($request->file('image')) {
-            $validatedData['image'] = $request->file('image')->store('foto-profile');
-        };
+        if ($request->file('image')) {
+            // Simpan gambar baru di direktori 'foto-profile' pada disk 'public'
+            $validatedData['image'] = $request->file('image')->store('foto-profile', 'public');
+        }
+
 
         Pegawai::create($validatedData);
                 
@@ -162,35 +161,35 @@ class PegawaiController extends Controller
             'jenis_kelamin' => 'required',
             'agama' => 'required',
             'status_nikah' => 'required',
-            'alamat' => '',
+            'alamat' => 'nullable',
+            'rt' => 'nullable',
+            'rw' => 'nullable',
+            'desa' => 'nullable',
+            'kecamatan' => 'nullable',
+            'kabupaten' => 'nullable',
+            'provinsi' => 'nullable',
+            'pos' => 'nullable',
             'telepon' => 'required',
-            'tingkat_pendidikan' => 'nullable',
-            'nama_pendidikan' => 'nullable',
-            'nama_sekolah' => 'nullable',
-            'tahun_lulus' => 'nullable',
-            'pangkat' => 'nullable',
             'golongan_ruang' => 'nullable',
             'tmt_golongan_ruang' => 'nullable',
             'golongan_ruang_cpns' => 'nullable',
             'tmt_golongan_ruang_cpns' => 'nullable',
-            'tmt_pns' => 'nullable',     
-            'jenis_kepegawaian' => 'required',
-            'status_hukum' => 'nullable',
-            'skpd' => 'nullable',
-            'jenis_jabatan' => 'nullable',
-            'jabatan_fungsional' => 'nullable',
-            'tmt_jabatan' => 'nullable',
-            'diklat_pimpinan' => 'nullable',
-            'tahun_diklat_pimpinan' => 'nullable'
-        ]);
+            'tmt_pns' => 'nullable'   
+            ]);
         
         $pegawai = Pegawai::findOrFail($id);
-        if($request->file('image')) {
-            if ( $pegawai->image ) {
-                Storage::delete($request->oldImage);
+
+        if ($request->hasFile('image')) {
+            // Hapus gambar lama jika ada dan file-nya benar-benar ada di storage
+            if ($pegawai->image && Storage::disk('public')->exists($pegawai->image)) {
+                Storage::disk('public')->delete($pegawai->image);
             }
-            $validatedData['image'] = $request->file('image')->store('foto-profile');
-        };
+
+            // Simpan gambar baru di direktori 'foto-profile' pada disk 'public'
+            $pegawai->image = $request->file('image')->store('foto-profile', 'public');
+        }
+
+        
         $pegawai->update($validatedData);
 
         return redirect('/dashboard/pegawai')->with('success', 'Berhasil Mengubah Data Pegawai');
@@ -209,6 +208,27 @@ class PegawaiController extends Controller
         return redirect('/dashboard/pegawai')->with('success','Data Pegawai Berhasil Dihapus' );
     }
 
+    public function updateImage(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'image' => 'required|image|mimes:jpg,jpeg,png,gif,bmp|max:2048',
+        ]);
+
+        $pegawai = Pegawai::findOrFail($id);
+
+        // Hapus gambar lama jika ada
+        if ($pegawai->image && Storage::disk('public')->exists($pegawai->image)) {
+            Storage::disk('public')->delete($pegawai->image);
+        }
+
+        // Simpan gambar baru
+        $path = $request->file('image')->store('foto-profile', 'public');
+        $pegawai->image = $path;
+        $pegawai->save();
+
+        return redirect()->back()->with('success', 'Foto pegawai berhasil diperbarui.');
+    }
+
     public function rekapGolongan()
     {
         // Ambil jumlah pegawai berdasarkan golongan
@@ -225,24 +245,6 @@ class PegawaiController extends Controller
     $dataPegawaiTanpaGolongan = Pegawai::whereNull('golongan_ruang')->get();
 
     return view('dashboard.rekapitulasi.golongan', compact('rekap', 'pegawaiTanpaGolongan', 'dataPegawaiTanpaGolongan'));
-    }
-    
-    public function rekapkepegawaian()
-    {
-        // Ambil jumlah pegawai berdasarkan kepegawaian
-        $rekap = Pegawai::select('jenis_kepegawaian', DB::raw('count(*) as jumlah'))
-                        ->whereNotNull('jenis_kepegawaian')
-                        ->groupBy('jenis_kepegawaian')
-                        ->orderBy('jenis_kepegawaian', 'desc')
-                        ->get();
-
-        // Hitung jumlah pegawai tanpa kepegawaian
-        $pegawaiTanpaKepegawaian = Pegawai::whereNull('jenis_kepegawaian')->count();
-
-        // Ambil detail pegawai tanpa kepegawaian
-        $dataPegawaiTanpaKepegawaian = Pegawai::whereNull('jenis_kepegawaian')->get();
-
-        return view('dashboard.rekapitulasi.kepegawaian', compact('rekap', 'pegawaiTanpaKepegawaian', 'dataPegawaiTanpaKepegawaian'));
     }
     
     public function rekapAgama()
@@ -298,4 +300,24 @@ class PegawaiController extends Controller
 
         return view('dashboard.rekapitulasi.status-nikah', compact('rekap', 'pegawaiTanpaStatusNikah' ,'dataPegawaiTanpaStatusNikah'));
     }
+    
+    public function getData($id)
+    {
+        $pegawai = Pegawai::with('jabatan', 'pendidikans')->findOrFail($id);
+
+        return response()->json([
+            'nip' => $pegawai->nip ?? '-',
+            'tempat_lahir' =>$pegawai->tempat_lahir ?? '-',
+            'tanggal_lahir' =>$pegawai->tanggal_lahir ?? '-',
+            'telepon' =>$pegawai->telepon ?? '-',
+            'agama' =>$pegawai->agama ?? '-',
+            'alamat' =>$pegawai->alamat ?? '-',
+            'golongan_ruang' =>$pegawai->golongan_ruang?? '-',
+            'tingkat' =>optional($pegawai->pendidikans)->tingkat ?? '-',
+            'jabatan' => optional($pegawai->jabatan)->unit_kerja ?? '-',
+            'pangkat' => optional($pegawai->jabatan)->nama ?? '-',
+            'unit_kerja' => optional($pegawai->jabatan)->skpd ?? '-',
+        ]);
+    }
+
 }

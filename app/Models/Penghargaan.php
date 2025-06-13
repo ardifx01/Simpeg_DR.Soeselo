@@ -11,12 +11,8 @@ class Penghargaan extends Model
     /** @use HasFactory<\Database\Factories\PenghargaanFactory> */
     use HasFactory;
 
-    protected $fillable = [
-        'pegawai_id',
-        'nama',
-        'pemberi',
-        'tahun'
-    ];
+    protected $table = 'penghargaans';
+    protected $guarded = [];
     
     public function pegawai(): BelongsTo
     {

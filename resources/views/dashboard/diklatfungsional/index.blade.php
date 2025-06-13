@@ -55,7 +55,7 @@
                 <div class="table-responsive small">
                     <table class="table table-striped table-bordered table-hover table-sm">
                         <thead>
-                            <tr>
+                            <tr class="text-center align-middle">
                                 <th>No</th>
                                 <th>Pegawai</th>
                                 <th>Nama</th>
@@ -68,7 +68,7 @@
                         <tbody>
                             @foreach ($diklatfungsionals as $key => $diklatfungsional)
                             <tr>
-                                <td>{{ $diklatfungsionals->firstItem() + $key }}</td>
+                                <td class="text-center">{{ $diklatfungsionals->firstItem() + $key }}</td>
                                 <td>
                                     {{ $diklatfungsional->pegawai->nip }} - {{ $diklatfungsional->pegawai->nama }}
                                 </td>

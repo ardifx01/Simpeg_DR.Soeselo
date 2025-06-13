@@ -26,7 +26,7 @@
     <li class="nav-item dropdown pe-3">
 
     <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
-        {{-- <img src="{{ asset('assets/img/profile-img.jpg') }}" alt="Profile" class="rounded-circle"> --}}
+        <img src="{{ asset('assets/img/logo.png') }}" alt="Profile">
         <span class="d-none d-md-block dropdown-toggle ps-2"><span class="text-warning">Welcome </span>{{ auth()->user()->username }}</span>
     </a><!-- End Profile Icon -->
 

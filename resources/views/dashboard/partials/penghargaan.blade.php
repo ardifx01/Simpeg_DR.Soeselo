@@ -3,18 +3,18 @@
     <div class="table-responsive small">
     <table class="table table-striped table-bordered table-sm">
         <thead>
-            <tr>
-                <th scope="col" style="width: 17px">No</th>
-                <th scope="col" style="width: 183px">Nama Tanda Jasa / Penghargaan</th>
-                <th scope="col" style="width: 120px">Pemberi</th>
-                <th scope="col" style="width: 100px">Tahun</th>
-                <th scope="col" style="width: 93px">Action</th>
+            <tr class="text-center align-middle">
+                <th>No</th>
+                <th>Nama Tanda Jasa / Penghargaan</th>
+                <th>Pemberi</th>
+                <th>Tahun</th>
+                <th>Action</th>
             </tr>
         </thead>
         <tbody>
             @foreach($pegawai->penghargaans as $key => $penghargaan)
             <tr>
-                <td>{{ $loop->iteration }}</td>
+                <td class="text-center">{{ $loop->iteration }}</td>
                 <td>{{ $penghargaan->nama }}</td>
                 <td>{{ $penghargaan->pemberi }}</td>
                 <td>{{ $penghargaan->tahun }}</td>

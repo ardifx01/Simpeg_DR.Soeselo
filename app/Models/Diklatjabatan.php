@@ -10,13 +10,9 @@ class Diklatjabatan extends Model
 {
     /** @use HasFactory<\Database\Factories\DiklatjabatanFactory> */
     use HasFactory;
-    protected $fillable = [
-        'pegawai_id',
-        'nama', 
-        'penyelenggara', 
-        'jumlah_jam', 
-        'tanggal_selesai'
-    ];
+    
+    protected $table = 'diklatjabatans';
+    protected $guarded = [];
 
     public function pegawai(): BelongsTo
     {

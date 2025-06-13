@@ -1,6 +1,6 @@
 <!-- Arsip view -->
 <div class="view">
-    <div class="justify-content-between">
+    <div class="d-flex justify-content-end">
         <!-- Button Trigger Upload Modal -->
         <button type="button" class="btn btn-primary btn-sm mb-3" data-bs-toggle="modal" data-bs-target="#uploadarsipModal{{$pegawai->id}}">
             <i class="bi bi-plus-circle"></i> Upload Arsip
@@ -76,7 +76,7 @@
     <div class="table-responsive small">
         <table class="table table-striped table-bordered table-sm">
             <thead>
-                <tr>
+                <tr class="text-center align-middle">
                     <th>No</th>
                     <th>Nama Arsip</th>
                     <th>File</th>
@@ -86,7 +86,7 @@
             <tbody>
                 @foreach ($pegawai->arsips as $arsip)
                 <tr>
-                    <td>{{ $loop->iteration }}</td>
+                    <td text-center>{{ $loop->iteration }}</td>
                     <td>{{ $arsip->jenis }}</td>
                     <td><a href="{{ route('arsip.view', $arsip->id) }}" target="_blank" class="text-danger fw-bold">
                         <i class="bi bi-file-earmark-pdf fs-4"></i></a>
