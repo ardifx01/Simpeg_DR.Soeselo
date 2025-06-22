@@ -186,6 +186,38 @@
                             </div>
                         </div>
 
+                        <div class="row mb-3">
+                            <label for="nama" class="col-md-4 col-lg-3 col-form-label">4. Jabatan</label>
+                            <div class="col-md-8 col-lg-9">
+                                <input name="nama" type="text" class="form-control @error('nama') is-invalid @enderror" id="nama" value="{{ old('nama') }}" required>
+                                @error('nama')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <label for="nama" class="col-md-4 col-lg-3 col-form-label">4. formasi Jabatan</label>
+                            <div class="col-md-4 col-lg-3">
+                                <input name="nama" type="text" class="form-control @error('nama') is-invalid @enderror" id="nama" value="{{ old('nama') }}" required>
+                                @error('nama')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="col-md-4 col-lg-3">
+                                <input name="nama" type="text" class="form-control @error('nama') is-invalid @enderror" id="nama" value="{{ old('nama') }}" required>
+                                @error('nama')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="col-md-4 col-lg-3">
+                                <input name="nama" type="text" class="form-control @error('nama') is-invalid @enderror" id="nama" value="{{ old('nama') }}" required>
+                                @error('nama')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+
                         <div class="row mb-3 form-group">
                             <label for="jenis_kepegawaian" class="col-md-4 col-lg-3 col-form-label">5. Jenis Kepegawaian</label>
                             <div class="col-md-4 col-lg-3">
@@ -195,6 +227,8 @@
                                     <option value="PPPK" {{ old('jenis_kepegawaian')=='PPPK' ? 'selected': '' }} >2. PPPK</option>
                                     <option value="CPNS" {{ old('jenis_kepegawaian')=='CPNS' ? 'selected': '' }} >3. CPNS</option>
                                     <option value="BLUD" {{ old('jenis_kepegawaian')=='BLUD' ? 'selected': '' }} >4. BLUD</option>
+                                    <option value="Mitra" {{ old('jenis_kepegawaian')=='Mitra' ? 'selected': '' }} >5. Mitra</option>
+                                    <option value="Ahli Daya" {{ old('jenis_kepegawaian')=='Ahli Daya' ? 'selected': '' }} >6. Ahli Daya</option>
                                 </select>
                             </div>
                             @error('jenis_kepegawaian')
@@ -208,9 +242,10 @@
                                 <select class="form-select" aria-label="Default select example" name="jenis_jabatan" id="jenis_jabatan">
                                     <option selected disabled>...</option>
                                     <option value="Struktural" {{ old('jenis_jabatan')=='Struktural' ? 'selected': '' }} >1. Struktural</option>
-                                    <option value="Fungsional Khusus" {{ old('jenis_jabatan')=='Fungsional Khusus' ? 'selected': '' }} >2. Fungsional Khusus</option>
-                                    <option value="Fungsional Umum" {{ old('jenis_jabatan')=='Fungsional Umum' ? 'selected': '' }} >3. Fungsional Umum</option>
-                                    <option value="Sekretaris Desa" {{ old('jenis_jabatan')=='Sekretaris Desa' ? 'selected': '' }} >4. Sekretaris Desa</option>
+                                    <option value="Fungsional" {{ old('jenis_jabatan')=='Fungsional' ? 'selected': '' }} >2. Fungsional</option>
+                                    <option value="Fungsional Pelaksana" {{ old('jenis_jabatan')=='Fungsional Pelaksana' ? 'selected': '' }} >3. Fungsional Pelaksana</option>
+                                    <option value="Tenaga Ahli Daya" {{ old('jenis_jabatan')=='Tenaga Ahli Daya' ? 'selected': '' }} >4. Tenaga Ahli Daya</option>
+                                    <option value="Tenaga Mitra" {{ old('jenis_jabatan')=='Tenaga Mitra' ? 'selected': '' }} >5. Tenaga Mitra</option>
                                 </select>
                             </div>
                             @error('jenis_jabatan')
@@ -230,11 +265,11 @@
                                     <option value="Penerima Uang Tunggu" {{ old('status')=='Penerima Uang Tunggu' ? 'selected': '' }} >5. Penerima Uang Tunggu</option>
                                     <option value="Wajib Militer" {{ old('status')=='Wajib Militer' ? 'selected': '' }} >6. Wajib Militer</option>
                                     <option value="Pejabat Negara" {{ old('status')=='Pejabat Negara' ? 'selected': '' }} >7. Pejabat Negara</option>
-                                    <option value="Kepala Desa" {{ old('status')=='Kepala Desa' ? 'selected': '' }} >8. Kepala Desa</option>
-                                    <option value="Proses Banding BAPEK" {{ old('status')=='Proses Banding BAPEK' ? 'selected': '' }} >9. Proses Banding BAPEK</option>
-                                    <option value="Masa Persiapan Pensiun" {{ old('status')=='Masa Persiapan Pensiun' ? 'selected': '' }} >10. Masa Persiapan Pensiun</option>
-                                    <option value="Pensiun" {{ old('status')=='Pensiun' ? 'selected': '' }} >11. Pensiun</option>
-                                    <option value="Calon CPNS" {{ old('status')=='Calon CPNS' ? 'selected': '' }} >12. Calon CPNS</option>
+                                    <option value="Proses Banding BAPEK" {{ old('status')=='Proses Banding BAPEK' ? 'selected': '' }} >8. Proses Banding BAPEK</option>
+                                    <option value="Masa Persiapan Pensiun" {{ old('status')=='Masa Persiapan Pensiun' ? 'selected': '' }} >9. Masa Persiapan Pensiun</option>
+                                    <option value="Pensiun" {{ old('status')=='Pensiun' ? 'selected': '' }} >10. Pensiun</option>
+                                    <option value="Calon CPNS" {{ old('status')=='Calon CPNS' ? 'selected': '' }} >11. Calon CPNS</option>
+                                    <option value="Hukuman Disiplin" {{ old('status')=='Hukuman Disiplin' ? 'selected': '' }} >12. Hukuman Disiplin</option>
                                 </select>
                             </div>
                             @error('status')
@@ -258,15 +293,13 @@
                             <div class="col-md-4 col-lg-3">
                                 <select class="form-select" aria-label="Default select example" name="eselon" id="eselon" required>
                                     <option selected>...</option>
-                                    <option value="V" {{ old('eselon')=='V' ? 'selected': '' }} >V</option>
-                                    <option value="IV.b" {{ old('eselon')=='IV.b' ? 'selected': '' }} >IV.b</option>
-                                    <option value="IV.a" {{ old('eselon')=='IV.a' ? 'selected': '' }} >IV.a</option>
-                                    <option value="III.b" {{ old('eselon')=='III.b' ? 'selected': '' }} >III.b</option>
-                                    <option value="III.a" {{ old('eselon')=='III.a' ? 'selected': '' }} >III.a</option>
                                     <option value="II.b" {{ old('eselon')=='II.b' ? 'selected': '' }} >II.b</option>
-                                    <option value="II.a" {{ old('eselon')=='II.a' ? 'selected': '' }} >II.a</option>
-                                    <option value="I.b" {{ old('eselon')=='I.b' ? 'selected': '' }} >I.b</option>
-                                    <option value="I.a" {{ old('eselon')=='I.a' ? 'selected': '' }} >I.a</option>
+                                    <option value="III.a" {{ old('eselon')=='III.a' ? 'selected': '' }} >III.a</option>
+                                    <option value="III.b" {{ old('eselon')=='III.b' ? 'selected': '' }} >III.b</option>
+                                    <option value="IV.a" {{ old('eselon')=='IV.a' ? 'selected': '' }} >IV.a</option>
+                                    <option value="IV.b" {{ old('eselon')=='IV.b' ? 'selected': '' }} >IV.b</option>
+                                    <option value="Kepala Instalasi" {{ old('eselon')=='Kepala Instalasi' ? 'selected': '' }} >Kepala Instalasi</option>
+                                    <option value="Kepala Ruang" {{ old('eselon')=='Kepala Ruang' ? 'selected': '' }} >Kepala Ruang</option>
                                 </select>
                             </div>
                         </div>

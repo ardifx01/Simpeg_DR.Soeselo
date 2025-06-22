@@ -10,7 +10,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Pegawai extends Model
 {
-    /** @use HasFactory<\Database\Factories\PegawaiFactory> */
     use HasFactory;
 
     protected $table = 'pegawais';

@@ -261,7 +261,7 @@
                     </div>
 
                     <div class="row mb-3 form-group">
-                        <label for="golongan_ruang" class="col-md-4 col-lg-3 col-form-label">15. Golongan Ruang</label>
+                        <label for="golongan_ruang" class="col-md-4 col-lg-3 col-form-label">15. Pangkat/Golongan Ruang</label>
                         <div class="col-md-8 col-lg-9">
                             <input name="golongan_ruang" type="text" class="form-control @error('golongan_ruang') is-invalid @enderror" id="golongan_ruang" value="{{ old('golongan_ruang') }}">
                             @error('golongan_ruang')
@@ -313,6 +313,45 @@
                                 <input name="tmt_pns" type="text" class="form-control @error('tmt_pns') is-invalid @enderror" id="tmt_pns" aria-label="Recipient's username" aria-describedby="button-addon2" value="{{ old('tmt_pns') }}">
                                 <button class="btn btn-outline-secondary" type="button" for="tmt_pns" id="button-addon2"><i class="bi bi-calendar3"></i></button>
                                 @error('tmt_pns')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3 form-group">
+                        <label for="tmt_pns" class="col-md-4 col-lg-3 col-form-label">20. TMT Awal Pegawai BLUD</label>
+                        <div class="col-md-4 col-lg-3">
+                            <div class="input-group">
+                                <input name="tmt_pns" type="text" class="form-control @error('tmt_pns') is-invalid @enderror" id="tmt_pns" aria-label="Recipient's username" aria-describedby="button-addon2" value="{{ old('tmt_pns') }}">
+                                <button class="btn btn-outline-secondary" type="button" for="tmt_pns" id="button-addon2"><i class="bi bi-calendar3"></i></button>
+                                @error('tmt_pns')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3 form-group">
+                        <label for="tmt_golongan_ruang_cpns" class="col-md-4 col-lg-3 col-form-label">21. No. SK Pengangkatan Pegawai BLUD</label>
+                        <div class="col-md-4 col-lg-3">
+                            <div class="input-group">
+                                <input name="tmt_golongan_ruang_cpns" type="text" class="form-control @error('tmt_golongan_ruang_cpns') is-invalid @enderror" id="tmt_golongan_ruang_cpns" aria-label="Recipient's username" aria-describedby="button-addon2" value="{{ old('tmt_golongan_ruang_cpns') }}">
+                                <button class="btn btn-outline-secondary" type="button" for="tmt_golongan_ruang_cpns" id="button-addon2"><i class="bi bi-calendar3"></i></button>
+                                @error('tmt_golongan_ruang_cpns')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3 form-group">
+                        <label for="tmt_golongan_ruang_cpns" class="col-md-4 col-lg-3 col-form-label">22.MOU Kontrak Pegawai BLUD</label>
+                        <div class="col-md-4 col-lg-3">
+                            <div class="input-group">
+                                <input name="tmt_golongan_ruang_cpns" type="text" class="form-control @error('tmt_golongan_ruang_cpns') is-invalid @enderror" id="tmt_golongan_ruang_cpns" aria-label="Recipient's username" aria-describedby="button-addon2" value="{{ old('tmt_golongan_ruang_cpns') }}">
+                                <button class="btn btn-outline-secondary" type="button" for="tmt_golongan_ruang_cpns" id="button-addon2"><i class="bi bi-calendar3"></i></button>
+                                @error('tmt_golongan_ruang_cpns')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>

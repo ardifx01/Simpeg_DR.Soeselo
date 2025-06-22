@@ -47,6 +47,7 @@ Route::middleware('auth')->group(function () {
     Route::put('/dashboard/pegawai/{id}/update-image', [PegawaiController::class, 'updateImage'])->name('pegawai.update-image');
     Route::get('/pegawai/search', [PegawaiController::class, 'search'])->name('pegawai.search');
     Route::get('/arsip/view/{id}', [ArsipController::class, 'arsipView'])->name('arsip.view');
+    Route::get('/rekap-kgb-pangkat', [App\Http\Controllers\PegawaiController::class, 'rekapKGBPangkat'])->name('rekap.kgbpangkat');
     Route::resource('/dashboard/istri', IstriController::class);
     Route::resource('/dashboard/anak', AnakController::class);
     Route::resource('/dashboard/diklatfungsional', DiklatFungsionalController::class);

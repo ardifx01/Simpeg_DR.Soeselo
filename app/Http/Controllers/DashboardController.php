@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
+use App\Models\Jabatan;
 use App\Models\Pegawai;
+use App\Models\Pendidikan;
 use App\Models\Penghargaan;
 use App\Models\Diklatteknik;
+use Illuminate\Http\Request;
 use App\Models\Diklatjabatan;
 use App\Models\Diklatfungsional;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use App\Models\Jabatan;
-use App\Models\OPD;
-use App\Models\Pendidikan;
 
 class DashboardController extends Controller
 {
@@ -69,5 +69,42 @@ class DashboardController extends Controller
         $pegawais = Pegawai::where('nama', 'like', "%$search%")->get();
 
         return view('dashboard.result', compact('pegawais', 'search'));
+    }
+
+    public function headerNotification()
+    {
+        $now = Carbon::now();
+        $pegawais = Pegawai::with('jabatan')->get();
+
+        $notifications = [];
+
+        foreach ($pegawais as $pegawai) {
+            $tmt = $pegawai->tmt_golongan_ruang ?? $pegawai->tmt_golongan_ruang_cpns;
+            $golongan = $pegawai->golongan_ruang ?? $pegawai->golongan_ruang_cpns;
+
+            if (!$tmt || !$golongan) continue;
+
+            $mk = Carbon::parse($tmt)->diffInYears($now);
+            $kgbKe = floor($mk / 2);
+            $tmtKgbTerakhir = Carbon::parse($tmt)->addYears($kgbKe * 2);
+
+            if ($tmtKgbTerakhir->lte($now)) {
+                $notifications[] = [
+                    'nama' => $pegawai->nama,
+                    'type' => 'KGB',
+                    'message' => "KGB untuk {$pegawai->nama} sudah bisa diproses.",
+                ];
+            }
+
+            if ($mk >= 4) {
+                $notifications[] = [
+                    'nama' => $pegawai->nama,
+                    'type' => 'PANGKAT',
+                    'message' => "Pangkat untuk {$pegawai->nama} sudah bisa diusulkan.",
+                ];
+            }
+        }
+
+        return $notifications;
     }
 }

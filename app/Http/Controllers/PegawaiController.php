@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\Pegawai;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class PegawaiController extends Controller
 {
@@ -320,4 +322,54 @@ class PegawaiController extends Controller
         ]);
     }
 
+    public function rekapKGBPangkat(Request $request)
+    {
+        $now = Carbon::now();
+        $pegawais = Pegawai::all();
+
+        $dataKGB = collect();
+        $dataPangkat = collect();
+
+        foreach ($pegawais as $pegawai) {
+            $tmt = $pegawai->tmt_golongan_ruang ?? $pegawai->tmt_golongan_ruang_cpns;
+            if (!$tmt) continue;
+
+            $mk = Carbon::parse($tmt)->diffInYears($now);
+            $kgbKe = floor($mk / 2);
+            $tmtKgbTerakhir = Carbon::parse($tmt)->addYears($kgbKe * 2);
+
+            if ($tmtKgbTerakhir->lte($now)) {
+                $dataKGB->push($pegawai);
+            }
+
+            if ($mk >= 4) {
+                $dataPangkat->push($pegawai);
+            }
+        }
+
+        $perPage = 10;
+        $currentPageKgb = LengthAwarePaginator::resolveCurrentPage('kgb_page');
+        $currentPagePangkat = LengthAwarePaginator::resolveCurrentPage('pangkat_page');
+
+        $kgbPaginated = new LengthAwarePaginator(
+            $dataKGB->forPage($currentPageKgb, $perPage),
+            $dataKGB->count(),
+            $perPage,
+            $currentPageKgb,
+            ['path' => url()->current(), 'pageName' => 'kgb_page']
+        );
+
+        $pangkatPaginated = new LengthAwarePaginator(
+            $dataPangkat->forPage($currentPagePangkat, $perPage),
+            $dataPangkat->count(),
+            $perPage,
+            $currentPagePangkat,
+            ['path' => url()->current(), 'pageName' => 'pangkat_page']
+        );
+
+        return view('dashboard.pegawai.rekap-kgb-pangkat', [
+            'dataKGB' => $kgbPaginated,
+            'dataPangkat' => $pangkatPaginated,
+        ]);
+    }
 }
