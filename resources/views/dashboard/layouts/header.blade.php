@@ -27,7 +27,12 @@
                 <i class="bi bi-bell fs-4"></i>
                 @if(count($headerNotifications) > 0)
                     <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                        {{ count($headerNotifications) }}
+                        {{-- First location: Red badge on bell icon --}}
+                        @if(count($headerNotifications) > 99)
+                            99+
+                        @else
+                            {{ count($headerNotifications) }}
+                        @endif
                         <span class="visually-hidden">unread notifications</span>
                     </span>
                 @endif
@@ -36,7 +41,14 @@
                 <div class="bg-primary text-white px-4 py-3 rounded-top">
                     <div class="d-flex justify-content-between align-items-center">
                         <span><i class="bi bi-bell-fill me-2 animate__animated animate__tada"></i>Notifikasi</span>
-                        <span class="badge bg-light text-primary">{{ count($headerNotifications) }}</span>
+                        {{-- Second location: Badge in dropdown header --}}
+                        <span class="badge bg-light text-primary">
+                            @if(count($headerNotifications) > 99)
+                                99+
+                            @else
+                                {{ count($headerNotifications) }}
+                            @endif
+                        </span>
                     </div>
                     <div class="small text-light">Terkait KGB / Kenaikan Pangkat</div>
                 </div>
