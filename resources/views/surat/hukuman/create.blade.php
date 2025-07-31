@@ -5,22 +5,22 @@
 <div class="pagetitle">
     <div class="row justify-content-between">
         <div class="col">
-            <h1>Surat keterangan</h1>
+            <h1>Surat Hukuman</h1>
             <nav>
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="{{ route('surat') }}">E-surat</a></li>
-                    <li class="breadcrumb-item active">Pengajuan Surat Keterangan</li>
+                    <li class="breadcrumb-item active">Pengajuan Surat Hukuman</li>
                 </ol>
             </nav>
         </div>
     </div>
-</div><!-- End Pengajuan Surat Keterangan Title -->
+</div><!-- End Pengajuan Surat Hukuman Title -->
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
                 <div class="card-header bg-primary text-white">
-                    <h4 class="mb-0">Form Pengajuan Keterangan Pegawai</h4>
+                    <h4 class="mb-0">Form Pengajuan Serat Hukuman Pegawai</h4>
                 </div>
 
                 <div class="card-body">
@@ -293,7 +293,7 @@
                         <div class="form-group row mb-0">
                             <div class="col-md-6">
                                 <button type="submit" class="btn btn-primary">
-                                    <i class="fas fa-paper-plane"></i> Ajukan Surat Keterangan
+                                    <i class="fas fa-paper-plane"></i> Ajukan Surat Hukuman
                                 </button>
                             </div>
                         </div>

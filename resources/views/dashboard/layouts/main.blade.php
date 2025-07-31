@@ -55,21 +55,21 @@
     <main id="main" class="main">
         {{-- Notifikasi berhasil --}}
         @if (session('success'))
-            <div class="alert alert-success">
+            <div class="alert alert-success alert-dismissible fade show" role="alert" id="alert-success">
                 {{ session('success') }}
-                <button type="button" class="btn-close float-end" data-bs-dismiss="alert" aria-label="Close"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         @endif
 
         {{-- Notifikasi error --}}
         @if ($errors->any())
-            <div class="alert alert-danger">
+            <div class="alert alert-danger alert-dismissible fade show" role="alert" id="alert-error">
                 <ul class="mb-0">
                     @foreach ($errors->all() as $error)
                         <li>{{ $error }}</li>
-                        <button type="button" class="btn-close float-end" data-bs-dismiss="alert" aria-label="Close"></button>
                     @endforeach
                 </ul>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         @endif
         @yield('main')
@@ -109,35 +109,66 @@
     <script src="{{ asset('assets/js/main.js') }}"></script>
 
     <script>
+        setTimeout(function() {
+            let alertSuccess = document.getElementById('alert-success');
+            let alertError = document.getElementById('alert-error');
+            if (alertSuccess) {
+                let bsAlert = bootstrap.Alert.getOrCreateInstance(alertSuccess);
+                bsAlert.close();
+            }
+            if (alertError) {
+                let bsAlert = bootstrap.Alert.getOrCreateInstance(alertError);
+                bsAlert.close();
+            }
+        }, 2000);
+
         $(document).ready(function () {
             let dateFields = [
-                {id: '#tanggal_lahir', button: '[for="tanggal_lahir"]'},
-                {id: '#tanggal_nikah', button: '[for="tanggal_nikah"]'},
-                {id: '#tahun_lulus', button: '[for="tahun_lulus"]'},
-                {id: '#tanggal_ijazah', button: '[for="tanggal_ijazah"]'},
-                {id: '#tahun', button: '[for="tahun"]'},
-                {id: '#tanggal_selesai', button: '[for="tanggal_selesai"]'},
-                {id: '#tmt_golongan_ruang', button: '[for="tmt_golongan_ruang"]'},
-                {id: '#tmt_golongan_ruang_cpns', button: '[for="tmt_golongan_ruang_cpns"]'},
-                {id: '#tmt_pns', button: '[for="tmt_pns"]'},
-                {id: '#tmt_jabatan', button: '[for="tmt_jabatan"]'},
-                {id: '#tahun_diklat_pimpinan', button: '[for="tahun_diklat_pimpinan"]'},
-                {id: '#tmt', button: '[for="tmt"]'}
+                {inputSelector: '[id^="tanggal_lahir"]', buttonSelector: '[for^="tanggal_lahir"]'},
+                {inputSelector: '[id^="tanggal_nikah"]', buttonSelector: '[for^="tanggal_nikah"]'},
+                {inputSelector: '[id^="tanggal_ijazah"]', buttonSelector: '[for^="tanggal_ijazah"]'},
+                {inputSelector: '[id^="tanggal_ijazah_ijin"]', buttonSelector: '[for^="tanggal_ijazah_ijin"]'},
+                {inputSelector: '[id^="tanggal_penghargaan"]', buttonSelector: '[for^="tanggal_penghargaan"]'},
+                {inputSelector: '[id^="tanggal_selesai"]', buttonSelector: '[for^="tanggal_selesai"]'},
+                {inputSelector: '[id^="tanggal_selesai_fungsional"]', buttonSelector: '[for^="tanggal_selesai_fungsional"]'},
+                {inputSelector: '[id^="tanggal_selesai_jabatan"]', buttonSelector: '[for^="tanggal_selesai_jabatan"]'},
+                {inputSelector: '[id^="tanggal_selesai_teknis"]', buttonSelector: '[for^="tanggal_selesai_teknis"]'},
+                {inputSelector: '[id^="tmt_golongan_ruang"]', buttonSelector: '[for^="tmt_golongan_ruang"]'},
+                {inputSelector: '[id^="tmt_golongan_ruang_cpns"]', buttonSelector: '[for^="tmt_golongan_ruang_cpns"]'},
+                {inputSelector: '[id^="tmt_pns"]', buttonSelector: '[for^="tmt_pns"]'},
+                {inputSelector: '[id^="tmt_jabatan"]', buttonSelector: '[for^="tmt_jabatan"]'},
+                {inputSelector: '[id^="tahun_diklat_pimpinan"]', buttonSelector: '[for^="tahun_diklat_pimpinan"]'},
+                {inputSelector: '[id^="tmt"]', buttonSelector: '[for^="tmt"]'},
+                {inputSelector: '[id^="tmt_organisasi"]', buttonSelector: '[for^="tmt_organisasi"]'},
+                {inputSelector: '[id^="tgl_sk_pengangkatan_blud"]', buttonSelector: '[for^="tgl_sk_pengangkatan_blud"]'},
+                {inputSelector: '[id^="tgl_mou_awal_blud"]', buttonSelector: '[for^="tgl_mou_awal_blud"]'},
+                {inputSelector: '[id^="tmt_awal_mou_blud"]', buttonSelector: '[for^="tmt_awal_mou_blud"]'},
+                {inputSelector: '[id^="tmt_akhir_mou_blud"]', buttonSelector: '[for^="tmt_akhir_mou_blud"]'},
+                {inputSelector: '[id^="tgl_akhir_blud"]', buttonSelector: '[for^="tgl_akhir_blud"]'},
+                {inputSelector: '[id^="tmt_mou_akhir"]', buttonSelector: '[for^="tmt_mou_akhir"]'},
+                {inputSelector: '[id^="tmt_akhir_mou"]', buttonSelector: '[for^="tmt_akhir_mou"]'},
+                {inputSelector: '[id^="tgl_mou_mitra"]', buttonSelector: '[for^="tgl_mou_mitra"]'},
+                {inputSelector: '[id^="tmt_mou_mitra"]', buttonSelector: '[for^="tmt_mou_mitra"]'},
+                {inputSelector: '[id^="tmt_akhir_mou_mitra"]', buttonSelector: '[for^="tmt_akhir_mou_mitra"]'}
             ];
-            
-            // Inisialisasi datepicker untuk semua field
+
             dateFields.forEach(function(field) {
-                $(field.id).datepicker({
-                    autoclose: true,
-                    clearBtn: true,
-                    format: "yyyy-mm-dd",
-                    todayHighlight: true,
-                    orientation: "bottom auto"
+                $(field.inputSelector).each(function () {
+                    if (!$(this).data('datepicker')) {
+                        $(this).datepicker({
+                            autoclose: true,
+                            clearBtn: true,
+                            format: "dd-mm-yyyy",
+                            todayHighlight: true,
+                            orientation: "bottom auto"
+                        });
+                    }
                 });
-                
-                // Tambahkan event handler untuk button calendar
-                $(field.button).click(function() {
-                    $(field.id).datepicker('show');
+
+                // Pastikan tombol show datepicker bekerja untuk semua ID dengan prefix sama
+                $(field.buttonSelector).off('click').on('click', function () {
+                    let targetId = $(this).attr('for');
+                    $('#' + targetId).datepicker('show');
                 });
             });
         });
@@ -149,12 +180,44 @@
                     placeholder: "-- Pilih Pegawai --",
                     allowClear: true
                 },
+                '#status_nikah': {
+                    placeholder: "-- Pilihan --",
+                    allowClear: true
+                },
                 '#jenis_kepegawaian': {
                     placeholder: "-- Pilihan --",
                     allowClear: true
                 },
                 '#unit_kerja': {
                     placeholder: "RSUD dr. Soeselo Slawi",
+                    allowClear: true
+                },
+                '#nama_jabatan': {
+                    placeholder: "RSUD dr. Soeselo Slawi",
+                    allowClear: true
+                },
+                '#pangkat': {
+                    placeholder: "-- Pilihan --",
+                    allowClear: true
+                },
+                '#golongan_ruang': {
+                    placeholder: "-- Pilihan --",
+                    allowClear: true
+                },
+                '#golongan_ruang_cpns': {
+                    placeholder: "-- Pilihan --",
+                    allowClear: true
+                },
+                '#formasi_jabatan': {
+                    placeholder: "-- Pilihan --",
+                    allowClear: true
+                },
+                '#formasi_jabatan_tingkat': {
+                    placeholder: "-- Pilihan --",
+                    allowClear: true
+                },
+                '#formasi_jabatan_keterangan': {
+                    placeholder: "-- Pilihan --",
                     allowClear: true
                 },
                 '#kategori': {
@@ -174,10 +237,6 @@
                     allowClear: true
                 },
                 '#agama': {
-                    placeholder: "-- Pilihan --",
-                    allowClear: true
-                },
-                '#tingkat': {
                     placeholder: "-- Pilihan --",
                     allowClear: true
                 },

@@ -50,7 +50,7 @@
                 <tr>
                     <td>{{ $cuti->pegawai->nama }}</td>
                     <td>{{ $cuti->pegawai->nip }}</td>
-                    <td>{{ $cuti->pegawai->jabatan->nama ?? '-' }}</td>
+                    <td>{{ $cuti->pegawai->jabatan->nama_jabatan ?? '-' }}</td>
                     <td>{{ ucfirst($cuti->jenis_cuti) }}</td>
                     <td>{{ \Carbon\Carbon::parse($cuti->tanggal_mulai)->format('d-m-Y') }}</td>
                     <td>{{ \Carbon\Carbon::parse($cuti->tanggal_selesai)->format('d-m-Y') }}</td>

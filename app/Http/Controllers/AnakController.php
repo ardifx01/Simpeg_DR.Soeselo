@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\Anak;
 use App\Models\Pegawai;
 use Illuminate\Http\Request;
@@ -52,18 +53,25 @@ class AnakController extends Controller
     public function store(Request $request)
     {
         // melakukan validasi data
-        $request->validate([
+        $validatedData = $request->validate([
             'pegawai_id' => 'required|exists:pegawais,id',
-            'nama'=>'required',
-            'tanggal_lahir'=>'required',
-            'tempat_lahir'=>'required',
-            'status_keluarga'=>'required',
-            'status_tunjangan'=>'required',
-            'jenis_kelamin'=>'required'
+            'nama' => 'required',
+            'tanggal_lahir_anak' => 'required',
+            'tempat_lahir' => 'required',
+            'status_keluarga' => 'required',
+            'status_tunjangan' => 'required',
+            'jenis_kelamin' => 'required'
         ]);
 
-        Anak::create($request->all());
-        return redirect()->route('anak.index', $request->pegawai_id)->with('success', 'Anak Berhasil Ditambahkan');
+        // Ubah format tanggal jika diisi
+        if (!empty($validatedData['tanggal_lahir_anak'])) {
+            $validatedData['tanggal_lahir_anak'] = Carbon::createFromFormat('d-m-Y', $validatedData['tanggal_lahir_anak'])->format('Y-m-d');
+        }
+
+        // Simpan ke database
+        Anak::create($validatedData);
+
+        return redirect()->back()->with('success', 'Anak Berhasil Ditambahkan');
     }
 
     /**
@@ -89,18 +97,21 @@ class AnakController extends Controller
     public function update(Request $request, Anak $anak)
     {
         // melakukan validasi data
-        $request->validate([
+        $validatedData = $request->validate([
             'pegawai_id' => 'required|exists:pegawais,id',
             'nama'=>'required',
-            'tanggal_lahir'=>'required',
+            'tanggal_lahir_anak'=>'required',
             'tempat_lahir'=>'required',
             'status_keluarga'=>'required',
             'status_tunjangan'=>'required',
             'jenis_kelamin'=>'required'
         ]);
+        if (!empty($validatedData['tanggal_lahir_anak'])) {
+            $validatedData['tanggal_lahir_anak'] = Carbon::createFromFormat('d-m-Y', $validatedData['tanggal_lahir_anak'])->format('Y-m-d');
+        }
 
-        $anak->update($request->all());
-        return redirect()->route('pegawai.show', $request->pegawai_id)->with('success', 'Anak Berhasil Diperbarui');
+        $anak->update($validatedData);
+        return redirect()->back()->with('success', 'Anak Berhasil Diperbarui');
     }
 
     /**

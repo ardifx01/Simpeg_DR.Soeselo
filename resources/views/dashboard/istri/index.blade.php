@@ -53,17 +53,17 @@
                     </div>
                 </div>
                 <div class="table-responsive small">
-                    <table class="table table-striped table-bordered table-hover table-sm">
+                    <table class="table table-bordered table-striped table-hover align-middle text-center">
                         <thead>
                             <tr class="text-center align-middle">
-                                <th>No</th>
+                                <th style="width: 50px;">No</th>
                                 <th>Pegawai</th>
                                 <th>Nama Suami/Istri</th>
                                 <th>TTL</th>
                                 <th>Profesi</th>
                                 <th>Tanggal Nikah</th>
                                 <th>Status</th>
-                                <th>Action</th>
+                                <th style="width: 100px;">Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -71,16 +71,16 @@
                             <tr>
                                 <td class="text-center">{{ $istris->firstItem() + $key }}</td>
                                 <td>
-                                    {{ $istri->pegawai->nip }} - {{ $istri->pegawai->nama }}
+                                    {{ $istri->pegawai->nip }} - {{ $istri->pegawai->nama_lengkap }}
                                 </td>
                                 <td>{{ $istri->nama }}</td>
-                                <td>{{ $istri->tempat_lahir }}<br>{{ $istri->tanggal_lahir }}</td>
+                                <td>{{ $istri->tempat_lahir }}, {{ \Carbon\Carbon::parse($istri->tanggal_lahir_istri)->translatedFormat('d F Y') }}</td>
                                 <td>{{ $istri->profesi }}</td>
-                                <td>{{ $istri->tanggal_nikah }}</td>
+                                <td>{{ \Carbon\Carbon::parse($istri->tanggal_nikah)->translatedFormat('d F Y') }}</td>
                                 <td>{{ $istri->status_hubungan }}</td>
                                 <td>
                                     <div class="d-flex justify-content-center">
-                                    <a href="{{ route('pegawai.show', $istri->pegawai->id) }}" class="btn btn-success btn-sm" title="Detial"><i class="bi bi-eye"></i></a>
+                                    <a href="{{ route('pegawai.show', $istri->pegawai->id) }}" onclick="localStorage.setItem('activePegawaiTab', '#suami-istri')" class="btn btn-success btn-sm" title="Detail"><i class="bi bi-eye"></i> Detail</a>
                                     </div>
                                 </td>
                             </tr>                                

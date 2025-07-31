@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Pegawai;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\Diklatfungsional;
 use App\Http\Controllers\Controller;
@@ -53,16 +54,18 @@ class DiklatfungsionalController extends Controller
     public function store(Request $request)
     {
         // melakukan validasi data
-        $request->validate([
+        $validatedData = $request->validate([
             'pegawai_id' => 'required|exists:pegawais,id',
             'nama'=>'required',
             'penyelenggara'=>'required',
             'jumlah_jam'=>'required',
-            'tanggal_selesai'=>'required'
+            'tanggal_selesai'=>'required|date_format:d-m-Y',
         ]);
+        // Format tanggal
+        $validatedData['tanggal_selesai'] = Carbon::createFromFormat('d-m-Y', $validatedData['tanggal_selesai'])->format('Y-m-d');
 
-        Diklatfungsional::create($request->all());
-        return redirect()->route('diklatfungsional.index', $request->pegawai_id)->with('success', 'Diklat Fungsional Berhasil Ditambahkan');
+        Diklatfungsional::create($validatedData);
+        return redirect()->back()->with('success', 'Diklat Fungsional Berhasil Ditambahkan');
     }
 
     /**
@@ -88,30 +91,27 @@ class DiklatfungsionalController extends Controller
     public function update(Request $request, Diklatfungsional $diklatfungsional)
     {
         // melakukan validasi data
-        $request->validate([
+        $validatedData = $request->validate([
             'pegawai_id' => 'required|exists:pegawais,id',
             'nama'=>'required',
             'penyelenggara'=>'required',
             'jumlah_jam'=>'required',
-            'tanggal_selesai'=>'required',
+            'tanggal_selesai'=>'required|date_format:d-m-Y',
         ]);
-        $diklatfungsional->update($request->all());
-        return redirect()->route('pegawai.show', $diklatfungsional->pegawai_id)->with('success', 'Diklat Fungsional Berhasil Diperbarui');
+        // Format tanggal
+        $validatedData['tanggal_selesai'] = Carbon::createFromFormat('d-m-Y', $validatedData['tanggal_selesai'])->format('Y-m-d');
+
+        $diklatfungsional->update($validatedData);
+        return redirect()->back()->with('success', 'Diklat Fungsional Berhasil Diperbarui');
 
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id)
+    public function destroy(Diklatfungsional $diklatfungsional)
     {
-        $diklatfungsional = Diklatfungsional::find($id);
-
-        if (!$diklatfungsional) {
-            return redirect()->back()->with('error', 'Diklat Fungsional tidak ditemukan!');
-        }
-
         $diklatfungsional->delete();
-        return redirect()->back()->with('success', 'Diklat Fungsional berhasil dihapus!');
+        return redirect()->back()->with('success', 'Diklat teknik berhasil dihapus!');
     }
 }

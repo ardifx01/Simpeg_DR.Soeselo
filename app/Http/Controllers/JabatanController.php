@@ -54,21 +54,43 @@ class JabatanController extends Controller
      */
     public function store(Request $request)
     {
-        // melakukan validasi data
         $request->validate([
             'pegawai_id' => 'required|exists:pegawais,id',
-            'nama'=>'required',
             'skpd'=>'required',
             'unit_kerja'=>'required',
+            'nama_jabatan'=>'required',
+            'formasi_jabatan'=>'nullable',
+            'formasi_jabatan_tingkat'=>'nullable',
+            'formasi_jabatan_keterangan'=>'nullable',
             'jenis_kepegawaian'=>'required',
             'jenis_jabatan'=>'required',
             'status'=>'required',
-            'tmt'=>'required',
-            'eselon'=>'required'
+            'pangkat'=>'nullable',
+            'golongan_ruang'=>'nullable',
+            'tmt_golongan_ruang'=>'nullable',
+            'golongan_ruang_cpns'=>'nullable',
+            'tmt_golongan_ruang_cpns'=>'nullable',
+            'tmt_pns'=>'nullable',
+            'eselon'=>'nullable',
+            'sk_pengangkatan_blud'=>'nullable',
+            'tgl_sk_pengangkatan_blud'=>'nullable|date',
+            'mou_awal_blud'=>'nullable',
+            'tgl_mou_awal_blud'=>'nullable|date',
+            'tmt_awal_mou_blud'=>'nullable|date',
+            'tmt_akhir_mou_blud'=>'nullable|date',
+            'mou_akhir_blud'=>'nullable',
+            'tgl_akhir_blud'=>'nullable|date',
+            'tmt_mou_akhir'=>'nullable|date',
+            'tmt_akhir_mou'=>'nullable|date',
+            'no_mou_mitra'=>'nullable',
+            'tgl_mou_mitra'=>'nullable|date',
+            'tmt_mou_mitra'=>'nullable|date',
+            'tmt_akhir_mou_mitra'=>'nullable|date',
         ]);
 
         Jabatan::create($request->all());
-        return redirect()->route('jabatan.index', $request->pegawai_id)->with('success', 'Jabatan Berhasil Ditambahkan');
+        return redirect()->back()
+        ->with('success', 'Jabatan Berhasil Ditambahkan');
     }
 
     /**
@@ -77,7 +99,6 @@ class JabatanController extends Controller
     public function show($id)
     {
         $pegawai = Pegawai::with('jabatan')->findOrFail($id);
-        dd($pegawai);
         return view('pegawai.show', compact('pegawai'));
     }
 
@@ -95,21 +116,43 @@ class JabatanController extends Controller
      */
     public function update(Request $request, Jabatan $jabatan)
     {
-        // melakukan validasi data
         $request->validate([
             'pegawai_id' => 'required|exists:pegawais,id',
-            'nama'=>'required',
             'skpd'=>'required',
             'unit_kerja'=>'required',
+            'nama_jabatan'=>'required',
+            'formasi_jabatan'=>'nullable',
+            'formasi_jabatan_tingkat'=>'nullable',
+            'formasi_jabatan_keterangan'=>'nullable',
             'jenis_kepegawaian'=>'required',
             'jenis_jabatan'=>'required',
             'status'=>'required',
-            'tmt'=>'required',
-            'eselon'=>'required'
+            'pangkat'=>'nullable',
+            'golongan_ruang'=>'nullable',
+            'tmt_golongan_ruang'=>'nullable',
+            'golongan_ruang_cpns'=>'nullable',
+            'tmt_golongan_ruang_cpns'=>'nullable',
+            'tmt_pns'=>'nullable',
+            'eselon'=>'nullable',
+            'sk_pengangkatan_blud'=>'nullable',
+            'tgl_sk_pengangkatan_blud'=>'nullable|date',
+            'mou_awal_blud'=>'nullable',
+            'tgl_mou_awal_blud'=>'nullable|date',
+            'tmt_awal_mou_blud'=>'nullable|date',
+            'tmt_akhir_mou_blud'=>'nullable|date',
+            'mou_akhir_blud'=>'nullable',
+            'tgl_akhir_blud'=>'nullable|date',
+            'tmt_mou_akhir'=>'nullable|date',
+            'tmt_akhir_mou'=>'nullable|date',
+            'no_mou_mitra'=>'nullable',
+            'tgl_mou_mitra'=>'nullable|date',
+            'tmt_mou_mitra'=>'nullable|date',
+            'tmt_akhir_mou_mitra'=>'nullable|date',
         ]);
 
         $jabatan->update($request->all());
-        return redirect()->route('jabatan.index', $request->pegawai_id)->with('success', 'Jabatan Berhasil Diperbarui');
+        return redirect()->back()
+        ->with('success', 'Jabatan Berhasil Diperbarui');
     }
 
     /**
@@ -148,17 +191,17 @@ class JabatanController extends Controller
     public function rekapJabatan()
     {
         // Ambil jumlah pegawai berdasarkan jabatan
-        $rekap = Jabatan::select('nama', DB::raw('count(*) as jumlah'))
-                        ->whereNotNull('nama')
-                        ->groupBy('nama')
-                        ->orderBy('nama', 'desc')
+        $rekap = Jabatan::select('nama_jabatan', DB::raw('count(*) as jumlah'))
+                        ->whereNotNull('nama_jabatan')
+                        ->groupBy('nama_jabatan')
+                        ->orderBy('nama_jabatan', 'desc')
                         ->get();
 
         // Hitung jumlah pegawai tanpa jabatan
-        $pegawaiTanpaJabatan = Jabatan::whereNull('nama')->count();
+        $pegawaiTanpaJabatan = Jabatan::whereNull('nama_jabatan')->count();
 
         // Ambil detail pegawai tanpa jabatan
-        $dataPegawaiTanpaJabatan = Jabatan::whereNull('nama')->get();
+        $dataPegawaiTanpaJabatan = Jabatan::whereNull('nama_jabatan')->get();
 
         return view('dashboard.rekapitulasi.jabatan', compact('rekap', 'pegawaiTanpaJabatan', 'dataPegawaiTanpaJabatan'));
     }

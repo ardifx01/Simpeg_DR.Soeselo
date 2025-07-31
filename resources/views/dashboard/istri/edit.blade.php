@@ -26,7 +26,7 @@
                     @csrf
                     @method('PUT')
                     <div class="row mb-3">
-                        <label for="pegawai_id" class="col-md-4 col-lg-3 col-form-label">1. Pegawai</label>
+                        <label for="pegawai_id" class="col-md-4 col-lg-3 col-form-label">Pegawai</label>
                         <div class="col-md-8 col-lg-9">
                             <select class="form-select" aria-label="Default select example" name="pegawai_id" id="pegawai_id" required>
                                 <option selected disabled>-- Pilih Pegawai --</option>
@@ -39,56 +39,55 @@
                         </div>
                     </div>
 
+                    <!-- Nama -->
                     <div class="row mb-3">
-                        <label for="nama" class="col-md-4 col-lg-3 col-form-label">2. Nama</label>
+                        <label for="nama_{{ $istri->id }}" class="col-md-4 col-lg-3 col-form-label">Nama</label>
                         <div class="col-md-8 col-lg-9">
-                            <input name="nama" type="text" class="form-control" id="nama" value="{{ old('nama') ?? $istri->nama }}" required>
+                            <input name="nama" type="text" class="form-control" id="nama_{{ $istri->id }}" value="{{ old('nama', $istri->nama) }}" required>
                         </div>
                     </div>
-                    
+
+                    <!-- Tempat, Tanggal Lahir -->
                     <div class="row mb-3">
-                        <label for="tempat_lahir" class="col-md-4 col-lg-3 col-form-label">3. Tempat Lahir</label>
+                        <label for="tempat_lahir_{{ $istri->id }}" class="col-md-4 col-lg-3 col-form-label">Tempat, Tanggal Lahir</label>
                         <div class="col-md-4 col-lg-3">
-                            <input name="tempat_lahir" type="text" class="form-control" id="tempat_lahir" value="{{ old('tempat_lahir') ?? $istri->tempat_lahir }}" required>
+                            <input name="tempat_lahir" type="text" class="form-control" id="tempat_lahir_{{ $istri->id }}" value="{{ old('tempat_lahir', $istri->tempat_lahir) }}" required>
                         </div>
                         <div class="col-md-4 col-lg-3">
-                            <div class="input-group mb-3">
-                                <input name="tanggal_lahir" type="text" class="form-control @error('tanggal_lahir') is-invalid @enderror" id="tanggal_lahir" aria-label="Recipient's username" aria-describedby="button-addon2" value="{{ old('tanggal_lahir') ?? $istri->tanggal_lahir }}" required>
-                                @error('tanggal_lahir')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                                <button class="btn btn-outline-secondary" type="button" for="tanggal_lahir" id="button-addon2"><i class="bi bi-calendar3"></i></button>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="row mb-3">
-                        <label for="profesi" class="col-md-4 col-lg-3 col-form-label">4. Profesi</label>
-                        <div class="col-md-8 col-lg-9">
-                            <input name="profesi" type="text" class="form-control" id="profesi" value="{{ old('profesi') ?? $istri->profesi }}">
-                        </div>
-                    </div>
-                    
-                    <div class="row mb-3">
-                        <label for="tanggal_nikah" class="col-md-4 col-lg-3 col-form-label">5. Tanggal Nikah</label>
-                        <div class="col-md-4 col-lg-3">
-                            <div class="input-group mb-3">
-                                <input name="tanggal_nikah" type="text" class="form-control @error('tanggal_nikah') is-invalid @enderror" id="tanggal_nikah" aria-label="Recipient's username" aria-describedby="button-addon2" value="{{ old('tanggal_nikah') ?? $istri->tanggal_nikah }}" required>
-                                @error('tanggal_nikah')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                                <button class="btn btn-outline-secondary" type="button" for="tanggal_nikah" id="button-addon2"><i class="bi bi-calendar3"></i></button>
+                            <div class="input-group">
+                                <input name="tanggal_lahir_istri" type="text" class="form-control" id="tanggal_lahir_istri_edit_{{ $istri->id }}" value="{{ old('tanggal_lahir_istri', \Carbon\Carbon::parse($istri->tanggal_lahir_istri)->format('d-m-Y')) }}" required>
+                                <button class="btn btn-outline-secondary" type="button" for="tanggal_lahir_istri_edit_{{ $istri->id }}"><i class="bi bi-calendar3"></i></button>
                             </div>
                         </div>
                     </div>
 
+                    <!-- Profesi -->
                     <div class="row mb-3">
-                        <label for="status_hubungan" class="col-md-4 col-lg-3 col-form-label">6. Status Hubungan</label>
+                        <label for="profesi_{{ $istri->id }}" class="col-md-4 col-lg-3 col-form-label">Profesi</label>
+                        <div class="col-md-8 col-lg-9">
+                            <input name="profesi" type="text" class="form-control" id="profesi_{{ $istri->id }}" value="{{ old('profesi', $istri->profesi) }}" required>
+                        </div>
+                    </div>
+
+                    <!-- Tanggal Nikah -->
+                    <div class="row mb-3">
+                        <label for="tanggal_nikah_edit_{{ $istri->id }}" class="col-md-4 col-lg-3 col-form-label">Tanggal Nikah</label>
                         <div class="col-md-4 col-lg-3">
-                            <select class="form-select" aria-label="Default select example" name="status_hubungan" id="status_hubungan">
-                                <option selected>...</option>
-                                <option value="Suami" {{ (old('status_hubungan') ?? $istri->status_hubungan)=='Suami' ? 'selected': '' }} >1. Suami</option>
-                                <option value="Istri" {{ (old('status_hubungan') ?? $istri->status_hubungan)=='Istri' ? 'selected': '' }} >2. Istri</option>
+                            <div class="input-group">
+                                <input name="tanggal_nikah" type="text" class="form-control" id="tanggal_nikah_edit_{{ $istri->id }}" value="{{ old('tanggal_nikah', \Carbon\Carbon::parse($istri->tanggal_nikah)->format('d-m-Y')) }}" required>
+                                <button class="btn btn-outline-secondary" type="button" for="tanggal_nikah_edit_{{ $istri->id }}"><i class="bi bi-calendar3"></i></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Status Hubungan -->
+                    <div class="row mb-3">
+                        <label for="status_hubungan_{{ $istri->id }}" class="col-md-4 col-lg-3 col-form-label">Status Hubungan</label>
+                        <div class="col-md-4 col-lg-3">
+                            <select class="form-select" name="status_hubungan" id="status_hubungan_{{ $istri->id }}" required>
+                                <option disabled>-- Pilihan --</option>
+                                <option value="Suami" {{ old('status_hubungan', $istri->status_hubungan) == 'Suami' ? 'selected' : '' }}>Suami</option>
+                                <option value="Istri" {{ old('status_hubungan', $istri->status_hubungan) == 'Istri' ? 'selected' : '' }}>Istri</option>
                             </select>
                         </div>
                     </div>

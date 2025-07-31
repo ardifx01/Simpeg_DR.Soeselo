@@ -2,12 +2,12 @@
 <div class="view">
     <div class="d-flex justify-content-end">
         <!-- Button Trigger Upload Modal -->
-        <button type="button" class="btn btn-primary btn-sm mb-3" data-bs-toggle="modal" data-bs-target="#uploadarsipModal{{$pegawai->id}}">
+        <button type="button" class="btn btn-primary btn-sm mb-3" data-bs-toggle="modal" data-bs-target="#uploadarsipModal">
             <i class="bi bi-plus-circle"></i> Upload Arsip
         </button>
         
         <!-- Upload Modal -->
-        <div class="modal fade" id="uploadarsipModal{{$pegawai->id}}" tabindex="-1" aria-labelledby="uploadarsipModalLabel" aria-hidden="true">
+        <div class="modal fade" id="uploadarsipModal" tabindex="-1" aria-labelledby="uploadarsipModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -18,7 +18,7 @@
                     <form action="{{ route('arsip.store') }}" method="POST" enctype="multipart/form-data" style="display:inline;">
                         @csrf
                         <div class="container row">
-                            <input type="hidden" name="pegawai_id" value="{{ $pegawai->id }}">
+                            <input type="hidden" name="pegawai_id" value="{{ isset($pegawai) && $pegawai ? $pegawai->id : '' }}">
                             <label for="jenis" class="col-md-4 col-lg-3 col-form-label">Nama Arsip</label>
                             <div class="col-md-8 col-lg-9">
                                 <select class="form-select" aria-label="Default select example" name="jenis" id="jenis">
@@ -55,7 +55,7 @@
                             </div>
                             <div class="row mb-3 form-group">
                                 <label for="file" class="col-md-4 col-lg-3 col-form-label">File</label>
-                                <div class="col-md- col-lg-9">
+                                <div class="col-md-8 col-lg-9">
                                     <input name="file" type="file" class="form-control @error('file') is-invalid @enderror" id="file" accept=".pdf" required>
                                     @error('file')
                                         <div class="text-danger">{{ $message }}</div>
@@ -84,17 +84,20 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach ($pegawai->arsips as $arsip)
+                @php
+                    $arsips = isset($pegawai) && $pegawai ? $pegawai->arsips : [];
+                @endphp
+                @forelse ($arsips as $arsip)
                 <tr>
-                    <td text-center>{{ $loop->iteration }}</td>
+                    <td class="text-center">{{ $loop->iteration }}</td>
                     <td>{{ $arsip->jenis }}</td>
                     <td><a href="{{ route('arsip.view', $arsip->id) }}" target="_blank" class="text-danger fw-bold">
                         <i class="bi bi-file-earmark-pdf fs-4"></i></a>
                     </td>
                     <td>
                         <div class="d-flex justify-content-center">
-                            <!-- Button Trigger Upload Modal -->
-                            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editarsipModal{{ $pegawai->id }}">
+                            <!-- Button Trigger Edit Modal -->
+                            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editarsipModal{{ $arsip->id }}">
                                 <i class="bi bi-pencil-square"></i>
                             </button>
                             <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#hapusarsipModal{{ $arsip->id }}">
@@ -103,11 +106,11 @@
                         </div>
 
                         <!-- Edit Modal -->
-                        <div class="modal fade" id="editarsipModal{{$pegawai->id}}" tabindex="-1" aria-labelledby="editarsipModalLabel" aria-hidden="true">
+                        <div class="modal fade" id="editarsipModal{{ $arsip->id }}" tabindex="-1" aria-labelledby="editarsipModalLabel{{ $arsip->id }}" aria-hidden="true">
                             <div class="modal-dialog">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h1 class="modal-title fs-5" id="editarsipModalLabel">Upload Arsip Kepegawaian</h1>
+                                        <h1 class="modal-title fs-5" id="editarsipModalLabel{{ $arsip->id }}">Edit Arsip Kepegawaian</h1>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
@@ -115,10 +118,10 @@
                                         @csrf
                                         @method('PUT')
                                         <div class="container row">
-                                            <input type="hidden" name="pegawai_id" value="{{ $pegawai->id }}">
-                                            <label for="jenis" class="col-md-4 col-lg-3 col-form-label">Nama Arsip</label>
+                                            <input type="hidden" name="pegawai_id" value="{{ isset($pegawai) && $pegawai ? $pegawai->id : '' }}">
+                                            <label for="jenis_edit_{{ $arsip->id }}" class="col-md-4 col-lg-3 col-form-label">Nama Arsip</label>
                                             <div class="col-md-8 col-lg-9 mb-3">
-                                                <select class="form-select" aria-label="Default select example" name="jenis" id="jenis">
+                                                <select class="form-select" aria-label="Default select example" name="jenis" id="jenis_edit_{{ $arsip->id }}">
                                                     <option selected>...</option>
                                                     <option value="SK CPNS" {{ (old('jenis') ?? $arsip->jenis)=='SK CPNS' ? 'selected': '' }} >SK CPNS</option>
                                                     <option value="Surat Tugas" {{ (old('jenis') ?? $arsip->jenis)=='Surat Tugas' ? 'selected': '' }} >Surat Tugas</option>
@@ -151,9 +154,9 @@
                                                 </select>
                                             </div>
                                             <div class="row mb-3 form-group">
-                                                <label for="file" class="col-md-4 col-lg-3 col-form-label">File</label>
+                                                <label for="file_edit_{{ $arsip->id }}" class="col-md-4 col-lg-3 col-form-label">File</label>
                                                 <div class="col-md-8 col-lg-9">
-                                                    <input name="file" type="file" class="form-control @error('file') is-invalid @enderror" id="file" accept=".pdf" required>
+                                                    <input name="file" type="file" class="form-control @error('file') is-invalid @enderror" id="file_edit_{{ $arsip->id }}" accept=".pdf" required>
                                                     @error('file')
                                                         <div class="text-danger">{{ $message }}</div>
                                                     @enderror
@@ -171,11 +174,11 @@
                         </div><!-- End Edit Modal -->
 
                         <!-- Confirm Delete Modal -->
-                        <div class="modal fade" id="hapusarsipModal{{ $arsip->id }}" tabindex="-1" aria-labelledby="hapusarsipModalLabel" aria-hidden="true">
+                        <div class="modal fade" id="hapusarsipModal{{ $arsip->id }}" tabindex="-1" aria-labelledby="hapusarsipModalLabel{{ $arsip->id }}" aria-hidden="true">
                             <div class="modal-dialog">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title" id="hapusarsipModalLabel">Konfirmasi Hapus</h5>
+                                        <h5 class="modal-title" id="hapusarsipModalLabel{{ $arsip->id }}">Konfirmasi Hapus</h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
@@ -193,9 +196,13 @@
                             </div>
                         </div>
                     </td>
-                </tr>                                
-                @endforeach
+                </tr>
+                @empty
+                <tr>
+                    <td colspan="4" class="text-center">Belum ada data</td>
+                </tr>
+                @endforelse
             </tbody>
-            </table>
-        </div>
+        </table>
+    </div>
 </div><!-- End Arsip view -->

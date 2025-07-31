@@ -159,7 +159,7 @@
                         </li>
                         
                         <li class="nav-item">
-                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#suami/i"><i class="bi bi-people-fill"></i> Suami/Istri</button>
+                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#suami-istri"><i class="bi bi-people-fill"></i> Suami/Istri</button>
                         </li>
 
                         <li class="nav-item">
@@ -186,7 +186,7 @@
                         <button class="nav-link" data-bs-toggle="tab" data-bs-target="#arsip"><i class="bi bi-folder-fill"></i></i> Arsip</button>
                         </li>
                     </ul>
-                    <div class="tab-content pt-2">
+                    <div class="tab-content pt-2 d-none" id="pegawai-tabs">
                         <div class="tab-pane fade show active profile-overview ms-3" id="profile-overview">
                             @include('dashboard.partials.profile')
                         </div>
@@ -195,7 +195,7 @@
                             @include('dashboard.partials.jabatan')
                         </div>
 
-                        <div class="tab-pane fade suami/i pt-3" id="suami/i">
+                        <div class="tab-pane fade pt-3" id="suami-istri">
                             @include('dashboard.partials.istri')
                         </div>
 
@@ -226,4 +226,27 @@
                 </div>
             </div>
         </div>
+        <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const triggerTabList = document.querySelectorAll('button[data-bs-toggle="tab"]');
+
+            triggerTabList.forEach(function (triggerEl) {
+                triggerEl.addEventListener('shown.bs.tab', function (event) {
+                    const tabTarget = event.target.getAttribute('data-bs-target');
+                    localStorage.setItem('activePegawaiTab', tabTarget);
+                });
+            });
+
+            const savedTab = localStorage.getItem('activePegawaiTab');
+            if (savedTab) {
+                const someTabTriggerEl = document.querySelector(`button[data-bs-target="${savedTab}"]`);
+                if (someTabTriggerEl) {
+                    new bootstrap.Tab(someTabTriggerEl).show();
+                }
+            }
+
+            // Tampilkan kembali tab setelah selesai menentukan tab aktif
+            document.getElementById('pegawai-tabs').classList.remove('d-none');
+        });
+        </script>
 @endsection

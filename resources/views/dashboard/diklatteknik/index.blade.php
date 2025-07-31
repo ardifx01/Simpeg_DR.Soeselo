@@ -53,16 +53,16 @@
                     </div>
                 </div>
                 <div class="table-responsive small">
-                    <table class="table table-striped table-bordered table-hover table-sm">
+                    <table class="table table-bordered table-striped table-hover align-middle text-center">
                         <thead>
                             <tr class="text-center align-middle">
-                                <th>No</th>
+                                <th style="width: 50px;">No</th>
                                 <th>Pegawai</th>
                                 <th>Nama</th>
                                 <th>Penyelenggara</th>
                                 <th>Jumlah Jam</th>
                                 <th>Tanggal Selesai</th>
-                                <th>Action</th>
+                                <th style="width: 100px;">Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -70,15 +70,15 @@
                             <tr>
                                 <td class="text-center">{{ $diklattekniks->firstItem() + $key }}</td>
                                 <td>
-                                    {{ $diklatteknik->pegawai->nip }} - {{ $diklatteknik->pegawai->nama }}
+                                    {{ $diklatteknik->pegawai->nip }} - {{ $diklatteknik->pegawai->nama_lengkap }}
                                 </td>
                                 <td>{{ $diklatteknik->nama }}</td>
                                 <td>{{ $diklatteknik->penyelenggara }}</td>
                                 <td>{{ $diklatteknik->jumlah_jam }}</td>
-                                <td>{{ $diklatteknik->tanggal_selesai }}</td>
+                                <td>{{ \Carbon\Carbon::parse($diklatteknik->tanggal_selesai)->translatedFormat('d F Y') }}</td>
                                 <td>
                                     <div class="d-flex justify-content-center">
-                                        <a href="{{ route('pegawai.show', $diklatteknik->pegawai->id) }}" class="btn btn-success btn-sm" title="Detial"><i class="bi bi-eye"></i></a>
+                                        <a href="{{ route('pegawai.show', $diklatteknik->pegawai->id) }}" onclick="localStorage.setItem('activePegawaiTab', '#diklat')" class="btn btn-success btn-sm" title="Detail"><i class="bi bi-eye"></i> Detail</a>
                                     </div>
                                 </td>
                             </tr>                                

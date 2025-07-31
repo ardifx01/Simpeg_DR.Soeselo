@@ -23,12 +23,12 @@ class DashboardController extends Controller
         $jumlahdiklat = Diklatfungsional::count() + Diklatjabatan::count() + Diklatteknik::count();// jumlah Diklat
 
         // Rekapitulasi Data Pegawai
-        $rekapGolongan = Pegawai::select('golongan_ruang', DB::raw("COUNT(*) as jumlah"))
+        $rekapGolongan = Jabatan::select('golongan_ruang', DB::raw("COUNT(*) as jumlah"))
             ->groupBy('golongan_ruang')
             ->get();
 
-        $rekapJabatan = Jabatan::select('nama', DB::raw("COUNT(*) as jumlah"))
-            ->groupBy('nama')
+        $rekapJabatan = Jabatan::select('nama_jabatan', DB::raw("COUNT(*) as jumlah"))
+            ->groupBy('nama_jabatan')
             ->get();
 
         $rekapEselon = Jabatan::select('eselon', DB::raw("COUNT(*) as jumlah"))

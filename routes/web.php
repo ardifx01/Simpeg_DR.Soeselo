@@ -68,9 +68,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard/statistik/cetak_pdf', [StatistikController::class, 'cetak'])->name('statistik.cetak');
     Route::prefix('/dashboard/nominatif')->name('dashboard.nominatif.')->group(function () {
         Route::get('/', [NominatifController::class, 'index'])->name('index');
-        Route::post('/show', [NominatifController::class, 'show'])->name('show');
+        Route::post('/', [NominatifController::class, 'index']);
+        Route::get('/clear', [NominatifController::class, 'clearResults'])->name('clear');
         Route::get('/cetak', [NominatifController::class, 'cetak'])->name('cetak');
         Route::get('/preview', [NominatifController::class, 'preview'])->name('preview');
+        Route::get('/export-excel', [NominatifController::class, 'exportExcel'])->name('exportExcel');
     });
     Route::get('/dashboard/rekap-golongan', [PegawaiController::class, 'rekapGolongan'])->name('rekap.golongan');
     Route::get('/dashboard/rekap-jabatan', [JabatanController::class, 'rekapJabatan'])->name('rekap.jabatan');

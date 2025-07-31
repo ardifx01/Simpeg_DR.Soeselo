@@ -15,7 +15,7 @@
         table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 8pt; /* Ukuran font lebih kecil untuk diklat */
+            font-size: 8pt;
         }
         th, td {
             border: 1px solid #000;

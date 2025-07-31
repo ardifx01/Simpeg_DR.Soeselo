@@ -26,10 +26,10 @@ class PegawaiController extends Controller
             });
         }
 
-        // Filter berdasarkan unit kerja dari relasi jabatan
-        if ($request->filled('unit_kerja')) {
+        // Filter berdasarkan nama jabatan dari relasi jabatan
+        if ($request->filled('nama_jabatan')) {
             $query->whereHas('jabatan', function ($q) use ($request) {
-                $q->where('unit_kerja', $request->unit_kerja);
+                $q->where('nama_jabatan', $request->nama_jabatan);
             });
         }
 
@@ -49,7 +49,7 @@ class PegawaiController extends Controller
 
         // Data untuk filter
         $jeniskepegawaianList = \App\Models\Jabatan::distinct()->pluck('jenis_kepegawaian');
-        $unitkerjaList = \App\Models\Jabatan::distinct()->pluck('unit_kerja');
+        $namajabatanList = \App\Models\Jabatan::distinct()->pluck('nama_jabatan');
 
         // Jika request berupa AJAX
         if ($request->ajax()) {
@@ -61,7 +61,7 @@ class PegawaiController extends Controller
         // Return view dengan semua data
         return view('dashboard.pegawai.index', compact(
             'pegawais',
-            'unitkerjaList',
+            'namajabatanList',
             'jeniskepegawaianList'
         ));
     }
@@ -71,7 +71,6 @@ class PegawaiController extends Controller
      */
     public function create()
     {
-        $pegawais = Pegawai::all();
         return view('dashboard.pegawai.create');
     }
 
@@ -82,7 +81,7 @@ class PegawaiController extends Controller
     {
         // melakukan validasi data
         $validatedData = $request->validate([
-            'image' => 'nullable|file|max:2048|mimes:jpg,jpeg,png,gif,bmp',
+            'image' => 'nullable|file|max:5120|mimes:jpg,jpeg,png,gif,bmp',
             'nip' => 'required',
             'nip_lama' => 'nullable',
             'no_karpeg' => 'nullable',
@@ -93,7 +92,7 @@ class PegawaiController extends Controller
             'gelar_depan' => 'nullable|max:5',
             'gelar_belakang' => 'nullable|max:5',
             'tempat_lahir' => 'required|max:45',
-            'tanggal_lahir' => 'required',
+            'tanggal_lahir' => 'required|date_format:d-m-Y',
             'jenis_kelamin' => 'required',
             'agama' => 'required',
             'status_nikah' => 'required',
@@ -106,12 +105,12 @@ class PegawaiController extends Controller
             'provinsi' => 'nullable',
             'pos' => 'nullable',
             'telepon' => 'required',
-            'golongan_ruang' => 'nullable',
-            'tmt_golongan_ruang' => 'nullable',
-            'golongan_ruang_cpns' => 'nullable',
-            'tmt_golongan_ruang_cpns' => 'nullable',
-            'tmt_pns' => 'nullable'
         ]);
+
+        // Konversi tanggal_lahir dari dd-mm-yyyy ke YYYY-MM-DD sebelum disimpan
+        if (!empty($validatedData['tanggal_lahir'])) {
+            $validatedData['tanggal_lahir'] = Carbon::createFromFormat('d-m-Y', $validatedData['tanggal_lahir'])->format('Y-m-d');
+        }
 
         //upload image
         if ($request->file('image')) {
@@ -119,18 +118,23 @@ class PegawaiController extends Controller
             $validatedData['image'] = $request->file('image')->store('foto-profile', 'public');
         }
 
+        // Simpan ke database dan simpan ID-nya
+        $pegawai = Pegawai::create($validatedData);
 
-        Pegawai::create($validatedData);
-                
-        return redirect('/dashboard/pegawai')->with('success', 'Berhasil Menambahkan Pegawai');
+        // Redirect ke halaman show pegawai
+        return redirect()->route('pegawai.show', $pegawai->id)->with('success', 'Berhasil Menambahkan Pegawai');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Pegawai $pegawai)
+    public function show(Pegawai $pegawai, Request $request)
     {
-        return view('dashboard.partials.show', compact('pegawai'));
+        $pegawai->load('jabatan');
+
+        $jabatan = $pegawai->jabatan;
+
+        return view('dashboard.partials.show', compact('pegawai', 'jabatan'));
     }
 
     /**
@@ -144,13 +148,13 @@ class PegawaiController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Pegawai $pegawai)
     {
         // melakukan validasi data
         $validatedData = $request->validate([
-            'image' => 'nullable|file|max:2048|mimes:jpg,jpeg,png,gif,bmp',
+            'image' => 'nullable|file|max:5120|mimes:jpg,jpeg,png,gif,bmp',
             'nip' => 'required',
-            'nip_lama' => 'required',
+            'nip_lama' => 'nullable',
             'no_karpeg' => 'nullable',
             'no_kpe' => 'nullable',
             'no_ktp' => 'required',
@@ -159,7 +163,7 @@ class PegawaiController extends Controller
             'gelar_depan' => 'nullable|max:5',
             'gelar_belakang' => 'nullable|max:5',
             'tempat_lahir' => 'required|max:45',
-            'tanggal_lahir' => 'required',
+            'tanggal_lahir' => 'required|date_format:d-m-Y',
             'jenis_kelamin' => 'required',
             'agama' => 'required',
             'status_nikah' => 'required',
@@ -172,29 +176,27 @@ class PegawaiController extends Controller
             'provinsi' => 'nullable',
             'pos' => 'nullable',
             'telepon' => 'required',
-            'golongan_ruang' => 'nullable',
-            'tmt_golongan_ruang' => 'nullable',
-            'golongan_ruang_cpns' => 'nullable',
-            'tmt_golongan_ruang_cpns' => 'nullable',
-            'tmt_pns' => 'nullable'   
-            ]);
-        
-        $pegawai = Pegawai::findOrFail($id);
+        ]);
 
+        // Konversi tanggal_lahir dari dd-mm-yyyy ke YYYY-MM-DD sebelum disimpan
+        if (!empty($validatedData['tanggal_lahir'])) {
+            $validatedData['tanggal_lahir'] = Carbon::createFromFormat('d-m-Y', $validatedData['tanggal_lahir'])->format('Y-m-d');
+        }
+        
+        // Upload image baru jika ada
         if ($request->hasFile('image')) {
-            // Hapus gambar lama jika ada dan file-nya benar-benar ada di storage
+            // Hapus image lama jika ada
             if ($pegawai->image && Storage::disk('public')->exists($pegawai->image)) {
                 Storage::disk('public')->delete($pegawai->image);
             }
 
-            // Simpan gambar baru di direktori 'foto-profile' pada disk 'public'
-            $pegawai->image = $request->file('image')->store('foto-profile', 'public');
+            // Simpan image baru
+            $validatedData['image'] = $request->file('image')->store('foto-profile', 'public');
         }
 
-        
         $pegawai->update($validatedData);
 
-        return redirect('/dashboard/pegawai')->with('success', 'Berhasil Mengubah Data Pegawai');
+        return redirect()->route('pegawai.show', $pegawai->id)->with('success', 'Berhasil Memperbarui Pegawai');
     }
     
     /**
@@ -210,26 +212,26 @@ class PegawaiController extends Controller
         return redirect('/dashboard/pegawai')->with('success','Data Pegawai Berhasil Dihapus' );
     }
 
-    public function updateImage(Request $request, $id)
-    {
-        $validated = $request->validate([
-            'image' => 'required|image|mimes:jpg,jpeg,png,gif,bmp|max:2048',
-        ]);
+    // public function updateImage(Request $request, $id)
+    // {
+    //     $validated = $request->validate([
+    //         'image' => 'required|image|mimes:jpg,jpeg,png,gif,bmp|max:2048',
+    //     ]);
 
-        $pegawai = Pegawai::findOrFail($id);
+    //     $pegawai = Pegawai::findOrFail($id);
 
-        // Hapus gambar lama jika ada
-        if ($pegawai->image && Storage::disk('public')->exists($pegawai->image)) {
-            Storage::disk('public')->delete($pegawai->image);
-        }
+    //     // Hapus gambar lama jika ada
+    //     if ($pegawai->image && Storage::disk('public')->exists($pegawai->image)) {
+    //         Storage::disk('public')->delete($pegawai->image);
+    //     }
 
-        // Simpan gambar baru
-        $path = $request->file('image')->store('foto-profile', 'public');
-        $pegawai->image = $path;
-        $pegawai->save();
+    //     // Simpan gambar baru
+    //     $path = $request->file('image')->store('foto-profile', 'public');
+    //     $pegawai->image = $path;
+    //     $pegawai->save();
 
-        return redirect()->back()->with('success', 'Foto pegawai berhasil diperbarui.');
-    }
+    //     return redirect()->back()->with('success', 'Foto pegawai berhasil diperbarui.');
+    // }
 
     public function rekapGolongan()
     {
@@ -296,13 +298,13 @@ class PegawaiController extends Controller
 
         // Hitung jumlah pegawai tanpa status nikah
         $pegawaiTanpaStatusNikah = Pegawai::whereNull('status_nikah')->count();
-        
+
         // Ambil detail pegawai tanpa status nikah
         $dataPegawaiTanpaStatusNikah = Pegawai::whereNull('status_nikah')->get();
 
         return view('dashboard.rekapitulasi.status-nikah', compact('rekap', 'pegawaiTanpaStatusNikah' ,'dataPegawaiTanpaStatusNikah'));
     }
-    
+
     public function getData($id)
     {
         $pegawai = Pegawai::with('jabatan', 'pendidikans')->findOrFail($id);

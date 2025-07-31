@@ -24,8 +24,8 @@ return new class extends Migration
             $table->string('gelar_depan')->nullable();
             $table->string('gelar_belakang')->nullable();
             $table->string('tempat_lahir');
-            $table->string('tanggal_lahir');
-            $table->string('jenis_kelamin');
+            $table->date('tanggal_lahir');
+            $table->enum('jenis_kelamin', ['Laki-laki', 'Perempuan']);
             $table->string('agama');
             $table->string('status_nikah');
             $table->text('alamat')->nullable();
@@ -36,12 +36,7 @@ return new class extends Migration
             $table->string('kabupaten')->nullable();
             $table->string('provinsi')->nullable();
             $table->string('pos')->nullable();
-            $table->string('telepon');
-            $table->string('golongan_ruang')->nullable();
-            $table->string('tmt_golongan_ruang')->nullable();
-            $table->string('golongan_ruang_cpns')->nullable();
-            $table->string('tmt_golongan_ruang_cpns')->nullable();
-            $table->string('tmt_pns')->nullable();
+            $table->string('telepon')->nullable();;
             $table->timestamps();
         });
     }

@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('pegawai_id')->constrained('pegawais')->onDelete('cascade');
             $table->string('nama');
             $table->string('pemberi');
-            $table->date('tahun');
+            $table->date('tanggal_penghargaan');
             $table->timestamps();
         });
     }

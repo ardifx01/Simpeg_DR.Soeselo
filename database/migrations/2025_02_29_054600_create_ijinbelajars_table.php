@@ -14,12 +14,12 @@ return new class extends Migration
         Schema::create('ijinbelajars', function (Blueprint $table) {
             $table->id();
             $table->foreignId('pegawai_id')->constrained('pegawais')->onDelete('cascade');
-            $table->string('tingkat');
-            $table->string('jenis');
-            $table->string('nama');
-            $table->date('tahun_lulus');
-            $table->integer('no_ijazah');
-            $table->date('tanggal_ijazah');
+            $table->string('tingkat_ijin');
+            $table->string('jenis_ijin');
+            $table->string('nama_ijin');
+            $table->year('tahun_lulus_ijin');
+            $table->string('no_ijazah_ijin');
+            $table->date('tanggal_ijazah_ijin');
             $table->timestamps();
         });
     }

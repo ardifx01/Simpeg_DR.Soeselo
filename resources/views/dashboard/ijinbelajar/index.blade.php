@@ -53,10 +53,10 @@
                     </div>
                 </div>
                 <div class="table-responsive small">
-                    <table class="table table-striped table-bordered table-hover table-sm">
+                    <table class="table table-bordered table-striped table-hover align-middle text-center">
                         <thead>
                             <tr class="text-center align-middle">
-                                <th>No</th>
+                                <th style="width: 50px;">No</th>
                                 <th>Pegawai</th>
                                 <th>Tingkat ijinbelajar</th>
                                 <th>Jenis Bantuan</th>
@@ -64,7 +64,7 @@
                                 <th>Tahun Lulus</th>
                                 <th>No Ijazah</th>
                                 <th>Tanggal Ijazah</th>
-                                <th>Action</th>
+                                <th style="width: 100px;">Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -72,17 +72,18 @@
                             <tr>
                                 <td class="text-center">{{ $ijinbelajars->firstItem() + $key }}</td>
                                 <td>
-                                    {{ $ijinbelajar->pegawai->nip }} - {{ $ijinbelajar->pegawai->nama }}
+                                    {{ $ijinbelajar->pegawai->nip }} - {{ $ijinbelajar->pegawai->nama_lengkap }}
                                 </td>
-                                <td>{{ $ijinbelajar->tingkat }}</td>
-                                <td>{{ $ijinbelajar->jenis }}</td>
-                                <td>{{ $ijinbelajar->sama }}</td>
-                                <td>{{ $ijinbelajar->tahun_lulus }}</td>
-                                <td>{{ $ijinbelajar->no_ijazah }}</td>
-                                <td>{{ $ijinbelajar->tanggal_ijazah }}</td>
+                                <td>{{ $ijinbelajar->tingkat_ijin }}</td>
+                                <td>{{ $ijinbelajar->jenis_ijin }}</td>
+                                <td>{{ $ijinbelajar->nama_ijin }}</td>
+                                <td>{{ $ijinbelajar->tahun_lulus_ijin }}</td>
+                                <td>{{ $ijinbelajar->no_ijazah_ijin }}</td>
+                                <td>{{ \Carbon\Carbon::parse($ijinbelajar->tanggal_ijazah)->translatedFormat('d F Y') }}</td>
                                 <td>
                                     <div class="d-flex justify-content-center">
-                                    <a href="{{ route('pegawai.show', $ijinbelajar->pegawai->id) }}" class="btn btn-success btn-sm" title="Detial"><i class="bi bi-eye"></i></a>
+                                        <a href="{{ route('pegawai.show', $ijinbelajar->pegawai->id) }}" onclick="localStorage.setItem('activePegawaiTab', '#anak')" class="btn btn-success btn-sm" title="Detail"><i class="bi bi-eye"></i> Detail</a>
+                                    </div>
                                 </td>
                             </tr>                                
                             @endforeach

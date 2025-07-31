@@ -53,17 +53,17 @@
                     </div>
                 </div>
                 <div class="table-responsive small">
-                    <table class="table table-striped table-bordered table-hover table-sm">
+                    <table class="table table-bordered table-striped table-hover align-middle text-center">
                         <thead>
                             <tr class="text-center align-middle">
-                                <th>No</th>
+                                <th style="width: 50px;">No</th>
                                 <th>Pegawai</th>
                                 <th>Nama Anak</th>
                                 <th>TTL</th>
                                 <th>Status keluarga</th>
                                 <th>Status Tunjangan</th>
                                 <th>Jenis Kelamin</th>
-                                <th>Action</th>
+                                <th style="width: 100px;">Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -71,16 +71,16 @@
                             <tr>
                                 <td class="text-center">{{ $anaks->firstItem() + $key }}</td>
                                 <td>
-                                    {{ $anak->pegawai->nip }} - {{ $anak->pegawai->nama }}
+                                    {{ $anak->pegawai->nip }} - {{ $anak->pegawai->nama_lengkap }}
                                 </td>
                                 <td>{{ $anak->nama }}</td>
-                                <td>{{ $anak->tempat_lahir }}<br>{{ $anak->tanggal_lahir }}</td>
+                                <td>{{ $anak->tempat_lahir }}, {{ \Carbon\Carbon::parse($anak->tanggal_lahir_anak)->translatedFormat('d F Y') }}</td>
                                 <td>{{ $anak->status_keluarga }}</td>
                                 <td>{{ $anak->status_tunjangan }}</td>
                                 <td>{{ $anak->jenis_kelamin }}</td>
                                 <td>
                                     <div class="d-flex justify-content-center">
-                                        <a href="{{ route('pegawai.show', $anak->pegawai->id) }}" class="btn btn-success btn-sm" title="Detial"><i class="bi bi-eye"></i></a>
+                                        <a href="{{ route('pegawai.show', $anak->pegawai->id) }}" onclick="localStorage.setItem('activePegawaiTab', '#anak')" class="btn btn-success btn-sm" title="Detail"><i class="bi bi-eye"></i> Detail</a>
                                     </div>
                                 </td>
                             </tr>                                

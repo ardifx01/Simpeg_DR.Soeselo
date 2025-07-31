@@ -61,8 +61,7 @@
                         </button>
                         @if(request('kategori'))
                             <div class="btn-group" role="group">
-                                <a href="{{ route('statistik.preview', request()->query()) }}" 
-                                class="btn btn-success btn-sm" target="_blank">
+                                <a href="{{ route('statistik.preview', request()->query()) }}" class="btn btn-success btn-sm" target="_blank">
                                     <i class="bi bi-printer"></i> Cetak Statistik
                                 </a>
                             </div>

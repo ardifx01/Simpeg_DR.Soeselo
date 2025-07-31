@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Pegawai;
+use Carbon\Carbon;
 use App\Models\Ijinbelajar;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -21,9 +22,9 @@ class IjinbelajarController extends Controller
         // Cek apakah ada pencarian
         if ($request->has('search')) {
             $search = $request->search;
-            $query->where('tingkat', 'like', "%$search%")
-                ->orWhere('jenis', 'like', "%$search%")
-                ->orWhere('nama', 'like', "%$search%");
+            $query->where('tingkat_ijin', 'like', "%$search%")
+                ->orWhere('jenis_ijin', 'like', "%$search%")
+                ->orWhere('nama_ijin', 'like', "%$search%");
         }
 
         // Ambil jumlah data per halaman dari request (default 10)
@@ -56,18 +57,22 @@ class IjinbelajarController extends Controller
     public function store(Request $request)
     {
         // melakukan validasi data
-        $request->validate([
+        $validatedData = $request->validate([
             'pegawai_id' => 'required|exists:pegawais,id',
-            'tingkat'=>'required',
-            'jenis'=>'required',
-            'nama'=>'required',
-            'tahun_lulus'=>'required',
-            'no_ijazah'=>'required',
-            'tanggal_ijazah'=>'required'
+            'tingkat_ijin'=>'required',
+            'jenis_ijin'=>'required',
+            'nama_ijin'=>'required',
+            'tahun_lulus_ijin'=>'required',
+            'no_ijazah_ijin'=>'required',
+            'tanggal_ijazah_ijin'=>'required|date_format:d-m-Y',
         ]);
 
-        Ijinbelajar::create($request->all());
-        return redirect()->route('ijinbelajar.index', $request->pegawai_id)->with('success', 'Ijin Belajar Berhasil Ditambahkan');
+        if (!empty($validatedData['tanggal_ijazah_ijin'])) {
+            $validatedData['tanggal_ijazah_ijin'] = Carbon::createFromFormat('d-m-Y', $validatedData['tanggal_ijazah_ijin'])->format('Y-m-d');
+        }
+
+        Ijinbelajar::create($validatedData);
+        return redirect()->back()->with('success', 'Izin Belajar Berhasil Ditambahkan');
     }
 
     /**
@@ -93,18 +98,22 @@ class IjinbelajarController extends Controller
     public function update(Request $request, Ijinbelajar $ijinbelajar)
     {
         // melakukan validasi data
-        $request->validate([
+        $validatedData = $request->validate([
             'pegawai_id' => 'required|exists:pegawais,id',
-            'tingkat'=>'required',
-            'jenis'=>'required',
-            'nama'=>'required',
-            'tahun_lulus'=>'required',
-            'no_ijazah'=>'required',
-            'tanggal_ijazah'=>'required'
+            'tingkat_ijin'=>'required',
+            'jenis_ijin'=>'required',
+            'nama_ijin'=>'required',
+            'tahun_lulus_ijin'=>'required',
+            'no_ijazah_ijin'=>'required',
+            'tanggal_ijazah_ijin'=>'required|date_format:d-m-Y',
         ]);
 
-        $ijinbelajar->update($request->all());
-        return redirect()->route('pegawai.show', $request->pegawai_id)->with('success', 'Ijin Belajar Berhasil Diperbarui');
+        if (!empty($validatedData['tanggal_ijazah_ijin'])) {
+            $validatedData['tanggal_ijazah_ijin'] = Carbon::createFromFormat('d-m-Y', $validatedData['tanggal_ijazah_ijin'])->format('Y-m-d');
+        }
+
+        $ijinbelajar->update($validatedData);
+        return redirect()->back()->with('success', 'Izin Belajar Berhasil Diperbarui');
     }
 
     /**
@@ -115,10 +124,10 @@ class IjinbelajarController extends Controller
         $ijinbelajar = Ijinbelajar::find($id);
 
         if (!$ijinbelajar) {
-            return redirect()->back()->with('error', 'Ijin Belajar tidak ditemukan!');
+            return redirect()->back()->with('error', 'Izin Belajar tidak ditemukan!');
         }
 
         $ijinbelajar->delete();
-        return redirect()->back()->with('success', 'Ijin Belajar berhasil dihapus!');
+        return redirect()->back()->with('success', 'Izin Belajar berhasil dihapus!');
     }
 }

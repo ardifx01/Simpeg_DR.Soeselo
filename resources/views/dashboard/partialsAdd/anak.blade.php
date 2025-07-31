@@ -1,60 +1,83 @@
-<!-- Anak view -->
-<div class="view">
-    <div class="table-responsive small">
-    <table class="table table-striped table-bordered table-sm">
-        <thead>
-            <tr class="text-center align-middle">
-                <th>No</th>
-                <th>Nama Anak</th>
-                <th>Tempat<br>Tanggal Lahir</th>
-                <th>Status keluarga</th>
-                <th>Status Tunjangan</th>
-                <th>Jenis Kelamin</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach($pegawai->anaks as $key => $anak)
-            <tr>
-                <td class="text-center">{{ $loop->iteration }}</td>
-                <td>{{ $anak->nama }}</td>
-                <td>{{ $anak->tempat_lahir }}<br>{{ $anak->tanggal_lahir }}</td>
-                <td>{{ $anak->status_keluarga }}</td>
-                <td>{{ $anak->status_tunjangan }}</td>
-                <td>{{ $anak->jenis_kelamin }}</td>
-                <td>
-                    <div class="d-flex justify-content-center">
-                        <a href="{{ route('anak.edit', $anak->id) }}" class="btn btn-warning btn-sm"><i class="bi bi-pencil-square"></i></a>
-                        <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#hapusAnakModal">
-                            <i class="bi bi-x-circle"></i>
-                        </button>
-                    </div>
-                    <!-- Modal Konfirmasi Hapus -->
-                    <div class="modal fade" id="hapusAnakModal" tabindex="-1" aria-labelledby="hapusAnakModalLabel" aria-hidden="true">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="hapusAnakModalLabel">Konfirmasi Hapus</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    Apakah Anda Yakin Ingin Menghapus Anak <strong>{{ $anak->nama }}</strong>?
-                                </div>
-                                <div class="modal-footer">
-                                    <form action="{{ route('anak.destroy', $anak->id) }}" method="POST">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-danger">Hapus</button>
-                                    </form>
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </td>
-            </tr>                                
-            @endforeach
-        </tbody>
-        </table>
-    </div>
-</div><!-- End Anak view -->
+<!-- Anak create -->
+<div class="view mt-1">
+    <form action="{{ route('anak.store') }}" method="POST">
+        @csrf
+        <div class="row mb-3">
+            <label for="Nama" class="col-md-4 col-lg-3 col-form-label">Nama</label>
+            <div class="col-md-8 col-lg-9">
+                <input name="nama" type="text" class="form-control @error('nama') is-invalid @enderror" id="nama" value="{{ old('nama') }}" required>
+                @error('nama')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
+        </div>
+        
+        <div class="row mb-3">
+            <label for="tempat_lahir_anak" class="col-md-4 col-lg-3 col-form-label">Tempat, Tanggal Lahir</label>
+            <div class="col-md-4 col-lg-3">
+                <input name="tempat_lahir_anak" type="text" class="form-control @error('tempat_lahir_anak') is-invalid @enderror" id="tempat_lahir_anak" value="{{ old('tempat_lahir_anak') }}" required>
+                @error('tempat_lahir_anak')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
+            <div class="col-md-4 col-lg-3">
+                <div class="input-group">
+                    <input name="tanggal_lahir_anak_anak" type="text" class="form-control @error('tanggal_lahir_anak') is-invalid @enderror" id="tanggal_lahir_anak" aria-label="Recipient's username" aria-describedby="button-addon2" value="{{ old('tanggal_lahir_anak') }}" required>
+                    <button class="btn btn-outline-secondary" type="button" for="tanggal_lahir_anak" id="button-addon2"><i class="bi bi-calendar3"></i></button>
+                    @error('tanggal_lahir_anak')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+            </div>
+        </div>
+        
+        <div class="row mb-3">
+            <label for="status_keluarga" class="col-md-4 col-lg-3 col-form-label">Status Keluarga</label>
+            <div class="col-md-4 col-lg-3">
+                <select class="form-select" aria-label="Default select example" name="status_keluarga" id="status_keluarga">
+                    <option selected>-- Pilihan --</option>
+                    <option value="Anak Kandung" {{ old('status_keluarga')=='Anak Kandung' ? 'selected': '' }} >Anak Kandung</option>
+                    <option value="Anak Angkat" {{ old('status_keluarga')=='Anak Angkat' ? 'selected': '' }} >Anak Angkat</option>
+                    <option value="Anak Tiri" {{ old('status_keluarga')=='Anak Tiri' ? 'selected': '' }} >Anak Tiri</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="row mb-3">
+            <label for="status_tunjangan" class="col-md-4 col-lg-3 col-form-label">Status Tunjangan</label>
+            <div class="col-md-4 col-lg-3">
+                <select class="form-select" aria-label="Default select example" name="status_tunjangan" id="status_tunjangan">
+                    <option selected>-- Pilihan --</option>
+                    <option value="Dapat" {{ old('status_tunjangan')=='Dapat' ? 'selected': '' }} >Dapat</option>
+                    <option value="Tidak Dapat" {{ old('status_tunjangan')=='Tidak Dapat' ? 'selected': '' }} >Tidak Dapat</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="row mb-3 form-group">
+            <label class="col-md-4 col-lg-3 col-form-label">Jenis Kelamin</label>
+            <div class="col-md-8 col-lg-9 mt-2">
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input @error('jenis_kelamin') is-invalid @enderror" type="radio" name="jenis_kelamin" id="laki_laki" value="Laki-laki">
+                    <label class="form-check-label" for="laki_laki">Laki-laki</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input @error('jenis_kelamin') is-invalid @enderror" type="radio" name="jenis_kelamin" id="perempuan" value="Perempuan">
+                    <label class="form-check-label" for="perempuan">Perempuan</label>
+                </div>
+                @error('jenis_kelamin')
+                    <div class="invalid-feedback d-block">{{ $message }}</div>
+                @enderror
+            </div>
+        </div>
+        
+        <div class="d-flex justify-content-center">
+            <div class="text-center p-2">
+                <button type="submit" class="btn btn-success"><i class="bi bi-floppy"></i> save</button>
+            </div>
+            <div class="text-center p-2">
+                <a href="{{ route('anak.index') }}" class="btn btn-outline-secondary"><i class="bi bi-arrow-90deg-left"></i> cancel</a>
+            </div>
+        </div>
+    </form>
+</div><!-- End Anak create -->

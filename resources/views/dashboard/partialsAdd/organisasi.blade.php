@@ -1,58 +1,58 @@
-<!-- Organisasi view -->
-<div class="view">
-    <div class="table-responsive small">
-    <table class="table table-striped table-bordered table-sm">
-        <thead>
-            <tr class="text-center align-middle">
-                <th>No</th>
-                <th>Nama Organisasi</th>
-                <th>Jenis Organisasi</th>
-                <th>Jabatan</th>
-                <th>TMT</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach($pegawai->organisasis as $key => $organisasi)
-            <tr>
-                <td class="text-center">{{ $loop->iteration }}</td>
-                <td>{{ $organisasi->nama }}</td>
-                <td>{{ $organisasi->jenis }}</td>
-                <td>{{ $organisasi->jabatan }}</td>
-                <td>{{ $organisasi->tmt }}</td>
-                <td>
-                    <div class="d-flex justify-content-center">
-                        <a href="{{ route('organisasi.edit', $organisasi->id) }}" class="btn btn-warning btn-sm"><i class="bi bi-pencil-square"></i></a>
-                        <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#hapusorganisasiModal">
-                            <i class="bi bi-x-circle"></i>
-                        </button>
-                    </div>
-                    <!-- Modal Konfirmasi Hapus -->
-                    <div class="modal fade" id="hapusorganisasiModal" tabindex="-1" aria-labelledby="hapusorganisasiModalLabel" aria-hidden="true">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="hapusorganisasiModalLabel">Konfirmasi Hapus</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    Apakah Anda Yakin Ingin Menghapus organisasi <strong>{{ $organisasi->nama }}</strong>?
-                                </div>
-                                <div class="modal-footer">
-                                    <form action="{{ route('organisasi.destroy', $organisasi->id) }}" method="POST">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-danger">Hapus</button>
-                                    </form>
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </td>
-            </tr>                                
-            @endforeach
-        </tbody>
-        </table>
-    </div>
-</div><!-- End Organisasi view -->
+<!-- Organisasi create -->
+<div class="view mt-1">
+    <form action="{{ route('organisasi.store') }}" method="POST">
+        @csrf
+
+        <div class="row mb-3">
+            <label for="nama" class="col-md-4 col-lg-3 col-form-label">Nama Organisasi</label>
+            <div class="col-md-8 col-lg-9">
+                <input name="nama" type="text" class="form-control @error('nama') is-invalid @enderror" id="nama" value="{{ old('nama') }}" required>
+                @error('nama')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label for="jenis" class="col-md-4 col-lg-3 col-form-label">Jenis Organisasi</label>
+            <div class="col-md-8 col-lg-9">
+                <input name="jenis" type="text" class="form-control @error('jenis') is-invalid @enderror" id="jenis" value="{{ old('jenis') }}" required>
+                @error('jenis')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label for="jabatan" class="col-md-4 col-lg-3 col-form-label">Jabatan</label>
+            <div class="col-md-8 col-lg-9">
+                <input name="jabatan" type="text" class="form-control @error('jabatan') is-invalid @enderror" id="jabatan" value="{{ old('jabatan') }}" required>
+                @error('jabatan')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label for="tmt" class="col-md-4 col-lg-3 col-form-label">TMT</label>
+            <div class="col-md-4 col-lg-3">
+                <div class="input-group">
+                    <input name="tmt" type="text" class="form-control @error('tmt') is-invalid @enderror" id="tmt" aria-label="Recipient's username" aria-describedby="button-addon2" value="{{ old('tmt') }}" required>
+                    @error('tmt')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                    <button class="btn btn-outline-secondary" type="button" for="tmt" id="button-addon2"><i class="bi bi-calendar3"></i></button>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-center">
+            <div class="text-center p-2">
+                <button type="submit" class="btn btn-success"><i class="bi bi-floppy"></i> save</button>
+            </div>
+            <div class="text-center p-2">
+                <button type="submit" class="btn btn-outline-secondary"><i class="bi bi-arrow-90deg-left"></i> cancel</button>
+            </div>
+        </div>
+    </form>
+</div><!-- End Organisasi create -->

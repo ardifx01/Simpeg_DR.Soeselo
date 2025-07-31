@@ -53,16 +53,16 @@
                     </div>
                 </div>
                 <div class="table-responsive small">
-                    <table class="table table-striped table-bordered table-hover table-sm">
+                    <table class="table table-bordered table-striped table-hover align-middle text-center">
                         <thead>
                             <tr class="text-center align-middle">
-                                <th>No</th>
+                                <th style="width: 50px;">No</th>
                                 <th>Pegawai</th>
                                 <th>Jenis Organisasi</th>
                                 <th>Nama Organisasi</th>
-                                <th>organisasi</th>
+                                <th>Jabatan</th>
                                 <th>TMT</th>
-                                <th>Action</th>
+                                <th style="width: 100px;">Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -70,15 +70,15 @@
                             <tr>
                                 <td class="text-center">{{ $organisasis->firstItem() + $key }}</td>
                                 <td>
-                                    {{ $organisasi->pegawai->nip }} - {{ $organisasi->pegawai->nama }}
+                                    {{ $organisasi->pegawai->nip }} - {{ $organisasi->pegawai->nama_lengkap }}
                                 </td>
-                                <td>{{ $organisasi->jenis_organisasi }}</td>
-                                <td>{{ $organisasi->nama_organisasi }}</td>
-                                <td>{{ $organisasi->jataban }}</td>
-                                <td>{{ $organisasi->tmt }}</td>
+                                <td>{{ $organisasi->jenis }}</td>
+                                <td>{{ $organisasi->nama }}</td>
+                                <td>{{ $organisasi->jabatan }}</td>
+                                <td>{{ \Carbon\Carbon::parse($organisasi->tmt_organisasi)->translatedFormat('d F Y') }}</td>
                                 <td>
                                     <div class="d-flex justify-content-center">
-                                        <a href="{{ route('pegawai.show', $organisasi->pegawai->id) }}" class="btn btn-success btn-sm" title="Detial"><i class="bi bi-eye"></i></a>
+                                        <a href="{{ route('pegawai.show', $organisasi->pegawai->id) }}" onclick="localStorage.setItem('activePegawaiTab', '#organisasi')" class="btn btn-success btn-sm" title="Detail"><i class="bi bi-eye"></i> Detail</a>
                                     </div>
                                 </td>
                             </tr>                                

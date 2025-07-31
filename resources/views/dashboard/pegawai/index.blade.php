@@ -2,26 +2,26 @@
 
 @section('main')
 
-        <div class="pagetitle">
-            <div class="row justify-content-between">
-                <div class="col">
-                    <h1>Pegawai | <small>Data Pegawai</small></h1>
-                    <nav>
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
-                            <li class="breadcrumb-item active">Pegawai</li>
-                        </ol>
-                    </nav>
-                </div>
-                <div class="col">
-                    <div class="text-end">
-                        <a href="{{ route('pegawai.create') }}"><button type="button" class="btn btn-primary btn-sm"><i class="bi bi-plus-circle"></i> Tambah Pegawai</button></a>
-                    </div>
+    <div class="pagetitle">
+        <div class="row justify-content-between">
+            <div class="col">
+                <h1>Pegawai | <small>Data Pegawai</small></h1>
+                <nav>
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
+                        <li class="breadcrumb-item active">Pegawai</li>
+                    </ol>
+                </nav>
+            </div>
+            <div class="col">
+                <div class="text-end">
+                    <a href="{{ route('pegawai.create') }}"><button type="button" class="btn btn-primary btn-sm"><i class="bi bi-plus-circle"></i> Tambah Pegawai</button></a>
                 </div>
             </div>
-        </div><!-- End Pegawai Title -->
+        </div>
+    </div><!-- End Pegawai Title -->
 
-        <section class="section dashboard">
+    <section class="section dashboard">
         <div class="row">
 
             <!-- Pegawai view -->
@@ -54,11 +54,11 @@
 
                         <!-- Unit Kerja -->
                         <div style="min-width: 250px;">
-                            <select name="unit_kerja" class="form-select" onchange="this.form.submit()">
+                            <select name="nama_jabatan" class="form-select" onchange="this.form.submit()">
                                 <option value="">-- Pilihan --</option>
-                                @foreach($unitkerjaList as $unit)
-                                    <option value="{{ $unit }}" {{ request('unit_kerja') == $unit ? 'selected' : '' }}>
-                                        {{ $unit }}
+                                @foreach($namajabatanList as $jabatan)
+                                    <option value="{{ $jabatan }}" {{ request('nama_jabatan') == $jabatan ? 'selected' : '' }}>
+                                        {{ $jabatan}}
                                     </option>
                                 @endforeach
                             </select>
@@ -76,23 +76,23 @@
                     </form>
                 </div>
                 <div class="table-responsive small">
-                    <table class="table table-striped table-bordered table-sm">
+                    <table class="table table-bordered table-striped table-hover align-middle text-center">
                         <thead>
                             <tr class="text-center align-middle">
-                                <th>No</th>
+                                <th style="width: 50px;">No</th>
                                 <th>Foto</th>
                                 <th>Nama Lengkap</th>
                                 <th>NIP <br> NIP Lama</th>
                                 <th>Jenis Kelamin <br> Tempat Tanggal Lahir</th>
                                 <th>Golongan <br> Jenis Kepegawaian</th>
                                 <th>Jabatan</th>
-                                <th>Action</th>
+                                <th style="width: 100px;">Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             @if($pegawais->isEmpty())
                                 <tr>
-                                    <td colspan="999" class="text-center text-muted">Data pegawai tidak ada yang cocok.</td>
+                                    <td colspan="8" class="text-center text-muted">Data pegawai tidak ada yang cocok.</td>
                                 </tr>
                             @else
                                 @foreach ($pegawais as $index => $pegawai)
@@ -107,16 +107,16 @@
                                             @endif
                                         </div>
                                     </td>
-                                    <td>{{ $pegawai->gelar_depan }} {{ $pegawai->nama }}, {{ $pegawai->gelar_belakang }}</td>
-                                    <td>{{ $pegawai->nip }}</td>
-                                    <td>{{ $pegawai->jenis_kelamin }}<br>{{ $pegawai->tempat_lahir }}<br>{{ $pegawai->tanggal_lahir }}</td>
-                                    <td>{{ $pegawai->golongan_ruang ?? '-' }}<br>{{ $pegawai->jabatan->jenis_kepegawaian ?? '-' }}</td>
-                                    <td>{{ $pegawai->jabatan->nama ?? '-' }}</td>
+                                    <td>{{ $pegawai->nama_lengkap }}</td>
+                                    <td>{{ $pegawai->nip }}<br>{{ $pegawai->nip_lama }}</td>
+                                    <td>{{ $pegawai->jenis_kelamin }}<br>{{ $pegawai->tempat_lahir }}, {{ \Carbon\Carbon::parse($pegawai->tanggal_lahir)->translatedFormat('d F Y') }}</td>
+                                    <td>{{ $pegawai->pangkat_golongan }}<br>{{ $pegawai->jabatan->jenis_kepegawaian }}</td>
+                                    <td>{{ $pegawai->jabatan->nama_jabatan ?? '-' }}</td>
                                     <td>
                                         <div class="d-flex justify-content-center">
                                         <a href="{{ route('pegawai.show',['pegawai' => $pegawai->id]) }}" class="btn btn-success btn-sm" title="Detial"><i class="bi bi-eye"></i></a>
                                         <a href="{{ route('pegawai.edit',['pegawai' => $pegawai->id]) }}" class="btn btn-warning btn-sm" title="Edit"><i class="bi bi-pencil-square"></i></a>
-                                        <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal{{$pegawai->id}}">
+                                        <button type="button" class="btn btn-danger btn-sm" title="Delete" data-bs-toggle="modal" data-bs-target="#exampleModal{{$pegawai->id}}">
                                             <i class="bi bi-x-circle"></i>
                                         </button>
                                         </div>
@@ -129,7 +129,7 @@
                                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                     </div>
                                                     <div class="modal-body">
-                                                        Apakah anda yakin akan menghapus data {{$pegawai->nama}}
+                                                        Apakah anda yakin akan menghapus data {{ $pegawai->nama_lengkap }}
                                                     </div>
                                                     <div class="modal-footer">
                                                         <form action="{{ route('pegawai.destroy',['pegawai' => $pegawai->id]) }}" method="POST" style="display:inline;">
@@ -153,6 +153,6 @@
                 </div>
             </div><!-- End Pegawai view -->
         </div>
-        </section>
+    </section>
 
 @endsection

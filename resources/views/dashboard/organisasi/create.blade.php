@@ -20,7 +20,7 @@
         <section class="section dashboard">
         <div class="row">
 
-            <!-- Fiklat Organisasi create -->
+            <!-- Organisasi create -->
             <div class="container rounded shadow p-4">
                 <form action="{{ route('organisasi.store') }}" method="POST">
                     @csrf

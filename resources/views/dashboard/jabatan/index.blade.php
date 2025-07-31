@@ -53,35 +53,34 @@
                     </div>
                 </div>
                 <div class="table-responsive small">
-                    <table class="table table-striped table-bordered table-hover table-sm">
+                    <table class="table table-bordered table-striped table-hover align-middle text-center">
                         <thead>
-                            <tr class="text-center">
-                                <th>No</th>
+                            <tr class="text-center align-middle">
+                                <th style="width: 50px;">No</th>
                                 <th>Pegawai</th>
-                                <th>Unit Kerja</th>
+                                <th>Jabatan</th>
                                 <th>Pangkat</th>
                                 <th>Jenis jabatan</th>
                                 <th>Jenis Kepegawaian</th>
                                 <th>TMT</th>
                                 <th>Eselon</th>
-                                <th>Action</th>
+                                <th style="width: 100px;">Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($jabatans as $key => $jabatan)
                             <tr>
                                 <td class="text-center">{{ $jabatans->firstItem() + $key }}</td>
-                                <td>{{ $jabatan->pegawai->nama }}</td>
-                                <td>{{ $jabatan->unit_kerja }}</td>
-                                <td>{{ $jabatan->nama }}</td>
+                                <td>{{ $jabatan->pegawai->nip }} - {{ $jabatan->pegawai->nama_lengkap }}</td>
+                                <td>{{ $jabatan->nama_jabatan }}</td>
+                                <td>{{ $jabatan->pangkat }}</td>
                                 <td>{{ $jabatan->jenis_jabatan }}</td>
                                 <td>{{ $jabatan->jenis_kepegawaian }}</td>
-                                <td>{{ $jabatan->tmt }}</td>
+                                <td>{{ $jabatan->tmt_golongan_ruang }}</td>
                                 <td>{{ $jabatan->eselon }}</td>
                                 <td>
                                     <div class="d-flex justify-content-center">
-                                        <a href="{{ route('pegawai.show', $jabatan->pegawai->id) }}" class="btn btn-success btn-sm" title="Detial"><i class="bi bi-eye"></i></a>
-                                        <a href="{{ route('jabatan.edit',['jabatan' => $jabatan->id]) }}" class="btn btn-warning btn-sm" title="Edit"><i class="bi bi-pencil-square"></i></a>
+                                        <a href="{{ route('pegawai.show', $jabatan->pegawai->id) }}" onclick="localStorage.setItem('activePegawaiTab', '#jabatan')" class="btn btn-success btn-sm" title="Detail"><i class="bi bi-eye"></i></a>
                                         <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal{{$jabatan->id}}">
                                             <i class="bi bi-x-circle"></i>
                                         </button>

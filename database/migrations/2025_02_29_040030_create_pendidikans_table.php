@@ -16,8 +16,8 @@ return new class extends Migration
             $table->foreignId('pegawai_id')->constrained('pegawais')->onDelete('cascade');
             $table->string('tingkat');
             $table->string('jurusan');
-            $table->string('nama');
-            $table->date('tahun_lulus');
+            $table->string('nama_sekolah');
+            $table->year('tahun_lulus');
             $table->string('no_ijazah');
             $table->date('tanggal_ijazah');
             $table->timestamps();

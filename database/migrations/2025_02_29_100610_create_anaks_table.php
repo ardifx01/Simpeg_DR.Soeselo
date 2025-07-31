@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('pegawai_id')->constrained('pegawais')->onDelete('cascade');
             $table->string('nama');
             $table->string('tempat_lahir');
-            $table->date('tanggal_lahir');
+            $table->date('tanggal_lahir_anak');
             $table->string('status_keluarga');
             $table->string('status_tunjangan');
             $table->string('jenis_kelamin');

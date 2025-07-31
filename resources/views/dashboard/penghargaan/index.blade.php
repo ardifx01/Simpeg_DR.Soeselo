@@ -53,15 +53,15 @@
                     </div>
                 </div>
                 <div class="table-responsive small">
-                    <table class="table table-striped table-bordered table-hover table-sm">
+                    <table class="table table-bordered table-striped table-hover align-middle text-center">
                         <thead>
                             <tr class="text-center align-middle">
-                                <th>No</th>
+                                <th style="width: 50px;">No</th>
                                 <th>Pegawai</th>
                                 <th>Nama Tanda Jasa / Penghargaan</th>
                                 <th>Pemberi</th>
                                 <th>Tahun</th>
-                                <th>Action</th>
+                                <th style="width: 100px;">Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -69,14 +69,14 @@
                             <tr>
                                 <td class="text-center">{{ $penghargaans->firstItem() + $key }}</td>
                                 <td>
-                                    {{ $penghargaan->pegawai->nip }} - {{ $penghargaan->pegawai->nama }}
+                                    {{ $penghargaan->pegawai->nip }} - {{ $penghargaan->pegawai->nama_lengkap }}
                                 </td>
                                 <td>{{ $penghargaan->nama }}</td>
                                 <td>{{ $penghargaan->pemberi }}</td>
-                                <td>{{ $penghargaan->tahun }}</td>
+                                <td>{{ \Carbon\Carbon::parse($penghargaan->tanggal_penghargaan)->translatedFormat('d F Y') }}</td>
                                 <td>
                                     <div class="d-flex justify-content-center">
-                                        <a href="{{ route('pegawai.show', $penghargaan->pegawai->id) }}" class="btn btn-success btn-sm" title="Detial"><i class="bi bi-eye"></i></a>
+                                        <a href="{{ route('pegawai.show', $penghargaan->pegawai->id) }}" onclick="localStorage.setItem('activePegawaiTab', '#penghargaan')" class="btn btn-success btn-sm" title="Detail"><i class="bi bi-eye"></i> Detail</a>
                                     </div>
                                 </td>
                             </tr>                                

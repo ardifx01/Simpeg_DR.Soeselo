@@ -349,7 +349,7 @@
             @if ($pegawai->jabatan)
                 <tr>
                     <td style="text-align:center;">1</td>
-                    <td>{{ $pegawai->jabatan->nama }}</td>
+                    <td>{{ $pegawai->jabatan->nama_jabatan }}</td>
                     <td>{{ $pegawai->jabatan->jenis_jabatan }}</td>
                     <td>{{ $pegawai->jabatan->jenis_kepegawaian }}</td>
                     <td>{{ $pegawai->jabatan->tmt ? \Carbon\Carbon::parse($pegawai->jabatan->tmt)->format('d-m-Y') : '-' }}</td>
@@ -358,7 +358,7 @@
                 </tr>
             @else
                 <tr>
-                    <td colspan="7" style="text-align:center;"><em>Riwayat Jabatan belum tersedia.</em></td>
+                    <td colspan="7" style="text-align:center;"><em>Riwayat Jabatan Belum Tersedia.</em></td>
                 </tr>
             @endif
             </tbody>
@@ -392,7 +392,7 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="7" style="text-align:center;"><em>Riwayat Pendidikan belum tersedia.</em></td>
+                    <td colspan="7" style="text-align:center;"><em>Riwayat Pendidikan Belum Tersedia.</em></td>
                 </tr>
             @endforelse
             </tbody>
@@ -420,7 +420,7 @@
                 </tr>                
             @empty
                 <tr>
-                    <td colspan="4" style="text-align:center;"><em>Riwayat Penghargaan belum tersedia.</em></td>
+                    <td colspan="4" style="text-align:center;"><em>Riwayat Penghargaan Belum Tersedia.</em></td>
                 </tr>
             @endforelse
             </tbody>
@@ -450,7 +450,7 @@
                 </tr>                
             @empty
                 <tr>
-                    <td colspan="5" style="text-align:center;"><em>Riwayat Organisasi belum tersedia.</em></td>
+                    <td colspan="5" style="text-align:center;"><em>Riwayat Organisasi Belum Tersedia.</em></td>
                 </tr>
             @endforelse
             </tbody>
@@ -480,7 +480,7 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="5" style="text-align:center;"><em>Riwayat Diklat Fungsional belum tersedia.</em></td>
+                    <td colspan="5" style="text-align:center;"><em>Riwayat Diklat Fungsional Belum Tersedia.</em></td>
                 </tr>
             @endforelse
             </tbody>
@@ -510,7 +510,7 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="5" style="text-align:center;"><em>Riwayat Diklat Jabatan belum tersedia.</em></td>
+                    <td colspan="5" style="text-align:center;"><em>Riwayat Diklat Jabatan Belum Tersedia.</em></td>
                 </tr>
             @endforelse
             </tbody>
@@ -540,7 +540,7 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="5" style="text-align:center;"><em>Riwayat Diklat Teknis belum tersedia.</em></td>
+                    <td colspan="5" style="text-align:center;"><em>Riwayat Diklat Teknis Belum Tersedia.</em></td>
                 </tr>
             @endforelse
             </tbody>
@@ -572,7 +572,7 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="6" style="text-align:center;"><em>Riwayat Suami/Istri belum tersedia.</em></td>
+                    <td colspan="6" style="text-align:center;"><em>Riwayat Suami/Istri Belum Tersedia.</em></td>
                 </tr>
             @endforelse
             </tbody>
@@ -604,7 +604,7 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="6" style="text-align:center;"><em>Riwayat Anak belum tersedia.</em></td>
+                    <td colspan="6" style="text-align:center;"><em>Riwayat Anak Belum Tersedia.</em></td>
                 </tr>
             @endforelse
             </tbody>

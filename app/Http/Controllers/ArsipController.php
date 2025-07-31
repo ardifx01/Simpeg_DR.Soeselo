@@ -21,7 +21,9 @@ class ArsipController extends Controller
 
     public function arsipView($id) {
         $arsip = Arsip::findOrFail($id);
-        return view('dashboard.arsip', compact('arsip'));
+        return view('dashboard.arsip', [
+            'fileUrl' => asset('storage/' . $arsip->file),
+        ]);
     }
 
     /**
@@ -37,23 +39,35 @@ class ArsipController extends Controller
      */
     public function store(Request $request)
     {
-        // melakukan validasi data
+        // Validasi input
         $request->validate([
             'pegawai_id' => 'required|exists:pegawais,id',
-            'jenis' => 'required|in:SK CPNS,Surat Tugas,Surat Menghadap,Ijazah Pendidikan,Surat Nikah,KTP,NPWP, Kartu Keluarga, Akta Lahir Keluarga, Pas Photo, FIP, Konversi NIP, SK PNS,SK Kenaikan Pangkat, KPE, Karpeg, Taspen, Karis / Karsu, SK Mutasi BKN / Gubernur, ASKES / BPJS, STTPL, Sumpah Jabatan PNS, KGB, Rekomendasi Ijin Belajar, Ijin Belajar, Penggunaan Gelar, Ujian Dinas, Penyesuaian Ijazah',
+            'jenis' => [
+                'required',
+                Rule::in([
+                    'SK CPNS', 'Surat Tugas', 'Surat Menghadapkan', 'Ijazah Pendidikan',
+                    'Surat Nikah', 'KTP', 'NPWP', 'Kartu Keluarga', 'Akta Lahir Keluarga',
+                    'Pas Photo', 'FIP', 'Konversi NIP', 'SK PNS', 'SK Kenaikan Pangkat',
+                    'KPE', 'Karpeg', 'Taspen', 'Karis / Karsu', 'SK Mutasi BKN / Gubernur',
+                    'ASKES / BPJS', 'STTPL', 'Sumpah Jabatan PNS', 'KGB',
+                    'Rekomendasi Ijin Belajar', 'Ijin Belajar', 'Penggunaan Gelar',
+                    'Ujian Dinas', 'Penyesuaian Ijazah'
+                ])
+            ],
             'file' => 'required|mimes:pdf|max:2048',
         ]);
 
-        //upload file
-        $file = $request->file('file')->store('arsip', 'public');
+        // Upload file ke storage/app/public/arsip
+        $filePath = $request->file('file')->store('arsip', 'public');
 
+        // Simpan ke database
         Arsip::create([
             'pegawai_id' => $request->pegawai_id,
-            'file' => $file,
-            'jenis' => $request->jenis
+            'jenis' => $request->jenis,
+            'file' => $filePath,
         ]);
 
-        return back()->with('success', 'Arsip Berhasil Ditambahkan');
+        return back()->with('success', 'Arsip berhasil ditambahkan.');
     }
 
     /**
@@ -79,22 +93,36 @@ class ArsipController extends Controller
     {
         $arsip = Arsip::findOrFail($id);
 
+        // Validasi input
         $validatedData = $request->validate([
             'pegawai_id' => 'required|exists:pegawais,id',
-            'jenis' => 'required|in:SK CPNS,Surat Tugas,Surat Menghadap,Ijazah Pendidikan,Surat Nikah,KTP,NPWP, Kartu Keluarga, Akta Lahir Keluarga, Pas Photo, FIP, Konversi NIP, SK PNS,SK Kenaikan Pangkat, KPE, Karpeg, Taspen, Karis / Karsu, SK Mutasi BKN / Gubernur, ASKES / BPJS, STTPL, Sumpah Jabatan PNS, KGB, Rekomendasi Ijin Belajar, Ijin Belajar, Penggunaan Gelar, Ujian Dinas, Penyesuaian Ijazah',
+            'jenis' => [
+                'required',
+                Rule::in([
+                    'SK CPNS', 'Surat Tugas', 'Surat Menghadapkan', 'Ijazah Pendidikan',
+                    'Surat Nikah', 'KTP', 'NPWP', 'Kartu Keluarga', 'Akta Lahir Keluarga',
+                    'Pas Photo', 'FIP', 'Konversi NIP', 'SK PNS', 'SK Kenaikan Pangkat',
+                    'KPE', 'Karpeg', 'Taspen', 'Karis / Karsu', 'SK Mutasi BKN / Gubernur',
+                    'ASKES / BPJS', 'STTPL', 'Sumpah Jabatan PNS', 'KGB',
+                    'Rekomendasi Ijin Belajar', 'Ijin Belajar', 'Penggunaan Gelar',
+                    'Ujian Dinas', 'Penyesuaian Ijazah'
+                ])
+            ],
             'file' => 'nullable|file|mimes:pdf|max:2048',
         ]);
 
+        // Jika ada file baru diunggah
         if ($request->hasFile('file')) {
             // Hapus file lama jika ada
-            if ($arsip->file && Storage::exists($arsip->file)) {
-                Storage::delete($arsip->file);
+            if ($arsip->file && Storage::disk('public')->exists($arsip->file)) {
+                Storage::disk('public')->delete($arsip->file);
             }
 
             // Simpan file baru
-            $validatedData['file'] = $request->file('file')->store('arsip');
+            $validatedData['file'] = $request->file('file')->store('arsip', 'public');
         }
 
+        // Update arsip
         $arsip->update($validatedData);
 
         return back()->with('success', 'Arsip berhasil diperbarui.');

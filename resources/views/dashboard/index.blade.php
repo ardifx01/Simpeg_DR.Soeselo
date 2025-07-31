@@ -2,27 +2,26 @@
 
 @section('main')
 
-        <div class="pagetitle">
-            <div class="d-flex justify-content-between">
-                <div>
-                    <h1>Dashboard <small>Overview & statistic Kepegawaian</small></h1>
-                    <nav>
-                        <ol class="breadcrumb">
-                        <li class="breadcrumb-item active">Dashboard</li>
-                        </ol>
-                    </nav>
-                </div>
-                <div>
-                    <button id="btnTanggal" class="btn btn-primary btn-sm">
-                        <i class="bi bi-calendar3"></i> <span id="tanggalSekarang"></span>
-                    </button> 
-                </div>
+    <div class="pagetitle">
+        <div class="d-flex justify-content-between">
+            <div>
+                <h1>Dashboard <small>Overview & statistic Kepegawaian</small></h1>
+                <nav>
+                    <ol class="breadcrumb">
+                    <li class="breadcrumb-item active">Dashboard</li>
+                    </ol>
+                </nav>
             </div>
-        </div><!-- End Dashboard Title -->
+            <div>
+                <button id="btnTanggal" class="btn btn-primary btn-sm">
+                    <i class="bi bi-calendar3"></i> <span id="tanggalSekarang"></span>
+                </button> 
+            </div>
+        </div>
+    </div><!-- End Dashboard Title -->
 
-        <section class="section dashboard">
+    <section class="section dashboard">
         <div class="row">
-
             <!-- E-personal Card -->
             <div class="col-xxl-3 col-md-6">
                 <a href="{{ route('dashboard.epersonal') }}">
@@ -102,6 +101,7 @@
 
             <!-- Charts Diagram -->
             <div class="row m-0">
+                @if (!empty($rekapGolongan) && count($rekapGolongan) > 0)
                 <div class="col-xxl-12">
                     <div class="card">
                         <div class="card-body">
@@ -110,7 +110,8 @@
                         </div>
                     </div>
                 </div>
-            
+                @endif
+
                 <div class="col-xxl-12 col-md-6">
                     <div class="card">
                         <div class="card-body">
@@ -173,8 +174,7 @@
                         </div>
                     </div>
                 </div>
-                
-        </div><!-- End Charts -->
+            </div><!-- End Charts -->
         </section>
         <script>
             document.addEventListener("DOMContentLoaded", () => {
@@ -217,12 +217,20 @@
                 // Looping untuk membuat chart secara otomatis jika datanya tersedia
                 Object.entries(rekapData).forEach(([key, data]) => {
                     if (data.length > 0) {
-                        createChart(
-                            `chart${key.charAt(0).toUpperCase() + key.slice(1)}`, // Capitalize ID
-                            key.replace(/([A-Z])/g, ' $1'), // Format Title
-                            data.map(item => item.nama || item.tingkat || item.golongan_ruang || item.eselon || item.jenis_kepegawaian || item.agama || item.jenis_kelamin || item.status_nikah ),
-                            data.map(item => item.jumlah)
-                        );
+                        const categories = data
+                            .map(item => item.nama_jabatan || item.tingkat || item.golongan_ruang || item.eselon || item.jenis_kepegawaian || item.agama || item.jenis_kelamin || item.status_nikah)
+                            .filter(Boolean);
+
+                        const values = data.map(item => item.jumlah).filter(val => val !== undefined && val !== null);
+
+                        if (categories.length > 0 && values.length > 0) {
+                            createChart(
+                                `chart${key.charAt(0).toUpperCase() + key.slice(1)}`,
+                                key.replace(/([A-Z])/g, ' $1'),
+                                categories,
+                                values
+                            );
+                        }
                     }
                 });
             });

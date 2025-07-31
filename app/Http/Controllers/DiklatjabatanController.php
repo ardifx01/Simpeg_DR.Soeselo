@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Pegawai;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\Diklatjabatan;
 use App\Http\Controllers\Controller;
@@ -52,16 +53,18 @@ class DiklatjabatanController extends Controller
     public function store(Request $request)
     {
         // melakukan validasi data
-        $request->validate([
+        $validatedData = $request->validate([
             'pegawai_id' => 'required|exists:pegawais,id',
             'nama'=>'required',
             'penyelenggara'=>'required',
             'jumlah_jam'=>'required',
-            'tanggal_selesai'=>'required'
+            'tanggal_selesai'=>'required|date_format:d-m-Y',
         ]);
+        // Format tanggal
+        $validatedData['tanggal_selesai'] = Carbon::createFromFormat('d-m-Y', $validatedData['tanggal_selesai'])->format('Y-m-d');
 
-        Diklatjabatan::create($request->all());
-        return redirect()->route('diklatjabatan.index', $request->pegawai_id)->with('success', 'Diklat Jabatan Berhasil Ditambahkan');
+        Diklatjabatan::create($validatedData);
+        return redirect()->back()->with('success', 'Diklat Jabatan Berhasil Ditambahkan');
     }
 
     /**
@@ -87,30 +90,27 @@ class DiklatjabatanController extends Controller
     public function update(Request $request, Diklatjabatan $diklatjabatan)
     {
         // melakukan validasi data
-        $request->validate([
+        $validatedData = $request->validate([
             'pegawai_id' => 'required|exists:pegawais,id',
             'nama'=>'required',
             'penyelenggara'=>'required',
             'jumlah_jam'=>'required',
-            'tanggal_selesai'=>'required',
+            'tanggal_selesai'=>'required|date_format:d-m-Y',
         ]);
-        $diklatjabatan->update($request->all());
-        return redirect()->route('pegawai.show', $diklatjabatan->pegawai_id)->with('success', 'Diklat Jabatan Berhasil Diperbarui');
+        // Format tanggal
+        $validatedData['tanggal_selesai'] = Carbon::createFromFormat('d-m-Y', $validatedData['tanggal_selesai'])->format('Y-m-d');
+
+        $diklatjabatan->update($validatedData);
+        return redirect()->back()->with('success', 'Diklat Jabatan Berhasil Diperbarui');
 
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id)
+    public function destroy(Diklatjabatan $diklatjabatan)
     {
-        $diklatjabatan = Diklatjabatan::find($id);
-
-        if (!$diklatjabatan) {
-            return redirect()->back()->with('error', 'Diklat Jabatan tidak ditemukan!');
-        }
-
         $diklatjabatan->delete();
-        return redirect()->back()->with('success', 'Diklat Jabatan berhasil dihapus!');
+        return redirect()->back()->with('success', 'Diklat teknik berhasil dihapus!');
     }
 }

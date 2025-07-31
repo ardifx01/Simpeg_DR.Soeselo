@@ -51,7 +51,8 @@ class CutiController extends Controller
     public function create()
     {
         $pegawais = Pegawai::all();
-        return view('surat.cuti.create', compact('pegawais'));
+        $atasans = Pegawai::all();
+        return view('surat.cuti.create', compact('pegawais', 'atasans'));
     }
 
     /**
@@ -63,15 +64,28 @@ class CutiController extends Controller
             'pegawai_id' => 'required|exists:pegawais,id',
             'jenis_cuti' => 'required',
             'alasan' => 'required',
-            'alasan_lainnya' => 'nullable',
-            'lama_hari' => 'required|integer',
+            'alasan_lainnya' => 'nullable|string|max:255',
+            'lama_hari' => 'required|integer|min:1',
             'tanggal_mulai' => 'required|date',
             'tanggal_selesai' => 'required|date|after_or_equal:tanggal_mulai',
             'alamat_cuti' => 'required|string|max:255',
             'telepon' => 'required|string|max:15',
+            'atasan_jabatan' => 'required|string|max:255',
+            'atasan_id' => 'required|exists:pegawais,id',
+            'atasan_nama' => 'required|string|max:255',
+            'atasan_nip' => 'required|string|max:50',
         ]);
-
-        Cuti::create($request->all());
+        
+        $data = $request->except(['_token']); // Ambil semua data kecuali token CSRF
+        if ($request->alasan !== 'lainnya') {
+            unset($data['alasan_lainnya']); // Hapus alasan_lainnya jika bukan 'lainnya'
+        }
+        $atasanPegawai = Pegawai::find($request->atasan_id);
+        if ($atasanPegawai) {
+            $data['atasan_nama'] = $atasanPegawai->gelar_depan . '. ' . $atasanPegawai->nama . ', ' . $atasanPegawai->gelar_belakang; // Format nama atasan
+            $data['atasan_nip'] = $atasanPegawai->nip;
+        }
+        Cuti::create($data);
 
         return redirect()->route('cuti.index')->with('success', 'Pengajuan surat cuti berhasil!');
     }
@@ -117,16 +131,18 @@ class CutiController extends Controller
         $template->setValue('tanggal_surat', \Carbon\Carbon::now()->translatedFormat('d F Y'));
         $template->setValue('nama', $cuti->pegawai->nama);
         $template->setValue('nip', $cuti->pegawai->nip ?? '-');
-        $template->setValue('jabatan', $cuti->pegawai->jabatan->unit_kerja ?? '-');
-        $template->setValue('unit_kerja', $cuti->pegawai->jabatan->skpd ?? '-');
+        $template->setValue('jabatan', $cuti->pegawai->jabatan->nama_jabatan ?? '-');
+        $template->setValue('unit_kerja', $cuti->pegawai->jabatan->unit_kerja ?? '-');
         $template->setValue('jenis_cuti', ucfirst($cuti->jenis_cuti));
-        $template->setValue('alasan', $cuti->alasan);
-        $template->setValue('alasan_lainnya', $cuti->alasan_lainnya);
+        $template->setValue('alasan', $cuti->alasan === 'lainnya' ? $cuti->alasan_lainnya : $cuti->alasan);
         $template->setValue('lama_hari', $cuti->lama_hari);
         $template->setValue('tanggal_mulai', \Carbon\Carbon::parse($cuti->tanggal_mulai)->format('d-m-Y'));
         $template->setValue('tanggal_selesai', \Carbon\Carbon::parse($cuti->tanggal_selesai)->format('d-m-Y'));
         $template->setValue('alamat_cuti', $cuti->alamat_cuti);
         $template->setValue('telepon', $cuti->telepon);
+        $template->setValue('atasan_jabatan', $cuti->atasan_jabatan ?? '-');
+        $template->setValue('atasan_nama', $cuti->atasan_nama ?? '-');
+        $template->setValue('atasan_nip', $cuti->atasan_nip ?? '-');
 
         $filename = 'surat_cuti_' . str_replace(' ', '_', strtolower($cuti->pegawai->nama)) . '.docx';
 
@@ -135,5 +151,4 @@ class CutiController extends Controller
 
         return response()->download($path)->deleteFileAfterSend(true);
     }
-
 }

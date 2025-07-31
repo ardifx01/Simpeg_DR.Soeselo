@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\Istri;
 use App\Models\Pegawai;
 use Illuminate\Http\Request;
@@ -50,19 +51,35 @@ class IstriController extends Controller
      */
     public function store(Request $request)
     {
+        // Validasi apakah pegawai sudah menikah
+        $pegawai = Pegawai::findOrFail($request->pegawai_id);
+
+        if ($pegawai->status_nikah === 'Belum') {
+            return redirect()->back()->with('error', 'Pegawai belum menikah. Tidak bisa mengisi data Suami/Istri.');
+        }
         // melakukan validasi data
-        $request->validate([
+        $validatedData = $request->validate([
             'pegawai_id' => 'required|exists:pegawais,id',
             'nama'=>'required',
             'tempat_lahir'=>'required',
-            'tanggal_lahir'=>'required',
+            'tanggal_lahir_istri'=>'required',
             'profesi'=>'required',
             'tanggal_nikah'=>'required',
             'status_hubungan'=>'required'
         ]);
 
-        Istri::create($request->all());
-        return redirect()->route('istri.index', $request->pegawai_id)->with('success', 'Istri Berhasil Ditambahkan');
+        // Ubah format tanggal
+        if (!empty($validatedData['tanggal_lahir_istri'])) {
+            $validatedData['tanggal_lahir_istri'] = Carbon::createFromFormat('d-m-Y', $validatedData['tanggal_lahir_istri'])->format('Y-m-d');
+        }
+
+        if (!empty($validatedData['tanggal_nikah'])) {
+            $validatedData['tanggal_nikah'] = Carbon::createFromFormat('d-m-Y', $validatedData['tanggal_nikah'])->format('Y-m-d');
+        }
+
+        Istri::create($validatedData);
+
+        return redirect()->back()->with('success', 'Istri berhasil ditambahkan!');
     }
 
     /**
@@ -88,17 +105,28 @@ class IstriController extends Controller
     public function update(Request $request, Istri $istri)
     {
         // melakukan validasi data
-        $request->validate([
+        $validatedData = $request->validate([
             'pegawai_id' => 'required|exists:pegawais,id',
             'nama'=>'required',
             'tempat_lahir'=>'required',
-            'tanggal_lahir'=>'required',
+            'tanggal_lahir_istri'=>'required',
             'profesi'=>'required',
             'tanggal_nikah'=>'required',
         ]);
-        $istri->update($request->all());
-        return redirect()->route('pegawai.show', $istri->pegawai_id)->with('success', 'Istri Berhasil Diperbarui');
 
+        // Ubah format tanggal
+        if (!empty($validatedData['tanggal_lahir_istri'])) {
+            $validatedData['tanggal_lahir_istri'] = Carbon::createFromFormat('d-m-Y', $validatedData['tanggal_lahir_istri'])->format('Y-m-d');
+        }
+
+        if (!empty($validatedData['tanggal_nikah'])) {
+            $validatedData['tanggal_nikah'] = Carbon::createFromFormat('d-m-Y', $validatedData['tanggal_nikah'])->format('Y-m-d');
+        }
+
+        // Update data istri
+        $istri->update($validatedData);
+
+        return redirect()->back()->with('success', 'Istri berhasil diperbarui!');
     }
 
     /**

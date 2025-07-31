@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('jenis');
             $table->string('nama');
             $table->string('jabatan');
-            $table->date('tmt');
+            $table->date('tmt_organisasi');
             $table->timestamps();
         });
     }

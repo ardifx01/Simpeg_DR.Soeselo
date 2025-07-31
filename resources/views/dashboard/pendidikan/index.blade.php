@@ -53,10 +53,10 @@
                     </div>
                 </div>
                 <div class="table-responsive small">
-                    <table class="table table-striped table-bordered table-hover table-sm">
+                    <table class="table table-bordered table-striped table-hover align-middle text-center">
                         <thead>
                             <tr class="text-center align-middle">
-                                <th>No</th>
+                                <th style="width: 50px;">No</th>
                                 <th>Nama Pegawai</th>
                                 <th>Tingkat Pendidikan</th>
                                 <th>Jurusan</th>
@@ -64,7 +64,7 @@
                                 <th>Tahun Lulus</th>
                                 <th>No Ijazah</th>
                                 <th>Tanggal Ijazah</th>
-                                <th>Action</th>
+                                <th style="width: 100px;">Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -72,17 +72,17 @@
                             <tr>
                                 <td class="text-center">{{ $pendidikans->firstItem() + $key }}</td>
                                 <td>
-                                    {{ $pendidikan->pegawai->gelar_depan }}. {{ $pendidikan->pegawai->nama }}, {{ $pendidikan->pegawai->gelar_belakang }}
+                                    {{ $pendidikan->pegawai->nip }} - {{ $pendidikan->pegawai->nama_lengkap }}
                                 </td>
                                 <td>{{ $pendidikan->tingkat }}</td>
                                 <td>{{ $pendidikan->jurusan }}</td>
-                                <td>{{ $pendidikan->nama }}</td>
+                                <td>{{ $pendidikan->nama_sekolah }}</td>
                                 <td>{{ $pendidikan->tahun_lulus }}</td>
                                 <td>{{ $pendidikan->no_ijazah }}</td>
-                                <td>{{ $pendidikan->tanggal_ijazah }}</td>
+                                <td>{{ \Carbon\Carbon::parse($pendidikan->tanggal_ijazah)->translatedFormat('d F Y') }}</td>
                                 <td>
                                     <div class="d-flex justify-content-center">
-                                        <a href="{{ route('pegawai.show', $pendidikan->pegawai->id) }}" class="btn btn-success btn-sm" title="Detial"><i class="bi bi-eye"></i></a>
+                                        <a href="{{ route('pegawai.show', $pendidikan->pegawai->id) }}" onclick="localStorage.setItem('activePegawaiTab', '#pendidikan')" class="btn btn-success btn-sm" title="Detail"><i class="bi bi-eye"></i> Detail</a>
                                     </div>
                                 </td>
                             </tr>                                

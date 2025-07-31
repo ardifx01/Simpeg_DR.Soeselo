@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Penghargaan;
+use Carbon\Carbon;
 use App\Models\Pegawai;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -53,15 +54,18 @@ class PenghargaanController extends Controller
     public function store(Request $request)
     {
         // melakukan validasi data
-        $request->validate([
+        $validatedData = $request->validate([
             'pegawai_id' => 'required|exists:pegawais,id',
             'nama'=>'required',
             'pemberi'=>'required',
-            'tahun'=>'required'
+            'tanggal_penghargaan'=>'required|date_format:d-m-Y',
         ]);
 
-        Penghargaan::create($request->all());
-        return redirect()->route('penghargaan.index', $request->pegawai_id)->with('success', 'Penghargaan Berhasil Ditambahkan');
+        // Format tanggal
+        $validatedData['tanggal_penghargaan'] = Carbon::createFromFormat('d-m-Y', $validatedData['tanggal_penghargaan'])->format('Y-m-d');
+
+        Penghargaan::create($validatedData);
+        return redirect()->back()->with('success', 'Penghargaan Berhasil Ditambahkan');
     }
 
     /**
@@ -87,15 +91,18 @@ class PenghargaanController extends Controller
     public function update(Request $request, Penghargaan $penghargaan)
     {
         // melakukan validasi data
-        $request->validate([
+        $validatedData = $request->validate([
             'pegawai_id' => 'required|exists:pegawais,id',
             'nama'=>'required',
             'pemberi'=>'required',
-            'tahun'=>'required'
+            'tanggal_penghargaan'=>'required|date_format:d-m-Y',
         ]);
 
-        $penghargaan->update($request->all());
-        return redirect()->route('pegawai.show', $request->pegawai_id)->with('success', 'Penghargaan Berhasil Diperbarui');
+        // Format tanggal
+        $validatedData['tanggal_penghargaan'] = Carbon::createFromFormat('d-m-Y', $validatedData['tanggal_penghargaan'])->format('Y-m-d');
+
+        $penghargaan->update($validatedData);
+        return redirect()->back()->with('success', 'Penghargaan Berhasil Diperbarui');
     }
 
     /**

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Pegawai;
+use Carbon\Carbon;
 use App\Models\Organisasi;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -19,8 +20,8 @@ class OrganisasiController extends Controller
         // Cek apakah ada pencarian
         if ($request->has('search')) {
             $search = $request->search;
-            $query->where('jenis_organisasi', 'like', "%$search%")
-                ->orWhere('nama_organisasi', 'like', "%$search%")
+            $query->where('jenis', 'like', "%$search%")
+                ->orWhere('nama', 'like', "%$search%")
                 ->orWhere('jataban', 'like', "%$search%");
         }
 
@@ -53,16 +54,18 @@ class OrganisasiController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+        $validatedData = $request->validate([
             'pegawai_id' => 'required|exists:pegawais,id',
             'jenis'=>'required',
             'nama'=>'required',
             'jabatan'=>'required',
-            'tmt'=>'required'
+            'tmt_organisasi'=>'required|date_format:d-m-Y',
         ]);
+        // Format tanggal
+        $validatedData['tmt_organisasi'] = Carbon::createFromFormat('d-m-Y', $validatedData['tmt_organisasi'])->format('Y-m-d');
 
-        Organisasi::create($request->all());
-        return redirect()->route('organisasi.index', $request->pegawai_id)->with('success', 'Organisasi Berhasil Ditambahkan');
+        Organisasi::create($validatedData);
+        return redirect()->back()->with('success', 'Organisasi Berhasil Ditambahkan');
     }
 
     /**
@@ -87,16 +90,18 @@ class OrganisasiController extends Controller
      */
     public function update(Request $request, Organisasi $organisasi)
     {
-        $request->validate([
+        $validatedData = $request->validate([
             'pegawai_id' => 'required|exists:pegawais,id',
             'jenis'=>'required',
             'nama'=>'required',
             'jabatan'=>'required',
-            'tmt'=>'required'
+            'tmt_organisasi'=>'required|date_format:d-m-Y',
         ]);
+        // Format tanggal
+        $validatedData['tmt_organisasi'] = Carbon::createFromFormat('d-m-Y', $validatedData['tmt_organisasi'])->format('Y-m-d');
 
-        $organisasi->update($request->all());
-        return redirect()->route('pegawai.show', $request->pegawai_id)->with('success', 'Organisasi Berhasil Ditambahkan');
+        $organisasi->update($validatedData);
+        return redirect()->back()->with('success', 'Organisasi Berhasil Diperbarui');
     }
 
     /**
@@ -107,10 +112,10 @@ class OrganisasiController extends Controller
         $organisasi = Organisasi::find($id);
 
         if (!$organisasi) {
-            return redirect()->back()->with('error', 'orga$organisasi tidak ditemukan!');
+            return redirect()->back()->with('error', 'Organisasi tidak ditemukan!');
         }
 
         $organisasi->delete();
-        return redirect()->back()->with('success', 'Istri berhasil dihapus!');
+        return redirect()->back()->with('success', 'Organisasi berhasil dihapus!');
     }
 }

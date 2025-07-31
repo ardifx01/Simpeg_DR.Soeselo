@@ -18,9 +18,9 @@
 </div><!-- End Pengajuan Surat keterangan Title -->
 
 <section class="row mt-4">
-    <form method="GET" action="{{ route('tugas_belajar.index') }}" class="d-flex flex-wrap align-items-center justify-content-between w-100 gap-2 mb-4">
+    <form method="GET" action="{{ route('keterangan.index') }}" class="d-flex flex-wrap align-items-center justify-content-between w-100 gap-2 mb-4">
         <div class="d-flex align-items-center">
-            <a href="{{ route('tugas_belajar.create') }}" class="btn btn-primary">
+            <a href="{{ route('keterangan.create') }}" class="btn btn-primary">
                 <i class="fas fa-plus"></i> Tambah Pengajuan
             </a>
         </div>

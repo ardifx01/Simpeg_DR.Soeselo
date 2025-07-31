@@ -13,11 +13,66 @@ class Pegawai extends Model
     use HasFactory;
 
     protected $table = 'pegawais';
-    protected $guarded = [];
+    protected $fillable = [
+        'image',
+        'nip',
+        'nip_lama',
+        'no_karpeg',
+        'no_kpe',
+        'no_ktp',
+        'no_npwp',
+        'nama',
+        'gelar_depan',
+        'gelar_belakang',
+        'tempat_lahir',
+        'tanggal_lahir',
+        'jenis_kelamin',
+        'agama',
+        'status_nikah',
+        'alamat',
+        'rt',
+        'rw',
+        'desa',
+        'kecamatan',
+        'kabupaten',
+        'provinsi',
+        'pos',
+        'telepon'
+    ];
+
+    public function getNamaLengkapAttribute()
+    {
+        $nama = trim("{$this->gelar_depan} {$this->nama}");
+        if ($this->gelar_belakang) {
+            $nama .= ", {$this->gelar_belakang}";
+        }
+        return $nama;
+    }
+
+    public function getPangkatGolonganAttribute()
+    {
+        $pangkat = optional($this->jabatan)->pangkat;
+        $golongan = optional($this->jabatan)->golongan_ruang;
+
+        if ($pangkat && $golongan) {
+            return "$pangkat / $golongan";
+        }
+
+        if ($pangkat) {
+            return $pangkat;
+        }
+
+        if ($golongan) {
+            return $golongan;
+        }
+
+        return '-';
+    }
     
+    // Accessor agar tetap bisa tampil d-m-Y jika ingin
     public function getTanggalLahirAttribute($value)
     {
-        return Carbon::parse($value)->format('d-m-Y');
+        return Carbon::parse($value)->format('Y-m-d');
     }
 
     public function jabatan(): HasOne

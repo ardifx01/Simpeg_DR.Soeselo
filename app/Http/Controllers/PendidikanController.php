@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Pegawai;
+use Carbon\Carbon;
 use App\Models\Pendidikan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -22,7 +23,7 @@ class PendidikanController extends Controller
             $search = $request->search;
             $query->where('tingkat', 'like', "%$search%")
                 ->orWhere('jurusan', 'like', "%$search%")
-                ->orWhere('nama', 'like', "%$search%");
+                ->orWhere('nama_sekolah', 'like', "%$search%");
         }
 
         // Ambil jumlah data per halaman dari request (default 10)
@@ -55,18 +56,21 @@ class PendidikanController extends Controller
     public function store(Request $request)
     {
         // melakukan validasi data
-        $request->validate([
+        $validatedData = $request->validate([
             'pegawai_id' => 'required|exists:pegawais,id',
-            'tingkat'=>'required',
-            'jurusan'=>'required',
-            'nama'=>'required',
-            'tahun_lulus'=>'required',
-            'no_ijazah'=>'required',
-            'tanggal_ijazah'=>'required'
+            'tingkat' => 'required',
+            'jurusan' => 'required',
+            'nama_sekolah' => 'required',
+            'tahun_lulus' => 'required|numeric|min:1900|max:' . date('Y'),
+            'no_ijazah' => 'required',
+            'tanggal_ijazah' => 'required|date_format:d-m-Y',
         ]);
 
-        Pendidikan::create($request->all());
-        return redirect()->route('pendidikan.index', $request->pegawai_id)->with('success', 'Pendidikan Berhasil Ditambahkan');
+        // Format tanggal
+        $validatedData['tanggal_ijazah'] = Carbon::createFromFormat('d-m-Y', $validatedData['tanggal_ijazah'])->format('Y-m-d');
+
+        Pendidikan::create($validatedData);
+        return redirect()->back()->with('success', 'Pendidikan Berhasil Ditambahkan');
     }
 
     /**
@@ -92,17 +96,21 @@ class PendidikanController extends Controller
     public function update(Request $request, Pendidikan $pendidikan)
     {
         // melakukan validasi data
-        $request->validate([
+        $validatedData = $request->validate([
             'pegawai_id' => 'required|exists:pegawais,id',
-            'tingkat'=>'required',
-            'jurusan'=>'required',
-            'nama'=>'required',
-            'tahun_lulus'=>'required',
-            'no_ijazah'=>'required',
-            'tanggal_ijazah'=>'required'
+            'tingkat' => 'required',
+            'jurusan' => 'required',
+            'nama_sekolah' => 'required',
+            'tahun_lulus' => 'required|numeric|min:1900|max:' . date('Y'),
+            'no_ijazah' => 'required',
+            'tanggal_ijazah' => 'required|date_format:d-m-Y',
         ]);
-        $pendidikan->update($request->all());
-        return redirect()->route('pegawai.show', $pendidikan->pegawai_id)->with('success', 'Pendidikan Berhasil Diperbarui');
+
+        // Format tanggal
+        $validatedData['tanggal_ijazah'] = Carbon::createFromFormat('d-m-Y', $validatedData['tanggal_ijazah'])->format('Y-m-d');
+
+        $pendidikan->update($validatedData);
+        return redirect()->back()->with('success', 'Pendidikan Berhasil Diperbarui');
     }
 
     /**
