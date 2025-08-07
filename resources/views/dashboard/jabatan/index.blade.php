@@ -26,28 +26,33 @@
 
             <!-- Jabatan view -->
             <div class="view">
-                <div class="d-flex justify-content-between row">
-                    <div class="col-sm-2 col-md-8 col-lg-6">
-                        <div class="row mb-3 form-group">
-                            <form method="GET" action="{{ route('jabatan.index') }}" class="d-flex align-items-center">
-                                <label for="per_page" class="me-2">Show:</label>
-                                <select name="per_page" class="form-select w-auto me-3" onchange="this.form.submit()">
-                                    <option value="10" {{ request('per_page') == 10 ? 'selected' : '' }}>10</option>
-                                    <option value="25" {{ request('per_page') == 25 ? 'selected' : '' }}>25</option>
-                                    <option value="50" {{ request('per_page') == 50 ? 'selected' : '' }}>50</option>
-                                    <option value="100" {{ request('per_page') == 100 ? 'selected' : '' }}>100</option>
-                                </select>
-                                <label for="per_page" class="me-2">Entries</label>
-                            </form>
-                        </div>
+                <div class="row align-items-center mb-3">
+                    <div class="col-12 col-md-6 col-lg-4 d-flex align-items-center mb-3 mb-md-0">
+                        <form method="GET" action="{{ route('jabatan.index') }}" class="d-flex align-items-center">
+                            <label for="per_page" class="me-2 text-nowrap">Show:</label>
+                            <select name="per_page" id="per_page" class="form-select w-auto me-2" onchange="this.form.submit()">
+                                <option value="10" {{ request('per_page') == 10 ? 'selected' : '' }}>10</option>
+                                <option value="25" {{ request('per_page') == 25 ? 'selected' : '' }}>25</option>
+                                <option value="50" {{ request('per_page') == 50 ? 'selected' : '' }}>50</option>
+                                <option value="100" {{ request('per_page') == 100 ? 'selected' : '' }}>100</option>
+                            </select>
+                            <label class="text-nowrap">Entries</label>
+                            @if (request()->has('search'))
+                                <input type="hidden" name="search" value="{{ request('search') }}">
+                            @endif
+                        </form>
                     </div>
-                    <div class="col-sm-2 col-md-3 col-lg-2">
+                    
+                    <div class="col-12 col-md-6 col-lg-4 offset-lg-4">
                         <form action="{{ route('jabatan.index') }}" method="GET">
-                            <div class="row mb-3 form-group">
-                                <label type="text" id="search" name="search" for="search" class="col-sm-1 col-md-3 col-lg-3 col-form-label">search: </label>
-                                <div class="col-sm-1 col-md-8 col-lg-9">
-                                    <input type="search" class="form-control" name="search" id="search" value="{{ request('search') }}">
-                                </div>
+                            @if (request()->has('per_page'))
+                                <input type="hidden" name="per_page" value="{{ request('per_page') }}">
+                            @endif
+                            <div class="input-group">
+                                <input type="search" name="search" id="search" class="form-control" placeholder="Cari..." value="{{ request('search') }}">
+                                <button type="submit" class="btn btn-outline-primary">
+                                    <i class="bi bi-search"></i> search
+                                </button>
                             </div>
                         </form>
                     </div>

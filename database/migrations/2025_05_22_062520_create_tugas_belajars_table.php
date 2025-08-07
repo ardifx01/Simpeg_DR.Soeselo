@@ -18,6 +18,12 @@ return new class extends Migration
             $table->string('lembaga');
             $table->string('fakultas');
             $table->string('program_studi');
+            $table->foreignId('atasan_id')->nullable()->constrained('pegawais')->onDelete('set null');
+            $table->string('atasan_nama')->nullable();
+            $table->string('atasan_nip')->nullable();
+            $table->string('atasan_pangkat')->nullable();
+            $table->string('atasan_golongan_ruang')->nullable();
+            $table->string('atasan_jabatan')->nullable();
             $table->timestamps();
         });
     }

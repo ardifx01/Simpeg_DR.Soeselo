@@ -212,27 +212,6 @@ class PegawaiController extends Controller
         return redirect('/dashboard/pegawai')->with('success','Data Pegawai Berhasil Dihapus' );
     }
 
-    // public function updateImage(Request $request, $id)
-    // {
-    //     $validated = $request->validate([
-    //         'image' => 'required|image|mimes:jpg,jpeg,png,gif,bmp|max:2048',
-    //     ]);
-
-    //     $pegawai = Pegawai::findOrFail($id);
-
-    //     // Hapus gambar lama jika ada
-    //     if ($pegawai->image && Storage::disk('public')->exists($pegawai->image)) {
-    //         Storage::disk('public')->delete($pegawai->image);
-    //     }
-
-    //     // Simpan gambar baru
-    //     $path = $request->file('image')->store('foto-profile', 'public');
-    //     $pegawai->image = $path;
-    //     $pegawai->save();
-
-    //     return redirect()->back()->with('success', 'Foto pegawai berhasil diperbarui.');
-    // }
-
     public function rekapGolongan()
     {
         // Ambil jumlah pegawai berdasarkan golongan
@@ -315,12 +294,12 @@ class PegawaiController extends Controller
             'tanggal_lahir' =>$pegawai->tanggal_lahir ?? '-',
             'telepon' =>$pegawai->telepon ?? '-',
             'agama' =>$pegawai->agama ?? '-',
-            'alamat' =>$pegawai->alamat ?? '-',
-            'golongan_ruang' =>$pegawai->golongan_ruang?? '-',
+            'alamat' =>$pegawai->alamat_lengkap ?? '-',
             'tingkat' =>optional($pegawai->pendidikans)->tingkat ?? '-',
-            'jabatan' => optional($pegawai->jabatan)->unit_kerja ?? '-',
-            'pangkat' => optional($pegawai->jabatan)->nama ?? '-',
-            'unit_kerja' => optional($pegawai->jabatan)->skpd ?? '-',
+            'unit_kerja' => optional($pegawai->jabatan)->unit_kerja ?? '-',
+            'nama_jabatan' => optional($pegawai->jabatan)->nama_jabatan ?? '-',
+            'golongan_ruang' =>optional($pegawai->jabatan)->golongan_ruang?? '-',
+            'pangkat' => optional($pegawai->jabatan)->pangkat ?? '-',
         ]);
     }
 

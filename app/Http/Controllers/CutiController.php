@@ -50,9 +50,32 @@ class CutiController extends Controller
      */
     public function create()
     {
-        $pegawais = Pegawai::all();
-        $atasans = Pegawai::all();
+        // Load pegawai dengan relasi jabatan
+        $pegawais = Pegawai::with('jabatan')->get();
+        $atasans = Pegawai::with('jabatan')->get();
         return view('surat.cuti.create', compact('pegawais', 'atasans'));
+    }
+
+    /**
+     * API endpoint untuk mengambil data pegawai
+     */
+    public function getPegawai($id)
+    {
+        try {
+            $pegawai = Pegawai::with('jabatan')->findOrFail($id);
+            
+            return response()->json([
+                'id' => $pegawai->id,
+                'nama' => $pegawai->nama,
+                'nip' => $pegawai->nip,
+                'nama_jabatan' => $pegawai->jabatan ? $pegawai->jabatan->nama_jabatan : null,
+                'unit_kerja' => $pegawai->jabatan ? $pegawai->jabatan->unit_kerja : null,
+                'gelar_depan' => $pegawai->gelar_depan,
+                'gelar_belakang' => $pegawai->gelar_belakang
+            ]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Pegawai tidak ditemukan'], 404);
+        }
     }
 
     /**
@@ -62,29 +85,36 @@ class CutiController extends Controller
     {
         $request->validate([
             'pegawai_id' => 'required|exists:pegawais,id',
-            'jenis_cuti' => 'required',
-            'alasan' => 'required',
+            'jenis_cuti' => 'required|string',
+            'alasan' => 'required|string',
             'alasan_lainnya' => 'nullable|string|max:255',
             'lama_hari' => 'required|integer|min:1',
             'tanggal_mulai' => 'required|date',
             'tanggal_selesai' => 'required|date|after_or_equal:tanggal_mulai',
             'alamat_cuti' => 'required|string|max:255',
             'telepon' => 'required|string|max:15',
-            'atasan_jabatan' => 'required|string|max:255',
             'atasan_id' => 'required|exists:pegawais,id',
-            'atasan_nama' => 'required|string|max:255',
-            'atasan_nip' => 'required|string|max:50',
         ]);
         
         $data = $request->except(['_token']); // Ambil semua data kecuali token CSRF
         if ($request->alasan !== 'lainnya') {
             unset($data['alasan_lainnya']); // Hapus alasan_lainnya jika bukan 'lainnya'
         }
-        $atasanPegawai = Pegawai::find($request->atasan_id);
-        if ($atasanPegawai) {
-            $data['atasan_nama'] = $atasanPegawai->gelar_depan . '. ' . $atasanPegawai->nama . ', ' . $atasanPegawai->gelar_belakang; // Format nama atasan
-            $data['atasan_nip'] = $atasanPegawai->nip;
+        
+        // Ambil data pegawai dengan relasi jabatan
+        $pegawai = Pegawai::with('jabatan')->find($request->pegawai_id);
+        if ($pegawai && $pegawai->jabatan) {
+            $data['nama_jabatan'] = $pegawai->jabatan->nama_jabatan;
+            $data['unit_kerja'] = $pegawai->jabatan->unit_kerja;
         }
+        
+        $atasanPegawai = Pegawai::with('jabatan')->find($request->atasan_id);
+        if ($atasanPegawai) {
+            $data['atasan_nama'] = $atasanPegawai->gelar_depan . '. ' . $atasanPegawai->nama . ', ' . $atasanPegawai->gelar_belakang;
+            $data['atasan_nip'] = $atasanPegawai->nip;
+            $data['atasan_jabatan'] = $atasanPegawai->jabatan?->nama_jabatan;
+        }
+        
         Cuti::create($data);
 
         return redirect()->route('cuti.index')->with('success', 'Pengajuan surat cuti berhasil!');
@@ -131,7 +161,7 @@ class CutiController extends Controller
         $template->setValue('tanggal_surat', \Carbon\Carbon::now()->translatedFormat('d F Y'));
         $template->setValue('nama', $cuti->pegawai->nama);
         $template->setValue('nip', $cuti->pegawai->nip ?? '-');
-        $template->setValue('jabatan', $cuti->pegawai->jabatan->nama_jabatan ?? '-');
+        $template->setValue('nama_jabatan', $cuti->pegawai->jabatan->nama_jabatan ?? '-');
         $template->setValue('unit_kerja', $cuti->pegawai->jabatan->unit_kerja ?? '-');
         $template->setValue('jenis_cuti', ucfirst($cuti->jenis_cuti));
         $template->setValue('alasan', $cuti->alasan === 'lainnya' ? $cuti->alasan_lainnya : $cuti->alasan);

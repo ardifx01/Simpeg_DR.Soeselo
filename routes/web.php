@@ -2,6 +2,7 @@
 
 use App\Models\Keterangan;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\SkpController;
 use App\Http\Controllers\AnakController;
 use App\Http\Controllers\CutiController;
 use App\Http\Controllers\ArsipController;
@@ -96,4 +97,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('pembinaan', PembinaanController::class);
     Route::get('/pembinaan/{id}/export', [PembinaanController::class, 'export'])->name('pembinaan.export');
     
+    Route::resource('skp', SkpController::class);
+    Route::get('/skp/{skp}/cetak/pdf', [SkpController::class, 'cetakPdf'])->name('skp.cetak.pdf');
+    Route::get('/skp/{skp}/cetak/word', [SkpController::class, 'cetakWord'])->name('skp.cetak.word');
+    Route::get('/skp/{skp}/cetak/excel', [SkpController::class, 'cetakExcel'])->name('skp.cetak.excel');
 });

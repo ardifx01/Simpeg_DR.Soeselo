@@ -170,7 +170,7 @@
             <div class="row mb-3 form-group">
                 <label for="alamat" class="col-md-4 col-lg-3 col-form-label">Alamat</label>
                 <div class="col-md-8 col-lg-9">
-                    <textarea name="alamat" class="form-control" id="alamat" style="height: 100px">{{ old('alamat')  ?? $pegawai->alamat }}</textarea>
+                    <textarea name="alamat" class="form-control" id="alamat" style="height: 100px">{{ old('alamat')  ?? $pegawai->alamat_lengkap }}</textarea>
                 </div>
             </div>
 

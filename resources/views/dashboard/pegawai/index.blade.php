@@ -65,7 +65,7 @@
                         </div>
                 
                         <!-- Search -->
-                        <div style="min-width: 250px;">
+                        <div class="col-12 col-md-4">
                             <div class="input-group">
                                 <input type="search" name="search" id="search" class="form-control" value="{{ request('search') }}">
                                 <button type="submit" class="btn btn-outline-primary">
@@ -110,7 +110,7 @@
                                     <td>{{ $pegawai->nama_lengkap }}</td>
                                     <td>{{ $pegawai->nip }}<br>{{ $pegawai->nip_lama }}</td>
                                     <td>{{ $pegawai->jenis_kelamin }}<br>{{ $pegawai->tempat_lahir }}, {{ \Carbon\Carbon::parse($pegawai->tanggal_lahir)->translatedFormat('d F Y') }}</td>
-                                    <td>{{ $pegawai->pangkat_golongan }}<br>{{ $pegawai->jabatan->jenis_kepegawaian }}</td>
+                                    <td>{{ $pegawai->pangkat_golongan }}<br>{{ $pegawai->jabatan?->jenis_kepegawaian ?? '-' }}</td>
                                     <td>{{ $pegawai->jabatan->nama_jabatan ?? '-' }}</td>
                                     <td>
                                         <div class="d-flex justify-content-center">

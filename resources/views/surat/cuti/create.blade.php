@@ -2,63 +2,65 @@
 
 @section('main')
 
-<div class="pagetitle">
-    <div class="row justify-content-between">
-        <div class="col">
-            <h1>Surat Cuti</h1>
+<div class="pagetitle mb-4">
+    <div class="row justify-content-between g-2">
+        <div class="col-auto">
+            <h1 class="h2 fw-bold text-primary">Surat Cuti</h1>
             <nav>
-                <ol class="breadcrumb">
+                <ol class="breadcrumb mb-0">
                     <li class="breadcrumb-item"><a href="{{ route('surat') }}">E-surat</a></li>
-                    <li class="breadcrumb-item active">Pengajuan Surat Cuti / Ijin</li>
+                    <li class="breadcrumb-item"><a href="{{ route('cuti.index') }}">Daftar Surat Cuti</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Pengajuan Surat Cuti / Ijin</li>
                 </ol>
             </nav>
         </div>
     </div>
-</div><div class="container">
+</div>
+
+<div class="container py-4">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <div class="card">
-                <div class="card-header bg-primary text-white">
-                    <h4 class="mb-0">Form Pengajuan Cuti Pegawai</h4>
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white py-3">
+                    <h4 class="mb-0 fw-bold">Form Pengajuan Cuti Pegawai</h4>
                 </div>
 
-                <div class="card-body">
+                <div class="card-body p-4">
                     <form action="{{ route('cuti.store') }}" method="POST">
                         @csrf
-                        <div class="mt-2 mb-4">
-                            <h5 class="border-bottom pb-2">Data Pegawai</h5>
-                            <div class="row">
+                        
+                        <div class="mb-4">
+                            <h5 class="border-bottom pb-2 mb-3">Data Pegawai</h5>
+                            <div class="row g-3">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="pegawai_id">Nama Lengkap</label>
+                                        <label for="pegawai_id" class="form-label">Nama Lengkap</label>
                                         <select class="form-select" aria-label="Default select example" name="pegawai_id" id="pegawai_id" required>
                                             <option selected>-- Pilih Pegawai --</option>
                                             @foreach($pegawais as $pegawai)
                                             <option value="{{ $pegawai->id }}">{{ $pegawai->gelar_depan }}. {{ $pegawai->nama }}, {{ $pegawai->gelar_belakang }}</option>
                                             @endforeach
                                         </select>
-                                        <small id="pegawai-loading" style="display:none; color:gray;">
+                                        <small id="pegawai-loading" class="form-text text-muted" style="display:none;">
                                             Mengambil data pegawai...
                                         </small>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="nip">NIP</label>
+                                        <label for="nip" class="form-label">NIP</label>
                                         <input type="text" class="form-control" name="nip" id="nip" readonly>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="nama_jabatan">Jabatan</label>
+                                        <label for="nama_jabatan" class="form-label">Jabatan</label>
                                         <input type="text" class="form-control" name="nama_jabatan" id="nama_jabatan" readonly>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="unit_kerja">Unit Kerja</label>
+                                        <label for="unit_kerja" class="form-label">Unit Kerja</label>
                                         <input type="text" class="form-control" name="unit_kerja" id="unit_kerja" readonly>
                                     </div>
                                 </div>
@@ -66,143 +68,149 @@
                         </div>
 
                         <div class="mb-4">
-                            <h5 class="border-bottom pb-2">Data Cuti</h5>
-                            <div class="row">
+                            <h5 class="border-bottom pb-2 mb-3">Data Cuti</h5>
+                            <div class="row g-3">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="jenis_cuti">Jenis Cuti</label>
-                                        <select class="form-control @error('jenis_cuti') is-invalid @enderror" id="jenis_cuti" name="jenis_cuti" required>
+                                        <label for="jenis_cuti" class="form-label">Jenis Cuti</label>
+                                        <select class="form-select @error('jenis_cuti') is-invalid @enderror" id="jenis_cuti" name="jenis_cuti" required>
                                             <option value="">-- Pilih Jenis Cuti --</option>
-                                            <option value="tahunan">Cuti Tahunan</option>
-                                            <option value="melahirkan">Cuti Melahirkan</option>
-                                            <option value="penting">Cuti di Luar Tanggungan Negara</option>
-                                            <option value="sakit">Ijin Sakit</option>
-                                            <option value="penting">Ijin Penting</option>
+                                            <option value="Cuti Tahunan">Cuti Tahunan</option>
+                                            <option value="Cuti Melahirkan">Cuti Melahirkan</option>
+                                            <option value="Cuti di Luar Tanggungan Negara">Cuti di Luar Tanggungan Negara</option>
+                                            <option value="Ijin Sakit">Ijin Sakit</option>
+                                            <option value="Ijin Penting">Ijin Penting</option>
                                         </select>
                                         @error('jenis_cuti')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
                                         @enderror
                                     </div>
                                 </div>
-                            </div>
-                            <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="tanggal_mulai">Tanggal Mulai</label>
-                                        <input type="date" class="form-control" id="tanggal_mulai" name="tanggal_mulai" required>
+                                        <label for="alasan" class="form-label">Alasan Cuti</label>
+                                        <select class="form-select @error('alasan') is-invalid @enderror" id="alasan" name="alasan" required>
+                                            <option value="">-- Pilih Alasan Cuti --</option>
+                                            <option value="Cuti Tahunan">Cuti Tahunan</option>
+                                            <option value="Cuti Melahirkan">Cuti Melahirkan</option>
+                                            <option value="Sakit">Sakit</option>
+                                            <option value="Suami / Istri Meninggal">Suami / Istri Meninggal</option>
+                                            <option value="Orang Tua / Mertua Pegawai Meninggal">Orang Tua / Mertua Pegawai Meninggal</option>
+                                            <option value="Istri Pegawai Melahirkan">Istri Pegawai Melahirkan</option>
+                                            <option value="Saudara Kandung Meninggal">Saudara Kandung Meninggal</option>
+                                            <option value="Suami / Istri / Anak Pegawai Sakit Keras">Suami / Istri / Anak Pegawai Sakit Keras</option>
+                                            <option value="Mendapat Musibah Kebakaran / Kebajiran / Bencana Alam">Mendapat Musibah Kebakaran / Kebanjiran / Bencana Alam</option>
+                                            <option value="Pegawai Menikah">Pegawai Menikah</option>
+                                            <option value="Pernikahan Anak Pegawai">Pernikahan Anak Pegawai</option>
+                                            <option value="Pernikahan Saudara Kandung Pegawai">Pernikahan Saudara Kandung Pegawai</option>
+                                            <option value="Mengkhitankan, Membaptis Anak Pegawai">Mengkhitankan, Membaptis Anak Pegawai</option>
+                                            <option value="Melaksanakan Ibadah haji untuk yang pertama kali">Melaksanakan Ibadah haji untuk yang pertama kali</option>
+                                            <option value="Melaksanakan ibadah lainya diluar Ibadah Haji">Melaksanakan ibadah lainya diluar Ibadah Haji</option>
+                                            <option value="Mendapatkan panggilan Dinas">Mendapatkan panggilan Dinas</option>
+                                            <option value="Melaksanakan hak dalam Pemilu">Melaksanakan hak dalam Pemilu</option>
+                                            <option value="Training, Seminar dan / atau Lokakarya">Training, Seminar dan / atau Lokakarya</option>
+                                            <option value="Lainnya">Lainnya</option>
+                                        </select>
+                                        <div id="alasanLainnya" class="mt-2" style="display: none;">
+                                            <input type="text" class="form-control" name="alasan_lainnya" id="alasan_lainnya" placeholder="Masukkan alasan cuti lainnya">
+                                        </div>
+                                        @error('alasan')
+                                        <div class="invalid-feedback d-block">
+                                            <strong>{{ $message }}</strong>
+                                        </div>
+                                        @enderror
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="tanggal_mulai" class="form-label">Tanggal Mulai</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="tanggal_mulai" name="tanggal_mulai" value="{{ old('tanggal_mulai') }}" autocomplete="off" required>
+                                        <button class="btn btn-outline-secondary" type="button" id="btn_tanggal_mulai" for="tanggal_mulai">
+                                            <i class="bi bi-calendar3"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label for="tanggal_selesai" class="form-label">Tanggal Selesai</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="tanggal_selesai" name="tanggal_selesai" value="{{ old('tanggal_selesai') }}" autocomplete="off" required>
+                                        <button class="btn btn-outline-secondary" type="button" id="btn_tanggal_selesai" for="tanggal_selesai">
+                                            <i class="bi bi-calendar3"></i>
+                                        </button>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="tanggal_selesai">Tanggal Selesai</label>
-                                        <input type="date" class="form-control" id="tanggal_selesai" name="tanggal_selesai" required>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="lama_hari">Lama Cuti (hari)</label>
+                                        <label for="lama_hari" class="form-label">Lama Cuti (hari)</label>
                                         <input type="number" class="form-control @error('lama_hari') is-invalid @enderror" id="lama_hari" name="lama_hari" min="1" readonly required>
                                         @error('lama_hari')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
+                                        <div class="invalid-feedback">
+                                            <strong>{{ $message }}</strong>
+                                        </div>
                                         @enderror
                                     </div>
                                 </div>
-                            </div>
-
-                            <div class="mt-4">
-                                <h5 class="border-bottom pb-2">Data Atasan Langsung</h5>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="atasan_jabatan">Jabatan Atasan</label>
-                                            <input type="text" class="form-control" name="atasan_jabatan" id="atasan_jabatan" readonly>
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label for="alamat_cuti" class="form-label">Alamat Selama Cuti</label>
+                                        <textarea class="form-control @error('alamat_cuti') is-invalid @enderror" id="alamat_cuti" name="alamat_cuti" rows="2" required></textarea>
+                                        @error('alamat_cuti')
+                                        <div class="invalid-feedback">
+                                            <strong>{{ $message }}</strong>
                                         </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="atasan_id">Nama Atasan</label>
-                                            <select class="form-select" aria-label="Default select example" name="atasan_id" id="atasan_id" required>
-                                                <option selected>-- Pilih Atasan --</option>
-                                                @foreach($atasans as $atasan)
-                                                <option value="{{ $atasan->id }}" data-nip="{{ $atasan->nip }}" data-nama="{{ $atasan->gelar_depan }}. {{ $atasan->nama }}, {{ $atasan->gelar_belakang }}">{{ $atasan->gelar_depan }}. {{ $atasan->nama }}, {{ $atasan->gelar_belakang }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
+                                        @enderror
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="atasan_nip">NIP Atasan</label>
-                                            <input type="text" class="form-control" name="atasan_nip" id="atasan_nip" readonly>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="telepon" class="form-label">Telepon/HP</label>
+                                        <input type="text" class="form-control @error('telepon') is-invalid @enderror" id="telepon" name="telepon" required>
+                                        @error('telepon')
+                                        <div class="invalid-feedback">
+                                            <strong>{{ $message }}</strong>
                                         </div>
+                                        @enderror
                                     </div>
                                 </div>
-                                
-                                <!-- Hidden field untuk atasan_nama -->
-                                <input type="hidden" name="atasan_nama" id="atasan_nama">
-                            </div>
-                            <div class="form-group">
-                                <label for="alasan">Alasan Cuti</label>
-                                <select class="form-control @error('alasan') is-invalid @enderror" id="alasan" name="alasan" required>
-                                    <option value="">-- Pilih Alasan Cuti --</option>
-                                    <option value="Cuti Tahunan">Cuti Tahunan</option>
-                                    <option value="Cuti Melahirkan">Cuti Melahirkan</option>
-                                    <option value="Ijin Sakit">Sakit</option>
-                                    <option value="Suami / Istri Meninggal">Suami / Istri Meninggal</option>
-                                    <option value="Orang Tua / Mertua Pegawai Meninggal">Orang Tua / Mertua Pegawai Meninggal</option>
-                                    <option value="Istri Pegawai Melahirkan">Istri Pegawai Melahirkan</option>
-                                    <option value="Saudara Kandung Meninggal">Saudara Kandung Meninggal</option>
-                                    <option value="Suami / Istri / Anak Pegawai Sakit Kera">Suami / Istri / Anak Pegawai Sakit Keras</option>
-                                    <option value="Musibah Kebakaran / Kebajiran / Bencana Alam">Musibah Kebakaran / Kebajiran / Bencana Alam</option>
-                                    <option value="Pegawai Menikah">Pegawai Menikah</option>
-                                    <option value="Pernikahan Anak Pegawai">Pernikahan Anak Pegawai</option>
-                                    <option value="Pernikahan Saudara Kandung Pegawai">Pernikahan Saudara Kandung Pegawai</option>
-                                    <option value="Mengkhitankan, Membaptis Anak Pegawai">Mengkhitankan, Membaptis Anak Pegawai</option>
-                                    <option value="Melaksanakan Ibadah haji untuk yang pertama kali">Melaksanakan Ibadah haji untuk yang pertama kali</option>
-                                    <option value="Melaksanakan ibadah lainya diluar Ibadah Haji">Melaksanakan ibadah lainya diluar Ibadah Haji</option>
-                                    <option value="Mendapatkan panggilan Dinas">Mendapatkan panggilan Dinas</option>
-                                    <option value="Melaksanakan hak dalam Pemilu">Melaksanakan hak dalam Pemilu</option>
-                                    <option value="Training, Seminar dan / atau Lokakarya">Training, Seminar dan / atau Lokakarya</option>
-                                    <option value="lainnya">Lainnya</option>
-                                </select>
-                                <div id="alasanLainnya" style="display: none; margin-top: 10px;">
-                                    <input type="text" class="form-control" name="alasan_lainnya" id="alasan_lainnya" placeholder="Masukkan alasan cuti lainnya">
-                                </div>
-                                @error('alasan')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                            <div class="form-group">
-                                <label for="alamat_cuti">Alamat Selama Cuti</label>
-                                <textarea class="form-control @error('alamat_cuti') is-invalid @enderror" id="alamat_cuti" name="alamat_cuti" rows="2" required></textarea>
-                                @error('alamat_cuti')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                            <div class="form-group">
-                                <label for="telepon">Telepon/HP</label>
-                                <input type="text" class="form-control @error('telepon') is-invalid @enderror" id="telepon" name="telepon" rows="2" required></input>
-                                @error('telepon')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
                             </div>
                         </div>
 
-                        <div class="form-group row mb-0">
+                        <div class="mb-4">
+                            <h5 class="border-bottom pb-2 mb-3">Data Atasan Langsung</h5>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="atasan_id" class="form-label">Nama Atasan</label>
+                                        <select class="form-select" aria-label="Default select example" name="atasan_id" id="atasan_id" required>
+                                            <option selected>-- Pilih Atasan --</option>
+                                            @foreach($atasans as $atasan)
+                                            <option value="{{ $atasan->id }}" data-nip="{{ $atasan->nip }}">{{ $atasan->gelar_depan }}. {{ $atasan->nama }}, {{ $atasan->gelar_belakang }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="atasan_jabatan" class="form-label">Jabatan Atasan</label>
+                                        <input type="text" class="form-control" name="atasan_jabatan" id="atasan_jabatan" readonly>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="atasan_nip" class="form-label">NIP Atasan</label>
+                                        <input type="text" class="form-control" name="atasan_nip" id="atasan_nip" readonly>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
                             <div class="col-md-6">
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="fas fa-paper-plane"></i> Ajukan Cuti
+                                <button type="submit" class="btn btn-primary d-block w-100">
+                                    <i class="fas fa-paper-plane me-2"></i> Ajukan Surat Cuti
                                 </button>
                             </div>
                         </div>
@@ -212,6 +220,7 @@
         </div>
     </div>
 </div>
+
 <script>
     document.querySelector('form').addEventListener('submit', function (e) {
         const pegawaiId = document.getElementById('pegawai_id').value;
@@ -232,19 +241,15 @@
         $('#pegawai_id').select2({
             placeholder: "-- Pilih Pegawai --"
         });
-        $('#atasan_id').select2({
+        $('#atasan_id').select2({ // Inisialisasi Select2 untuk atasan
             placeholder: "-- Pilih Atasan --"
         });
-        $('#alasan').select2({
-            placeholder: "-- Pilih Alasan Cuti --"
-        });
 
-        // Event listener untuk pegawai
         $('#pegawai_id').on('change', function () {
             const pegawaiId = $(this).val();
 
             if (!pegawaiId || pegawaiId === '-- Pilih Pegawai --') {
-                clearPegawaiForm();
+                clearPegawaiForm(); // Mengosongkan form pegawai dan atasan
                 return;
             }
 
@@ -259,8 +264,7 @@
                     $('#nip').val(data.nip || '-');
                     $('#nama_jabatan').val(data.nama_jabatan || '-');
                     $('#unit_kerja').val(data.unit_kerja || '-');
-                    
-                    // Panggil fungsi untuk menentukan jabatan atasan
+
                     determineAtasanJabatan(data.nama_jabatan);
                 })
                 .catch(error => {
@@ -276,56 +280,14 @@
         $('#atasan_id').on('change', function() {
             const selectedOption = $(this).find(':selected');
             const atasanNip = selectedOption.data('nip');
-            const atasanNama = selectedOption.data('nama');
 
             if (atasanNip) {
                 $('#atasan_nip').val(atasanNip);
             } else {
                 $('#atasan_nip').val('');
             }
-
-            // Set hidden field atasan_nama
-            if (atasanNama) {
-                $('#atasan_nama').val(atasanNama);
-            } else {
-                $('#atasan_nama').val('');
-            }
         });
 
-        // Event listener untuk perhitungan lama cuti
-        const tanggalMulai = document.getElementById('tanggal_mulai');
-        const tanggalSelesai = document.getElementById('tanggal_selesai');
-        const lamaCuti = document.getElementById('lama_hari');
-
-        function hitungLamaCuti() {
-            const mulai = new Date(tanggalMulai.value);
-            const selesai = new Date(tanggalSelesai.value);
-
-            if (tanggalMulai.value && tanggalSelesai.value && selesai >= mulai) {
-                const selisih = Math.floor((selesai - mulai) / (1000 * 60 * 60 * 24)) + 1;
-                lamaCuti.value = selisih;
-            } else {
-                lamaCuti.value = '';
-            }
-        }
-
-        tanggalMulai.addEventListener('change', hitungLamaCuti);
-        tanggalSelesai.addEventListener('change', hitungLamaCuti);
-
-        // Event listener untuk alasan cuti lainnya
-        $('#alasan').on('change', function() {
-            const alasanLainnya = document.getElementById('alasanLainnya');
-            
-            if (this.value === 'lainnya') {
-                alasanLainnya.style.display = 'block';
-                document.getElementById('alasan_lainnya').required = true;
-            } else {
-                alasanLainnya.style.display = 'none';
-                document.getElementById('alasan_lainnya').required = false;
-            }
-        });
-
-        // Fungsi helper
         function clearPegawaiForm() {
             $('#nip').val('');
             $('#nama_jabatan').val('');
@@ -333,7 +295,6 @@
             $('#atasan_jabatan').val('');
             $('#atasan_id').val('').trigger('change');
             $('#atasan_nip').val('');
-            $('#atasan_nama').val('');
         }
 
         function determineAtasanJabatan(jabatanPegawai) {
@@ -438,6 +399,44 @@
 
             $('#atasan_jabatan').val(atasanJabatan);
         }
+
+        const tanggalMulai = document.getElementById('tanggal_mulai');
+        const tanggalSelesai = document.getElementById('tanggal_selesai');
+        const lamaCuti = document.getElementById('lama_hari');
+
+        function hitungLamaCuti() {
+            const mulai = new Date(tanggalMulai.value);
+            const selesai = new Date(tanggalSelesai.value);
+
+            if (tanggalMulai.value && tanggalSelesai.value && selesai >= mulai) {
+                const selisih = Math.floor((selesai - mulai) / (1000 * 60 * 60 * 24)) + 1;
+                lamaCuti.value = selisih;
+            } else {
+                lamaCuti.value = '';
+            }
+        }
+
+        tanggalMulai.addEventListener('change', hitungLamaCuti);
+        tanggalSelesai.addEventListener('change', hitungLamaCuti);
+
+        
+        // Inisialisasi Select2 untuk alasan
+        $('#alasan').select2({
+            placeholder: "-- Pilih Alasan Cuti --"
+        });
+
+        // Event listener untuk perubahan nilai pada Select2 alasan
+        $('#alasan').on('change', function() {
+            const alasanLainnya = document.getElementById('alasanLainnya');
+            
+            if (this.value === 'lainnya') {
+                alasanLainnya.style.display = 'block';
+                document.getElementById('alasan_lainnya').required = true;
+            } else {
+                alasanLainnya.style.display = 'none';
+                document.getElementById('alasan_lainnya').required = false;
+            }
+        });
     });
 </script>
 @endsection

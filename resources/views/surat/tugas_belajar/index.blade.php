@@ -10,7 +10,7 @@
             <nav>
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="{{ route('surat') }}">E-surat</a></li>
-                    <li class="breadcrumb-item active">Daftar Surat TugasB elajar</li>
+                    <li class="breadcrumb-item active">Daftar Surat Tugas Belajar</li>
                 </ol>
             </nav>
         </div>
@@ -24,7 +24,7 @@
                 <i class="fas fa-plus"></i> Tambah Pengajuan
             </a>
         </div>
-        <div style="min-width: 250px;">
+        <div class="col-12 col-md-4">
             <div class="input-group">
                 <input type="search" name="search" id="search" class="form-control" value="{{ request('search') }}">
                 <button type="submit" class="btn btn-outline-primary">
@@ -51,7 +51,7 @@
             <tr>
                 <td>{{ $tugasbelajar->pegawai->nama }}</td>
                 <td>{{ $tugasbelajar->pegawai->nip }}</td>
-                <td>{{ $tugasbelajar->pegawai->jabatan->nama ?? '-' }}</td>
+                <td>{{ $tugasbelajar->pegawai->jabatan->nama_jabatan ?? '-' }}</td>
                 <td>{{ $tugasbelajar->program }}</td>
                 <td>{{ $tugasbelajar->lembaga }}</td>
                 <td>{{ $tugasbelajar->fakultas }}</td>

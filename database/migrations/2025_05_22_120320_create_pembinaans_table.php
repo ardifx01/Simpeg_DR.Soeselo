@@ -14,11 +14,16 @@ return new class extends Migration
         Schema::create('pembinaans', function (Blueprint $table) {
             $table->id();
             $table->foreignId('pegawai_id')->constrained()->onDelete('cascade');
-            $table->string('nama');
+            $table->string('nama_pasangan');
             $table->string('pekerjaan');
             $table->string('agama');
             $table->string('alamat');
             $table->string('hubungan');
+            $table->string('status_perceraian')->nullable();
+            $table->foreignId('atasan_id')->nullable()->constrained('pegawais')->onDelete('set null');
+            $table->string('atasan_nama')->nullable();
+            $table->string('atasan_nip')->nullable();
+            $table->string('atasan_jabatan')->nullable();
             $table->timestamps();
         });
     }

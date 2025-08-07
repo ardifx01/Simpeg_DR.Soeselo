@@ -14,6 +14,9 @@ return new class extends Migration
         Schema::create('cutis', function (Blueprint $table) {
             $table->id();
             $table->foreignId('pegawai_id')->constrained()->onDelete('cascade');
+            $table->string('nip')->nullable();
+            $table->string('nama_jabatan')->nullable();
+            $table->string('unit_kerja')->nullable();
             $table->string('jenis_cuti');
             $table->string('alasan')->nullable();
             $table->string('alasan_lainnya')->nullable();
@@ -22,6 +25,11 @@ return new class extends Migration
             $table->date('tanggal_selesai')->nullable();
             $table->string('alamat_cuti')->nullable();
             $table->string('telepon')->nullable();
+            $table->foreignId('atasan_id')->nullable()->constrained('pegawais')->onDelete('set null');
+            $table->string('atasan_nama')->nullable();
+            $table->string('atasan_nip')->nullable();
+            $table->string('atasan_jabatan')->nullable();
+            
             $table->enum('status', ['diproses', 'disetujui', 'ditolak'])->default('diproses');
             $table->timestamps();
         });

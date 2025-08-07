@@ -60,16 +60,34 @@ class PembinaanController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+        // Validasi data yang masuk dari request
+        $validatedData = $request->validate([
             'pegawai_id' => 'required|exists:pegawais,id',
-            'nama' => 'required',
-            'pekerjaan' => 'required',
-            'agama' => 'required',
-            'alamat' => 'required',
+            'atasan_id' => 'required|exists:pegawais,id',
+            'nama_pasangan' => 'required|string|max:255',
+            'pekerjaan' => 'required|string|max:255',
+            'agama' => 'required|string|max:255',
+            'alamat' => 'required|string|max:255',
             'hubungan' => 'required|in:Suami,Istri',
+            'status_perceraian' => 'nullable|string|max:255',
         ]);
 
-        pembinaan::create($request->all());
+        // Mengambil semua data yang sudah divalidasi
+        $data = $validatedData;
+
+        // Ambil data atasan pegawai berdasarkan atasan_id yang dipilih
+        $atasanPegawai = Pegawai::with('jabatan')->find($data['atasan_id']);
+
+        if ($atasanPegawai) {
+            // Mengisi kolom-kolom atasan dari data pegawai yang ditemukan
+            $data['atasan_nama'] = $atasanPegawai->nama_lengkap;
+            $data['atasan_nip'] = $atasanPegawai->nip;
+            $data['atasan_jabatan'] = $atasanPegawai->jabatan?->nama_jabatan;
+        }
+
+        unset($data['atasan_id']);
+
+        Pembinaan::create($data);
 
         return redirect()->route('pembinaan.index')->with('success', 'Pengajuan surat pembinaan berhasil!');
     }
@@ -108,29 +126,36 @@ class PembinaanController extends Controller
 
     public function export($id)
     {
-        $pembinaan = Pembinaan::with('pegawai.jabatan')->findOrFail($id);
+        // Mencari data pembinaan beserta relasi pegawai dan jabatan terkait
+        $pembinaan = Pembinaan::with('pegawai.jabatan', 'atasan.jabatan')->findOrFail($id);
 
+        // Path ke template Word yang akan digunakan
         $template = new TemplateProcessor(storage_path('app/templates/pembinaan_template.docx'));
 
+        // Mengisi data pada template Word
         $template->setValue('hari_tanggal', Carbon::now()->translatedFormat('l, d F Y'));
-        $template->setValue('nama_pegawai', $pembinaan->pegawai->nama);
-        $template->setValue('nip', $pembinaan->pegawai->nip ?? '-');
-        $template->setValue('pangkat', $pembinaan->pegawai->jabatan->nama ?? '-');
-        $template->setValue('gologan_ruang', $pembinaan->pegawai->golongan_ruang ?? '-');
-        $template->setValue('jabatan', $pembinaan->pegawai->jabatan->unit_kerja ?? '-');
+        $template->setValue('nama_pegawai', $pembinaan->pegawai->nama_lengkap);
+        $template->setValue('nip_pegawai', $pembinaan->pegawai->nip ?? '-');
+        $template->setValue('pangkat_pegawai', $pembinaan->pegawai->pangkat ?? '-');
+        $template->setValue('golongan_ruang_pegawai', $pembinaan->pegawai->golongan_ruang ?? '-');
+        $template->setValue('jabatan_pegawai', $pembinaan->pegawai->jabatan?->nama_jabatan ?? '-');
         $template->setValue('agama_pegawai', $pembinaan->pegawai->agama ?? '-');
-        $template->setValue('alamat_pegawai', $pembinaan->pegawai->alamat ?? '-');
-        $status = $pembinaan->pegawai->jabatan->jenis_kepegawaian ?? null;
+        $template->setValue('alamat_pegawai', $pembinaan->pegawai->alamat_lengkap ?? '-');
+        $status = $pembinaan->pegawai->jabatan?->jenis_kepegawaian ?? null;
         $statusFinal = in_array($status, ['PNS', 'PPPK', 'CPNS']) ? 'ASN' : ($status === 'BLUD' ? 'BLUD' : '-');
-        $template->setValue('status', $statusFinal);
-        $template->setValue('nama', $pembinaan->nama);
+        $template->setValue('status_kepegawaian', $statusFinal);
+        $template->setValue('nama_pasangan', $pembinaan->nama_pasangan);
         $template->setValue('pekerjaan', $pembinaan->pekerjaan ?? '-');
-        $template->setValue('agama', $pembinaan->agama ?? '-');
-        $template->setValue('alamat', $pembinaan->alamat);
+        $template->setValue('agama_pasangan', $pembinaan->agama ?? '-');
+        $template->setValue('alamat_pasangan', $pembinaan->alamat);
         $template->setValue('hubungan', ucfirst($pembinaan->hubungan));
+        $template->setValue('status_perceraian', $pembinaan->status_perceraian ?? '-');
+        $template->setValue('nama_atasan', $pembinaan->atasan?->nama_lengkap ?? '-');
+        $template->setValue('nip_atasan', $pembinaan->atasan?->nip ?? '-');
+        $template->setValue('jabatan_atasan', $pembinaan->atasan?->jabatan?->nama_jabatan ?? '-');
 
+        // Menyimpan file dan mengunduhnya
         $filename = 'surat_pembinaan_' . str_replace(' ', '_', strtolower($pembinaan->pegawai->nama)) . '.docx';
-
         $path = storage_path("app/public/{$filename}");
         $template->saveAs($path);
 

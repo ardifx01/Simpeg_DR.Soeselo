@@ -9,7 +9,7 @@ class Keterangan extends Model
     protected $fillable = [
         'pegawai_id', 'jenis_keterangan', 'nama', 'nik', 'tempat_lahir',
         'tanggal_lahir', 'agama', 'pekerjaan', 'alamat', 'hubungan',
-        'status'
+        'status_rawat'
     ];
 
     public function pegawai()

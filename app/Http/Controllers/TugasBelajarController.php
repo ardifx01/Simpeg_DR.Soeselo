@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\Pegawai;
 use App\Models\TugasBelajar;
 use Illuminate\Http\Request;
@@ -59,15 +60,34 @@ class TugasBelajarController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+        // Validasi data yang masuk dari request
+        $validatedData = $request->validate([
             'pegawai_id' => 'required|exists:pegawais,id',
-            'program' => 'required',
-            'lembaga' => 'required',
-            'fakultas' => 'required',
-            'program_studi' => 'required',
+            'atasan_id' => 'required|exists:pegawais,id',
+            'program' => 'required|string|max:255',
+            'lembaga' => 'required|string|max:255',
+            'fakultas' => 'required|string|max:255',
+            'program_studi' => 'required|string|max:255',
         ]);
 
-        tugasbelajar::create($request->all());
+        // Mengambil semua data yang sudah divalidasi
+        $data = $validatedData;
+
+        // Ambil data atasan pegawai berdasarkan atasan_id yang dipilih
+        $atasanPegawai = Pegawai::with('jabatan')->find($data['atasan_id']);
+
+        if ($atasanPegawai) {
+            // Mengisi kolom-kolom atasan dari data pegawai yang ditemukan
+            $data['atasan_nama'] = $atasanPegawai->nama_lengkap;
+            $data['atasan_nip'] = $atasanPegawai->nip;
+            $data['atasan_pangkat'] = $atasanPegawai->pangkat ?? null;
+            $data['atasan_golongan_ruang'] = $atasanPegawai->golongan_ruang ?? null;
+            $data['atasan_jabatan'] = $atasanPegawai->jabatan?->nama_jabatan;
+        }
+
+        unset($data['atasan_id']);
+
+        TugasBelajar::create($data);
 
         return redirect()->route('tugas_belajar.index')->with('success', 'Pengajuan surat tugas belajar berhasil!');
     }
@@ -110,22 +130,30 @@ class TugasBelajarController extends Controller
 
         $template = new TemplateProcessor(storage_path('app/templates/tugas_belajar_template.docx'));
 
-        $template->setValue('tanggal_surat', \Carbon\Carbon::now()->translatedFormat('d F Y'));
-        $template->setValue('nama', $tugasbelajar->pegawai->nama);
-        $template->setValue('nip', $tugasbelajar->pegawai->nip);
-        $template->setValue('golongan_ruang', $tugasbelajar->pegawai->golongan_ruang ?? '-');
-        $template->setValue('tempat_lahir', $tugasbelajar->pegawai->tempat_lahir ?? '-');
-        $template->setValue('tanggal_lahir', $tugasbelajar->pegawai->tanggal_lahir ?? '-');
-        $template->setValue('alamat', $tugasbelajar->pegawai->alamat ?? '-');
-        $template->setValue('telepon', $tugasbelajar->pegawai->telepon ?? '-');
-        $template->setValue('pendidikan', $tugasbelajar->pegawai->pendidikan->tingkat ?? '-');
-        $template->setValue('pangkat', $tugasbelajar->pegawai->jabatan->nama ?? '-');
-        $template->setValue('jabatan', $tugasbelajar->pegawai->jabatan->unit_kerja ?? '-');
-        $template->setValue('unit_kerja', $tugasbelajar->pegawai->jabatan->skpd ?? '-');
-        $template->setValue('program', $tugasbelajar->program);
-        $template->setValue('lembaga', $tugasbelajar->lembaga);
-        $template->setValue('fakultas', $tugasbelajar->fakultas);
-        $template->setValue('program_studi', $tugasbelajar->program_studi);
+        $template->setValue('nama_pegawai', $tugasbelajar->pegawai->nama_lengkap ?? '-');
+        $template->setValue('nip_pegawai', $tugasbelajar->pegawai->nip ?? '-');
+        $template->setValue('pangkat_pegawai', $tugasbelajar->pegawai->pangkat ?? '-');
+        $template->setValue('golongan_ruang_pegawai', $tugasbelajar->pegawai->golongan_ruang ?? '-');
+        $template->setValue('jabatan_pegawai', $tugasbelajar->pegawai->jabatan->nama_jabatan ?? '-');
+        $template->setValue('unit_kerja_pegawai', $tugasbelajar->pegawai->jabatan->unit_kerja ?? '-');
+        $template->setValue('tempat_lahir_pegawai', $tugasbelajar->pegawai->tempat_lahir ?? '-');
+        $tanggalLahir = $tugasbelajar->pegawai->tanggal_lahir;
+        $tanggalLahirFormatted = $tanggalLahir ? Carbon::parse($tanggalLahir)->translatedFormat('d F Y') : '-';
+        $template->setValue('tanggal_lahir_pegawai', $tanggalLahirFormatted);
+        $usia = $tanggalLahir ? Carbon::parse($tanggalLahir)->age : '-';
+        $template->setValue('usia_pegawai', $usia);        $template->setValue('alamat_pegawai', $tugasbelajar->pegawai->alamat_lengkap ?? '-');
+        $template->setValue('telepon_pegawai', $tugasbelajar->pegawai->telepon ?? '-');
+        $template->setValue('pendidikan_pegawai', $tugasbelajar->pegawai->pendidikan->tingkat ?? '-');
+        $template->setValue('program', $tugasbelajar->program ?? '-');
+        $template->setValue('lembaga', $tugasbelajar->lembaga ?? '-');
+        $template->setValue('fakultas', $tugasbelajar->fakultas ?? '-');
+        $template->setValue('program_studi', $tugasbelajar->program_studi ?? '-');
+        $template->setValue('nama_atasan', $tugasbelajar->atasan->nama_lengkap ?? '-');
+        $template->setValue('nip_atasan', $tugasbelajar->atasan->nip ?? '-');
+        $template->setValue('nip_unit_kerja', $tugasbelajar->atasan->unit_kerja ?? '-');
+        $template->setValue('pangkat_atasan', $tugasbelajar->atasan->pangkat ?? '-');
+        $template->setValue('golongan_ruang_atasan', $tugasbelajar->atasan->golongan_ruang ?? '-');
+        $template->setValue('jabatan_atasan', $tugasbelajar->atasan->jabatan->nama_jabatan ?? '-');
 
         $filename = 'surat_tugas_belajar_' . str_replace(' ', '_', strtolower($tugasbelajar->pegawai->nama)) . '.docx';
 

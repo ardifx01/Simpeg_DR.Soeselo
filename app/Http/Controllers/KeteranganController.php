@@ -62,14 +62,15 @@ class KeteranganController extends Controller
         $request->validate([
             'pegawai_id' => 'required|exists:pegawais,id',
             'jenis_keterangan' => 'required',
-            'nama' => 'required',
-            'nik' => 'required',
-            'tempat_lahir' => 'required',
-            'tanggal_lahir' => 'required',
-            'agama' => 'required',
-            'pekerjaan' => 'required',
-            'alamat' => 'required',
-            'hubungan' => 'required',
+            'nama' => 'nullable|string|max:255',
+            'nik' => 'nullable|string|max:255',
+            'tempat_lahir' => 'nullable|string|max:255',
+            'tanggal_lahir' => 'nullable|string|max:255',
+            'agama' => 'nullable|string|max:255',
+            'pekerjaan' => 'nullable|string|max:255',
+            'alamat' => 'nullable|string|max:255',
+            'hubungan' => 'nullable|string|max:255',
+            'status_rawat' => 'nullable|string|max:255',
         ]);
 
         Keterangan::create($request->all());
@@ -118,21 +119,23 @@ class KeteranganController extends Controller
         $template->setValue('tanggal_surat', \Carbon\Carbon::now()->translatedFormat('d F Y'));
         $template->setValue('nama_pegawai', $keterangan->pegawai->nama);
         $template->setValue('nip', $keterangan->pegawai->nip ?? '-');
-        $template->setValue('tampat_lahir_pegawai', $keterangan->pegawai->tampat_lahir ?? '-');
+        $template->setValue('tempat_lahir_pegawai', $keterangan->pegawai->tempat_lahir ?? '-');
         $template->setValue('tanggal_lahir_pegawai', \Carbon\Carbon::parse($keterangan->pegawai->tanggal_lahir)->format('d-m-Y'));
-        $template->setValue('jabatan', $keterangan->pegawai->jabatan->nama ?? '-');
+        $template->setValue('jabatan', $keterangan->pegawai->jabatan->nama_jabatan ?? '-');
         $template->setValue('pendidikan', $keterangan->pegawai->pendidikan->tingkat ?? '-');
         $template->setValue('alamat_pegawai', $keterangan->pegawai->alamat ?? '-');
         $template->setValue('unit_kerja', $keterangan->pegawai->jabatan->unit_kerja ?? '-');
         $status = $keterangan->pegawai->jabatan->jenis_kepegawaian ?? null;
         $statusFinal = in_array($status, ['PNS', 'PPPK', 'CPNS']) ? 'ASN' : ($status === 'BLUD' ? 'BLUD' : '-');
         $template->setValue('status', $statusFinal);
+        $template->setValue('status_rawat', $keterangan->status_rawat);
         $template->setValue('nama', $keterangan->nama);
         $template->setValue('nik', $keterangan->nik ?? '-');
         $template->setValue('tempat_lahir', $keterangan->tempat_lahir ?? '-');
         $template->setValue('tanggal_lahir', \Carbon\Carbon::parse($keterangan->tanggal_lahir)->format('d-m-Y'));
         $template->setValue('agama', $keterangan->agama ?? '-');
         $template->setValue('alamat', $keterangan->alamat);
+        $template->setValue('pekerjaan', $keterangan->pekerjaan);
         $template->setValue('hubungan', ucfirst($keterangan->hubungan));
 
         $filename = 'surat_keterangan_' . str_replace(' ', '_', strtolower($keterangan->pegawai->nama)) . '.docx';

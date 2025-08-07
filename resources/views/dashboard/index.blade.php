@@ -25,7 +25,7 @@
             <!-- E-personal Card -->
             <div class="col-xxl-3 col-md-6">
                 <a href="{{ route('dashboard.epersonal') }}">
-                    <div class="card info-card pegawai-card">
+                    <div class="card info-card pegawai-card" data-aos="zoom-in">
                     <div class="card-body">
                         <h5 class="card-title">E-personal</h5>
                         <div class="d-flex align-items-center">
@@ -45,7 +45,7 @@
             <!-- E-surat Card -->
             <div class="col-xxl-3 col-md-6">
                 <a href="{{ route('surat') }}">
-                    <div class="card info-card opd-card">
+                    <div class="card info-card opd-card" data-aos="zoom-in">
                     <div class="card-body">
                         <h5 class="card-title">E-surat</h5>
                         <div class="d-flex align-items-center">
@@ -64,7 +64,7 @@
             <!-- Diklat Card -->
             <div class="col-xxl-3 col-md-6">
                 <a href="">
-                    <div class="card info-card diklat-card">
+                    <div class="card info-card diklat-card" data-aos="zoom-in">
                     <div class="card-body">
                         <h5 class="card-title">Diklat</h5>
                         <div class="d-flex align-items-center">
@@ -82,8 +82,8 @@
 
             <!-- Penghargaan Card -->
             <div class="col-xxl-3 col-md-6">
-                <a href="">
-                    <div class="card info-card penghargaan-card">
+                <a href="{{ route('penghargaan.index') }}">
+                    <div class="card info-card penghargaan-card" data-aos="zoom-in">
                     <div class="card-body">
                         <h5 class="card-title">Penghargaan</h5>
                         <div class="d-flex align-items-center">
@@ -103,7 +103,7 @@
             <div class="row m-0">
                 @if (!empty($rekapGolongan) && count($rekapGolongan) > 0)
                 <div class="col-xxl-12">
-                    <div class="card">
+                    <div class="card" data-aos="fade-up">
                         <div class="card-body">
                             <h5 class="card-title">Statistik Jumlah Pegawai Berdasarkan Golongan</h5>
                             <div id="chartGolongan"></div>
@@ -113,8 +113,8 @@
                 @endif
 
                 <div class="col-xxl-12 col-md-6">
-                    <div class="card">
-                        <div class="card-body">
+                    <div class="card" data-aos="fade-up">
+                        <div class="card-body" data-aos="fade-up">
                             <h5 class="card-title">Statistik Jumlah Pegawai Berdasarkan Jabatan</h5>
                             <div id="chartJabatan"></div>
                         </div>
@@ -122,7 +122,7 @@
                 </div>
             
                 <div class="col-xxl-6 col-md-6">
-                    <div class="card">
+                    <div class="card" data-aos="fade-up">
                         <div class="card-body">
                             <h5 class="card-title">Statistik Jumlah Pegawai Berdasarkan Status Kepegawaian</h5>
                             <div id="chartKepegawaian"></div>
@@ -131,7 +131,7 @@
                 </div>
             
                 <div class="col-xxl-6 col-md-6">
-                    <div class="card">
+                    <div class="card" data-aos="fade-up">
                         <div class="card-body">
                             <h5 class="card-title">Statistik Jumlah Pegawai Berdasarkan Eselon</h5>
                             <div id="chartEselon"></div>
@@ -140,7 +140,7 @@
                 </div>
             
                 <div class="col-xxl-6 col-md-6">
-                    <div class="card">
+                    <div class="card" data-aos="fade-up">
                         <div class="card-body">
                             <h5 class="card-title">Statistik Jumlah Pegawai Berdasarkan Agama</h5>
                             <div id="chartAgama"></div>
@@ -149,7 +149,7 @@
                 </div>
             
                 <div class="col-xxl-6 col-md-6">
-                    <div class="card">
+                    <div class="card" data-aos="fade-up">
                         <div class="card-body">
                             <h5 class="card-title">Statistik Jumlah Pegawai Berdasarkan Jenis Kelamin</h5>
                             <div id="chartJenisKelamin"></div>
@@ -158,7 +158,7 @@
                 </div>
             
                 <div class="col-xxl-6 col-md-6">
-                    <div class="card">
+                    <div class="card" data-aos="fade-up">
                         <div class="card-body">
                             <h5 class="card-title">Statistik Jumlah Pegawai Berdasarkan Status Nikah</h5>
                             <div id="chartStatusNikah"></div>
@@ -167,7 +167,7 @@
                 </div>
                 
                 <div class="col-xxl-6 col-md-6">
-                    <div class="card">
+                    <div class="card" data-aos="fade-up">
                         <div class="card-body">
                             <h5 class="card-title">Statistik Jumlah Pegawai Berdasarkan Pendidikan Akhir</h5>
                             <div id="chartPendidikan"></div>

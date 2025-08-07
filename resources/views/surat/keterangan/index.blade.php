@@ -24,7 +24,7 @@
                 <i class="fas fa-plus"></i> Tambah Pengajuan
             </a>
         </div>
-        <div style="min-width: 250px;">
+        <div class="col-12 col-md-4">
             <div class="input-group">
                 <input type="search" name="search" id="search" class="form-control" value="{{ request('search') }}">
                 <button type="submit" class="btn btn-outline-primary">
@@ -49,7 +49,7 @@
             <tr>
                 <td>{{ $keterangan->pegawai->nama }}</td>
                 <td>{{ $keterangan->pegawai->nip }}</td>
-                <td>{{ $keterangan->pegawai->jabatan->nama ?? '-' }}</td>
+                <td>{{ $keterangan->pegawai->jabatan->nama_jabatan ?? '-' }}</td>
                 <td>{{ ucfirst($keterangan->jenis_keterangan) }}</td>
                 <td>
                     <a href="{{ route('keterangan.export', $keterangan->id) }}" class="btn btn-success btn-sm">

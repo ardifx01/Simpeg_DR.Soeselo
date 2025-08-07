@@ -1,9 +1,12 @@
-<div class="d-flex align-items-center justify-content-between">
-    <a href="{{ route('dashboard') }}" class="logo d-flex align-items-center">
-        <img src="{{ asset('assets/img/logo.png') }}" alt="">
-        <h5 class="d-none d-lg-block ms-2">Sistem Informasi Kepegawaian</h5>
+<div class="d-flex align-items-center justify-content-between py-2">
+    <a href="{{ route('dashboard') }}" class="d-flex align-items-center text-decoration-none">
+        <img src="{{ asset('assets/img/logo.png') }}" alt="" style="height: 40px;">
+        <div class="d-none fw-bold d-lg-flex flex-column ms-2">
+            <span style="line-height: 1.2;">Sistem Informasi</span>
+            <span style="line-height: 1.2;">Kepegawaian</span>
+        </div>
     </a>
-    <i class="bi bi-list toggle-sidebar-btn"></i>
+    <i class="bi bi-list toggle-sidebar-btn fs-4"></i>
 </div><!-- End Logo -->
 
 <div class="search-bar">

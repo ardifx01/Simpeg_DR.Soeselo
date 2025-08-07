@@ -55,7 +55,7 @@
     <main id="main" class="main">
         {{-- Notifikasi berhasil --}}
         @if (session('success'))
-            <div class="alert alert-success">
+            <div class="alert alert-success alert-dismissible fade show" role="alert" id="alert-success">
                 {{ session('success') }}
                 <button type="button" class="btn-close float-end" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
@@ -63,15 +63,16 @@
 
         {{-- Notifikasi error --}}
         @if ($errors->any())
-            <div class="alert alert-danger">
+            <div class="alert alert-danger alert-dismissible fade show" role="alert" id="alert-error">
                 <ul class="mb-0">
                     @foreach ($errors->all() as $error)
                         <li>{{ $error }}</li>
-                        <button type="button" class="btn-close float-end" data-bs-dismiss="alert" aria-label="Close"></button>
                     @endforeach
                 </ul>
+                <button type="button" class="btn-close float-end" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         @endif
+
         @yield('main')
 
     </main><!-- End #main -->
@@ -84,6 +85,10 @@
     </footer><!-- End Footer -->
 
     <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+    
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     
     <!-- jQuery CDN -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
@@ -109,16 +114,112 @@
     <script src="{{ asset('assets/js/main.js') }}"></script>
 
     <script>
+        AOS.init();
+
+        // Tutup alert otomatis setelah 2 detik
+        setTimeout(function() {
+            let alertSuccess = document.getElementById('alert-success');
+            let alertError = document.getElementById('alert-error');
+            if (alertSuccess) {
+                let bsAlert = bootstrap.Alert.getOrCreateInstance(alertSuccess);
+                bsAlert.close();
+            }
+            if (alertError) {
+                let bsAlert = bootstrap.Alert.getOrCreateInstance(alertError);
+                bsAlert.close();
+            }
+        }, 2000);
+
         document.addEventListener("DOMContentLoaded", function () {
             let spanTanggal = document.getElementById("tanggalSekarang");
 
-            // Ambil tanggal sekarang
-            let today = new Date();
-            let options = { day: "numeric", month: "long", year: "numeric" };
-            let formattedDate = today.toLocaleDateString("id-ID", options); // Format: dd mm yyyy
+            if (spanTanggal) {
+                // Ambil tanggal sekarang
+                let today = new Date();
+                let options = { day: "numeric", month: "long", year: "numeric" };
+                let formattedDate = today.toLocaleDateString("id-ID", options);
 
-            // Set value pada span
-            spanTanggal.textContent = formattedDate;
+                // Set value pada span
+                spanTanggal.textContent = formattedDate;
+            }
+        });
+
+        $(document).ready(function () {
+            let dateFields = [
+                {inputSelector: '[id^="catatan_tanggal"]', buttonSelector: '[for^="btn_catatan_tanggal"]'},
+                {inputSelector: '[id^="edit_catatan_tanggal"]', buttonSelector: '[for^="btn_edit_catatan_tanggal"]'},
+                {inputSelector: '[id^="tanggal_mulai"]', buttonSelector: '[id^="btn_tanggal_mulai"]'},
+                {inputSelector: '[id^="tanggal_selesai"]', buttonSelector: '[id^="btn_tanggal_selesai"]'},
+                {inputSelector: '[id^="tanggal_lahir_keluarga"]', buttonSelector: '[id^="btn_tanggal_lahir_keluarga"]'},
+                {inputSelector: '[id^="tanggal_hukuman"]', buttonSelector: '[id^="btn_tanggal_hukuman"]'}
+            ];
+
+            dateFields.forEach(function(field) {
+                $(field.inputSelector).each(function () {
+                    if (!$(this).data('datepicker')) {
+                        $(this).datepicker({
+                            autoclose: true,
+                            clearBtn: true,
+                            format: "dd-mm-yyyy",
+                            todayHighlight: true,
+                            orientation: "bottom auto"
+                        });
+                    }
+                });
+
+                // Pastikan tombol show datepicker bekerja untuk semua ID dengan prefix sama
+                $(field.buttonSelector).off('click').on('click', function () {
+                    let targetId = $(this).attr('for');
+                    $('#' + targetId).datepicker('show');
+                });
+            });
+        });
+
+        $(document).ready(function() {
+            // Object configuration untuk kemudahan maintenance
+            const select2Configs = {
+                '#pegawai_dinilai_id': {
+                    placeholder: "-- Pilih Pegawai --",
+                    allowClear: true
+                },
+                '#pegawai_penilai_id': {
+                    placeholder: "-- Pilih Pegawai Penilai --",
+                    allowClear: true
+                },
+                '#atasan_pegawai_penilai_id': {
+                    placeholder: "-- Pilih Atasan --",
+                    allowClear: true
+                }
+            };
+            
+            // Initialize semua Select2 elements
+            Object.entries(select2Configs).forEach(([selector, config]) => {
+                $(selector).select2({
+                    ...config,
+                    width: '100%' // Default option tambahan
+                });
+            });
+
+            const select2ConfigDinamis = {
+                placeholder: "-- Pilih Pegawai Penilai --",
+                allowClear: true,
+                width: '100%',
+            };
+
+            // Fungsi untuk menambahkan baris baru
+            function tambahBaris() {
+                const newSelectId = `pegawai_penilai_id_catatan_${currentIndex}`;
+                
+                // Dapatkan elemen select yang baru ditambahkan
+                const newSelectElement = $(`#${newSelectId}`);
+                
+                // Inisialisasi Select2 pada elemen baru menggunakan konfigurasi dinamis
+                newSelectElement.select2(select2ConfigDinamis);
+
+                currentIndex++;
+            }
+            
+            $('#tombol-tambah-baris').on('click', tambahBaris);
         });
     </script>
 </body>

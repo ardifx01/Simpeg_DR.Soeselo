@@ -85,6 +85,10 @@
 
     <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
     
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    
     <!-- jQuery CDN -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
@@ -109,6 +113,8 @@
     <script src="{{ asset('assets/js/main.js') }}"></script>
 
     <script>
+        AOS.init();
+        
         setTimeout(function() {
             let alertSuccess = document.getElementById('alert-success');
             let alertError = document.getElementById('alert-error');
@@ -266,21 +272,35 @@
         document.addEventListener("DOMContentLoaded", function () {
             let spanTanggal = document.getElementById("tanggalSekarang");
 
-            // Ambil tanggal sekarang
-            let today = new Date();
-            let options = { day: "numeric", month: "long", year: "numeric" };
-            let formattedDate = today.toLocaleDateString("id-ID", options); // Format: dd mm yyyy
+            if (spanTanggal) {
+                // Ambil tanggal sekarang
+                let today = new Date();
+                let options = { day: "numeric", month: "long", year: "numeric" };
+                let formattedDate = today.toLocaleDateString("id-ID", options);
 
-            // Set value pada span
-            spanTanggal.textContent = formattedDate;
+                // Set value pada span
+                spanTanggal.textContent = formattedDate;
+            }
         });
 
-        document.getElementById('per_page').addEventListener('change', function() {
-            this.form.submit();
+        document.addEventListener('DOMContentLoaded', function () {
+            const perPageSelect = document.getElementById('per_page');
+            if (perPageSelect) {
+                perPageSelect.addEventListener('change', function () {
+                    this.form.submit();
+                });
+            }
         });
-        document.getElementById('jenis_kepegawaian').addEventListener('change', function() {
-            this.form.submit();
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const jenisKepegawaian = document.getElementById('jenis_kepegawaian');
+            if (jenisKepegawaian) {
+                jenisKepegawaian.addEventListener('change', function () {
+                    this.form.submit();
+                });
+            }
         });
+
     </script>
 </body>
 

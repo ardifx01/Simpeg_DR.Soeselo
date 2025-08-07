@@ -59,28 +59,53 @@ class HukumanController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+        $validatedData = $request->validate([
             'pegawai_id' => 'required|exists:pegawais,id',
-            'bentuk_pelanggaran' => 'required',
-            'waktu' => 'required',
-            'tempat' => 'required',
-            'faktor_meringankan' => 'required',
-            'faktor_memberatkan' => 'required',
-            'dampak' => 'required',
-            'pwkt' => 'required',
-            'no' => 'required',
-            'tahun' => 'required',
-            'pasal' => 'required',
-            'tentang' => 'required',
-            'jenis_hukuman' => 'required',
-            'keterangan_hukuman' => 'required',
-            'peraturan' => 'required',
-            'hari' => 'required',
-            'tanggal' => 'required',
-            'jam' => 'required',
+            'bentuk_pelanggaran' => 'required|string|max:255',
+            'waktu' => 'required|string|max:255',
+            'tempat' => 'required|string|max:255',
+            'faktor_meringankan' => 'required|string',
+            'faktor_memberatkan' => 'required|string',
+            'dampak' => 'required|string',
+            'pwkt' => 'required|string|max:255',
+            'no' => 'required|string|max:255',
+            'tahun' => 'required|integer|digits:4',
+            'pasal' => 'required|string|max:255',
+            'tentang' => 'required|string',
+            'jenis_hukuman' => 'required|string|max:255',
+            'keterangan_hukuman' => 'required|string',
+            'peraturan' => 'required|string',
+            'hari' => 'required|string|max:255',
+            'tanggal' => 'required|date',
+            'jam' => 'required|date_format:H:i:s',
+            'atasan_id' => 'required|exists:pegawais,id',
         ]);
 
-        hukuman::create($request->all());
+        // Mengambil semua data yang sudah divalidasi
+        $data = $validatedData;
+
+        // Ambil data atasan pegawai berdasarkan atasan_id yang dipilih.
+        $atasanPegawai = Pegawai::with('jabatan')->find($data['atasan_id']);
+
+        if ($atasanPegawai) {
+            // Isi kolom-kolom atasan di tabel 'hukumen' dari data atasan pegawai yang ditemukan.
+            $data['atasan_nama'] = $atasanPegawai->nama_lengkap;
+            $data['atasan_nip'] = $atasanPegawai->nip;
+            $data['atasan_jabatan'] = $atasanPegawai->jabatan?->nama_jabatan;
+            $data['atasan_pangkat'] = $atasanPegawai->pangkat ?? null;
+            $data['atasan_golongan_ruang'] = $atasanPegawai->golongan_ruang ?? null;
+        } else {
+            // Jika atasan tidak ditemukan, set nilai-nilai atasan ke null.
+            $data['atasan_nama'] = null;
+            $data['atasan_nip'] = null;
+            $data['atasan_jabatan'] = null;
+            $data['atasan_pangkat'] = null;
+            $data['atasan_golongan_ruang'] = null;
+        }
+
+        unset($data['atasan_id']);
+
+        Hukuman::create($data);
 
         return redirect()->route('hukuman.index')->with('success', 'Pengajuan surat hukuman berhasil!');
     }
@@ -126,10 +151,15 @@ class HukumanController extends Controller
         $template->setValue('tanggal_surat', \Carbon\Carbon::now()->translatedFormat('d F Y'));
         $template->setValue('nama', $hukuman->pegawai->nama);
         $template->setValue('nip', $hukuman->pegawai->nip);
-        $template->setValue('pangkat', $hukuman->pegawai->jabatan->nama ?? '-');
+        $template->setValue('pangkat', $hukuman->pegawai->jabatan->pangkat ?? '-');
         $template->setValue('golongan_ruang', $hukuman->pegawai->golongan_ruang ?? '-');
-        $template->setValue('jabatan', $hukuman->pegawai->jabatan->unit_kerja ?? '-');
-        $template->setValue('unit_kerja', $hukuman->pegawai->jabatan->skpd ?? '-');
+        $template->setValue('jabatan', $hukuman->pegawai->jabatan->nama_jabatan ?? '-');
+        $template->setValue('unit_kerja', $hukuman->pegawai->jabatan->unit_kerja ?? '-');
+        $template->setValue('atasan_nama', $hukuman->atasan_nama ?? '-');
+        $template->setValue('atasan_jabatan', $hukuman->atasan_jabatan ?? '-');
+        $template->setValue('atasan_nip', $hukuman->atasan_nip ?? '-');
+        $template->setValue('atasan_pangkat', $hukuman->atasan_pangkat ?? '-');
+        $template->setValue('atasan_golongan_ruang', $hukuman->atasan_golongan_ruang ?? '-');
         $template->setValue('bentuk_pelanggaran', $hukuman->bentuk_pelanggaran);
         $template->setValue('waktu', $hukuman->waktu);
         $template->setValue('tempat', $hukuman->tempat);

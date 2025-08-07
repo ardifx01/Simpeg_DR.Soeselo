@@ -49,13 +49,22 @@ class Pegawai extends Model
         return $nama;
     }
 
+    public function getAlamatLengkapAttribute()
+    {
+        $alamat = trim("{$this->desa}, RT {$this->rt}/RW {$this->rw}, Desa {$this->desa}, Kecamatan {$this->kecamatan}, Kabupaten {$this->kabupaten}, Provinsi {$this->provinsi}");
+        if ($this->pos) {
+            $alamat .= ", Kode Pos: {$this->pos}";
+        }
+        return $alamat;
+    }
+
     public function getPangkatGolonganAttribute()
     {
         $pangkat = optional($this->jabatan)->pangkat;
         $golongan = optional($this->jabatan)->golongan_ruang;
 
         if ($pangkat && $golongan) {
-            return "$pangkat / $golongan";
+            return "$pangkat ($golongan)";
         }
 
         if ($pangkat) {

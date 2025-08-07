@@ -164,65 +164,65 @@
             <div class="row mb-3 form-group">
                 <label for="alamat" class="col-md-4 col-lg-3 col-form-label">Alamat</label>
                 <div class="col-md-8 col-lg-9">
-                    <textarea name="alamat" class="form-control" id="alamat" style="height: 100px"></textarea>
+                    <textarea name="alamat" class="form-control" id="alamatLengkap" style="height: 100px"></textarea>
                 </div>
             </div>
 
             <div class="row mb-3 form-group">
                 <label for="rt" class="col-md-4 col-lg-3 col-form-label">RT</label>
                 <div class="col-md-4 col-lg-3">
-                    <input name="rt" type="text" class="form-control @error('rt') is-invalid @enderror" id="rt" value="">
+                    <input name="rt" type="text" class="form-control @error('rt') is-invalid @enderror" id="rt" value="" oninput="updateAlamatLengkap()">
                     @error('rt')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
                 <label for="rw" class="col-md-4 col-lg-3 col-form-label">RW</label>
                 <div class="col-md-4 col-lg-3">
-                    <input name="rw" type="text" class="form-control @error('rw') is-invalid @enderror" id="rw" value="">
+                    <input name="rw" type="text" class="form-control @error('rw') is-invalid @enderror" id="rw" value="" oninput="updateAlamatLengkap()">
                     @error('rw')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
             </div>
-            
+
             <div class="row mb-3 form-group">
                 <label for="desa" class="col-md-4 col-lg-3 col-form-label">Desa</label>
                 <div class="col-md-4 col-lg-3">
-                    <input name="desa" type="text" class="form-control @error('desa') is-invalid @enderror" id="desa" value="">
+                    <input name="desa" type="text" class="form-control @error('desa') is-invalid @enderror" id="desa" value="" oninput="updateAlamatLengkap()">
                     @error('desa')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
                 <label for="kecamatan" class="col-md-4 col-lg-3 col-form-label">Kecamatan</label>
                 <div class="col-md-4 col-lg-3">
-                    <input name="kecamatan" type="text" class="form-control @error('kecamatan') is-invalid @enderror" id="kecamatan" value="">
+                    <input name="kecamatan" type="text" class="form-control @error('kecamatan') is-invalid @enderror" id="kecamatan" value="" oninput="updateAlamatLengkap()">
                     @error('kecamatan')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
             </div>
-            
+
             <div class="row mb-3 form-group">
                 <label for="kabupaten" class="col-md-4 col-lg-3 col-form-label">Kabupaten</label>
                 <div class="col-md-4 col-lg-3">
-                    <input name="kabupaten" type="text" class="form-control @error('kabupaten') is-invalid @enderror" id="kabupaten" value="">
+                    <input name="kabupaten" type="text" class="form-control @error('kabupaten') is-invalid @enderror" id="kabupaten" value="" oninput="updateAlamatLengkap()">
                     @error('kabupaten')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
                 <label for="provinsi" class="col-md-4 col-lg-3 col-form-label">Provinsi</label>
                 <div class="col-md-4 col-lg-3">
-                    <input name="provinsi" type="text" class="form-control @error('provinsi') is-invalid @enderror" id="provinsi" value="">
+                    <input name="provinsi" type="text" class="form-control @error('provinsi') is-invalid @enderror" id="provinsi" value="" oninput="updateAlamatLengkap()">
                     @error('provinsi')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
             </div>
-            
+
             <div class="row mb-3 form-group">
                 <label for="pos" class="col-md-4 col-lg-3 col-form-label">Kode POS</label>
                 <div class="col-md-4 col-lg-3">
-                    <input name="pos" type="text" class="form-control @error('pos') is-invalid @enderror" id="pos" value="">
+                    <input name="pos" type="text" class="form-control @error('pos') is-invalid @enderror" id="pos" value="" oninput="updateAlamatLengkap()">
                     @error('pos')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
@@ -278,5 +278,43 @@ function previewGambar(event) {
     if(event.target.files[0]) {
         reader.readAsDataURL(event.target.files[0]);
     }
+}
+
+function updateAlamatLengkap() {
+    // Ambil nilai dari setiap input
+    const rt = document.getElementById('rt').value;
+    const rw = document.getElementById('rw').value;
+    const desa = document.getElementById('desa').value;
+    const kecamatan = document.getElementById('kecamatan').value;
+    const kabupaten = document.getElementById('kabupaten').value;
+    const provinsi = document.getElementById('provinsi').value;
+    const pos = document.getElementById('pos').value;
+
+    // Gabungkan nilai-nilai tersebut untuk membentuk alamat lengkap
+    let alamatLengkap = alamat;
+
+    if (desa) {
+        alamatLengkap += `, ${desa}`;
+    }
+    if (rt || rw) {
+        alamatLengkap += ` RT ${rt}/RW ${rw}`;
+    }
+    if (desa) {
+        alamatLengkap += `, Desa ${desa}`;
+    }
+    if (kecamatan) {
+        alamatLengkap += `, Kecamatan ${kecamatan}`;
+    }
+    if (kabupaten) {
+        alamatLengkap += `, Kabupaten ${kabupaten}`;
+    }
+    if (provinsi) {
+        alamatLengkap += `, Provinsi ${provinsi}`;
+    }
+    if (pos) {
+        alamatLengkap += ` Kode Pos:${pos}`;
+    }
+
+    console.log("Alamat Lengkap:", alamatLengkap);
 }
 </script>

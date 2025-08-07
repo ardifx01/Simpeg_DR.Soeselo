@@ -832,6 +832,16 @@ h6 {
   background: #ffecdf;
 }
 
+.dashboard .pembinaan-card .card-icon {
+  color: #ff478f;
+  background: #ffe3f0;
+}
+
+.dashboard .info-card .card-icon {
+  color: #17a2b8;
+  background: #e2f7fb;
+}
+
 /* Activity */
 .dashboard .activity {
   font-size: 14px;
