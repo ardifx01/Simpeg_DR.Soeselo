@@ -94,7 +94,6 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
     <!-- jQuery dan Select2 JS -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 
     <!-- Apexcharts-->
@@ -146,12 +145,18 @@
 
         $(document).ready(function () {
             let dateFields = [
-                {inputSelector: '[id^="catatan_tanggal"]', buttonSelector: '[for^="btn_catatan_tanggal"]'},
-                {inputSelector: '[id^="edit_catatan_tanggal"]', buttonSelector: '[for^="btn_edit_catatan_tanggal"]'},
+                {inputSelector: '[id^="catatan_tanggal"]', buttonSelector: '[for="catatan_tanggal"]'},
                 {inputSelector: '[id^="tanggal_mulai"]', buttonSelector: '[id^="btn_tanggal_mulai"]'},
                 {inputSelector: '[id^="tanggal_selesai"]', buttonSelector: '[id^="btn_tanggal_selesai"]'},
                 {inputSelector: '[id^="tanggal_lahir_keluarga"]', buttonSelector: '[id^="btn_tanggal_lahir_keluarga"]'},
-                {inputSelector: '[id^="tanggal_hukuman"]', buttonSelector: '[id^="btn_tanggal_hukuman"]'}
+                {inputSelector: '[id^="tanggal_hukuman"]', buttonSelector: '[id^="btn_tanggal_hukuman"]'},
+                {inputSelector: '[id^="tanggal_acara"]', buttonSelector: '[id^="btn_tanggal_acara"]'},
+                {inputSelector: '[id^="tanggal_disposisi"]', buttonSelector: '[id^="btn_tanggal_disposisi"]'},
+                {inputSelector: '[id^="tanggal_diterima"]', buttonSelector: '[id^="btn_tanggal_diterima"]'},
+                {inputSelector: '[id^="tanggal_ditetapkan"]', buttonSelector: '[id^="btn_tanggal_ditetapkan"]'},
+                {inputSelector: '[id^="tanggal_kuasa"]', buttonSelector: '[id^="btn_tanggal_kuasa"]'},
+                {inputSelector: '[id^="tanggal_nota"]', buttonSelector: '[id^="btn_tanggal_nota"]'},
+                {inputSelector: '[id^="tanggal_notula"]', buttonSelector: '[id^="btn_tanggal_notula"]'}
             ];
 
             dateFields.forEach(function(field) {
@@ -188,6 +193,50 @@
                 },
                 '#atasan_pegawai_penilai_id': {
                     placeholder: "-- Pilih Atasan --",
+                    allowClear: true
+                },
+                '#pihak_pertama_id': {
+                    placeholder: "-- Pilih Pihak Pertama --",
+                    allowClear: true
+                },
+                '#pihak_kedua_id': {
+                    placeholder: "-- Pilih Pihak Kedua --",
+                    allowClear: true
+                },
+                '#atasan_id': {
+                    placeholder: "-- Pilih Atasan --",
+                    allowClear: true
+                },
+                '#penandatangan_id': {
+                    placeholder: "-- Pilih Penandatangan --",
+                    allowClear: true
+                },
+                '#diteruskan_kepada': {
+                    placeholder: "-- Pilih Pegawai --",
+                    allowClear: true
+                },
+                '#tujuan': {
+                    placeholder: "-- Pilih Penerima Surat --",
+                    allowClear: true
+                },
+                '#pegawai_id': {
+                    placeholder: "-- Pilih Pegawai --",
+                    allowClear: true
+                },
+                '#ketua_id': {
+                    placeholder: "-- Pilih Pegawai --",
+                    allowClear: true
+                },
+                '#sekretaris_id': {
+                    placeholder: "-- Pilih Pegawai --",
+                    allowClear: true
+                },
+                '#pencatat_id': {
+                    placeholder: "-- Pilih Pegawai --",
+                    allowClear: true
+                },
+                '#peserta': {
+                    placeholder: "-- Pilih Pegawai --",
                     allowClear: true
                 }
             };

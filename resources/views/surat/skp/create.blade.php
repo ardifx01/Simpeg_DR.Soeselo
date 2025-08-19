@@ -79,13 +79,6 @@
                         @enderror
                     </div>
                     
-                    <div class="col-md-6">
-                        <label for="nilai_perilaku" class="form-label">Nilai Perilaku <span class="text-danger">*</span></label>
-                        <input type="number" name="nilai_perilaku" id="nilai_perilaku" class="form-control @error('nilai_perilaku') is-invalid @enderror" value="{{ old('nilai_perilaku') }}" min="0" max="100" step="0.01" required>
-                        @error('nilai_perilaku')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
                 </div>
             </div>
 
@@ -99,21 +92,77 @@
                 </div>
                 
                 <div id="kegiatanContainer">
-                    {{-- Kegiatan akan ditambahkan di sini melalui JavaScript --}}
+                    {{-- Kegiatan existing akan dimuat di sini --}}
+                </div>
+            </div>
+
+            {{-- Tugas Tambahan --}}
+            <div class="mb-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="card-title text-primary border-bottom pb-2 mb-0">Tugas Tambahan</h5>
+                    <button type="button" class="btn btn-warning btn-sm" id="addTugasTambahan">
+                        <i class="bi bi-plus-circle"></i> Tambah Tugas Tambahan
+                    </button>
+                </div>
+                
+                <div id="tugasTambahanContainer">
+                    {{-- Tugas Tambahan existing akan dimuat di sini --}}
                 </div>
             </div>
 
             {{-- Catatan Penilaian --}}
             <div class="mb-4">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h5 class="card-title text-primary border-bottom pb-2 mb-0">Catatan Penilaian</h5>
-                    <button type="button" class="btn btn-info btn-sm" id="addCatatan">
-                        <i class="bi bi-plus-circle"></i> Tambah Catatan
-                    </button>
-                </div>
-                
-                <div id="catatanContainer">
-                    {{-- Catatan akan ditambahkan di sini melalui JavaScript --}}
+                <h5 class="card-title text-primary border-bottom pb-2">Catatan Penilaian</h5>
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <label for="catatan_tanggal" class="form-label">Tanggal</label>
+                        <div class="input-group">
+                            <input type="text" name="catatan_tanggal" id="catatan_tanggal" class="form-control" placeholder="Pilih tanggal" value="{{ old('catatan_tanggal') }}">
+                            <button class="btn btn-outline-secondary" type="button" for="catatan_tanggal">
+                                <i class="bi bi-calendar3"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="col-12 mb-4">
+                        <label class="form-label">Uraian</label>
+                        <textarea name="uraian" id="uraian" class="form-control bg-light" rows="8" readonly style="resize:none">{{ old('uraian') }}</textarea>
+                    </div>
+                    <div class="col-12">
+                        <h6 class="pb-2">Aspek Perilaku</h6>
+                    </div>
+
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label class="form-label">Orientasi Pelayanan</label>
+                            <input type="number" class="form-control" name="orientasi_pelayanan" id="orientasi_pelayanan" min="0" max="100" step="0.01" value="{{ old('orientasi_pelayanan') }}">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Integritas</label>
+                            <input type="number" class="form-control" name="integritas" id="integritas" min="0" max="100" step="0.01" value="{{ old('integritas') }}">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Komitmen</label>
+                            <input type="number" class="form-control" name="komitmen" id="komitmen" min="0" max="100" step="0.01" value="{{ old('komitmen') }}">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Disiplin</label>
+                            <input type="number" class="form-control" name="disiplin" id="disiplin" min="0" max="100" step="0.01" value="{{ old('disiplin') }}">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Kerjasama</label>
+                            <input type="number" class="form-control" name="kerjasama" id="kerjasama" min="0" max="100" step="0.01" value="{{ old('kerjasama') }}">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Kepemimpinan</label>
+                            <input type="number" class="form-control" name="kepemimpinan" id="kepemimpinan" min="0" max="100" step="0.01" value="{{ old('kepemimpinan') }}">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Nilai Perilaku</label>
+                            <input type="number" class="form-control" name="nilai_perilaku" id="nilai_perilaku" readonly value="{{ old('nilai_perilaku') }}" readonly>
+                        </div>
+                        <input type="hidden" name="catatan_id" value="{{ old('catatan_id', '') }}">
+                    </div>
                 </div>
             </div>
 
@@ -131,15 +180,13 @@
     const pegawais = @json($pegawais);
 </script>
 
-{{-- JavaScript untuk Dynamic Form --}}
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         let kegiatanIndex = 0;
-        let catatanIndex = 0;
+        let tugasTambahanIndex = 0;
 
         // Tambah kegiatan pertama dan catatan pertama saat halaman dimuat
         addKegiatanForm();
-        addCatatanForm();
 
         // Event listener untuk tombol tambah kegiatan
         document.getElementById('addKegiatan').addEventListener('click', function() {
@@ -147,10 +194,10 @@
             updateKegiatanNumbers();
         });
 
-        // Event listener untuk tombol tambah catatan
-        document.getElementById('addCatatan').addEventListener('click', function() {
-            addCatatanForm();
-            updateCatatanNumbers();
+        // Event listener tombol tambah tugas tambahan
+        document.getElementById('addTugasTambahan').addEventListener('click', function() {
+            addTugasTambahanForm();
+            updateTugasTambahanNumbers();
         });
 
         // Fungsi untuk menambah form kegiatan
@@ -183,7 +230,7 @@
                             </div>
                             <div class="col-md-12">
                                 <label class="form-label">AK (Angka Kredit)</label>
-                                <input type="text" name="kegiatan[${currentIndex}][ak]" class="form-control">
+                                <input type="number" name="kegiatan[${currentIndex}][ak]" class="form-control">
                             </div>
                             
                             <div class="col-12">
@@ -192,11 +239,11 @@
                             
                             <div class="col-md-6">
                                 <label class="form-label">Target Kuantitatif Output <span class="text-danger">*</span></label>
-                                <input type="text" name="kegiatan[${currentIndex}][target_kuantitatif_output]" class="form-control" required>
+                                <input type="number" name="kegiatan[${currentIndex}][target_kuantitatif_output]" class="form-control" required>
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">Realisasi Kuantitatif Output</label>
-                                <input type="text" name="kegiatan[${currentIndex}][realisasi_kuantitatif_output]" class="form-control">
+                                <input type="number" name="kegiatan[${currentIndex}][realisasi_kuantitatif_output]" class="form-control">
                             </div>
                             
                             <div class="col-md-6">
@@ -242,93 +289,43 @@
             kegiatanIndex++;
         }
 
-        // Fungsi untuk menambah form catatan
-        function addCatatanForm() {
-            const container = document.getElementById('catatanContainer');
-            const currentIndex = catatanIndex;
-
-            let optionsHtml = '<option value="">-- Pilih Pegawai --</option>';
-            pegawais.forEach(pegawai => {
-                optionsHtml += `<option value="${pegawai.id}">${pegawai.nama}</option>`;
-            });
+        // Fungsi menambah form tugas tambahan
+        function addTugasTambahanForm() {
+            const container = document.getElementById('tugasTambahanContainer');
+            const currentIndex = tugasTambahanIndex;
             
-            const catatanHtml = `
-                <div class="card mb-3 catatan-item" id="catatan-${currentIndex}">
+            const tugasHtml = `
+                <div class="card mb-3 tugas-item" id="tugas-${currentIndex}">
                     <div class="card-header bg-light d-flex justify-content-between align-items-center">
-                        <h6 class="mb-0">Catatan ${document.querySelectorAll('.catatan-item').length + 1}</h6>
-                        <button type="button" class="btn btn-danger btn-sm remove-catatan">
+                        <h6 class="mb-0">Tugas Tambahan ${document.querySelectorAll('.tugas-item').length + 1}</h6>
+                        <button type="button" class="btn btn-danger btn-sm remove-tugas">
                             <i class="bi bi-trash"></i> Hapus
                         </button>
                     </div>
                     <div class="card-body">
-                    <div class="row g-3 mt-1">
-                            <div class="col-md-6">
-                                <label for="catatan_tanggal_${currentIndex}" class="form-label">Tanggal</label>
-                                <div class="input-group">
-                                    <input type="text" name="catatan[${currentIndex}][tanggal]" id="catatan_tanggal_${currentIndex}" class="form-control" placeholder="Pilih tanggal">
-                                    <button class="btn btn-outline-secondary" type="button" id="btn_catatan_tanggal_${currentIndex}">
-                                        <i class="bi bi-calendar3"></i>
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <label for="pegawai_penilai_id_catatan_${currentIndex}" class="form-label">Pegawai Penilai <span class="text-danger">*</span></label>
-                                <select name="catatan[${currentIndex}][pegawai_penilai_id]" id="pegawai_penilai_id_catatan_${currentIndex}" class="form-select pegawai-penilai-select" required>
-                                    <option value="">-- Pilih Pegawai Penilai --</option>
-                                    ${optionsHtml}
-                                </select>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">Nama Pegawai Penilai</label>
-                                <input type="text" name="catatan[${currentIndex}][nama_pegawai_penilai]" id="nama_pegawai_penilai_catatan_${currentIndex}" class="form-control" readonly>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">NIP Pegawai Penilai</label>
-                                <input type="text" name="catatan[${currentIndex}][nip_pegawai_penilai]" id="nip_pegawai_penilai_catatan_${currentIndex}" class="form-control" readonly>
-                            </div>
+                        <div class="row g-3 mt-1">
                             <div class="col-md-12">
-                                <label class="form-label">Uraian</label>
-                                <textarea name="catatan[${currentIndex}][uraian]" class="form-control" rows="3"></textarea>
+                                <label class="form-label">Nama Tugas Tambahan <span class="text-danger">*</span></label>
+                                <input type="text" name="tugas_tambahan[${currentIndex}][nama_tambahan]" class="form-control">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Nilai Tugas Tambahan</label>
+                                <input type="number" name="tugas_tambahan[${currentIndex}][nilai_tambahan]" class="form-control">
                             </div>
                         </div>
                     </div>
                 </div>
             `;
             
-            container.insertAdjacentHTML('beforeend', catatanHtml);
-
-            $(`#pegawai_penilai_id_catatan_${currentIndex}`).select2({
-                placeholder: "-- Pilih Pegawai Penilai --",
-                allowClear: true,
-                width: '100%'
+            container.insertAdjacentHTML('beforeend', tugasHtml);
+            
+            const newItem = document.getElementById(`tugas-${currentIndex}`);
+            newItem.querySelector('.remove-tugas').addEventListener('click', function() {
+                newItem.remove();
+                updateTugasTambahanNumbers();
             });
             
-            // Event listener untuk dropdown autofill
-            const selectDropdown = document.getElementById(`pegawai_penilai_id_catatan_${currentIndex}`);
-            const namaInput = document.getElementById(`nama_pegawai_penilai_catatan_${currentIndex}`);
-            const nipInput = document.getElementById(`nip_pegawai_penilai_catatan_${currentIndex}`);
-
-            selectDropdown.addEventListener('change', function() {
-                const selectedId = this.value;
-                const selectedPegawai = pegawais.find(p => p.id == selectedId);
-
-                if (selectedPegawai) {
-                    namaInput.value = selectedPegawai.nama;
-                    nipInput.value = selectedPegawai.nip || '';
-                } else {
-                    namaInput.value = '';
-                    nipInput.value = '';
-                }
-            });
-
-            // Event listener untuk tombol hapus catatan
-            const newItem = document.getElementById(`catatan-${currentIndex}`);
-            newItem.querySelector('.remove-catatan').addEventListener('click', function() {
-                newItem.remove();
-                updateCatatanNumbers();
-            });
-
-            catatanIndex++;
+            tugasTambahanIndex++;
         }
 
         // Fungsi untuk update nomor kegiatan
@@ -340,14 +337,66 @@
             });
         }
 
-        // Fungsi untuk update nomor catatan
-        function updateCatatanNumbers() {
-            const catatanItems = document.querySelectorAll('.catatan-item');
-            catatanItems.forEach(function(item, index) {
+        // Fungsi update nomor tugas tambahan
+        function updateTugasTambahanNumbers() {
+            const tugasItems = document.querySelectorAll('.tugas-item');
+            tugasItems.forEach(function(item, index) {
                 const header = item.querySelector('.card-header h6');
-                header.textContent = `Catatan ${index + 1}`;
+                header.textContent = `Tugas Tambahan ${index + 1}`;
             });
         }
+
+        // Autofill pegawai penilai
+        $('#pegawai_penilai_id').on('change', function () {
+            const selectedId = $(this).val();
+            const selectedPegawai = pegawais.find(p => p.id == selectedId);
+
+            if (selectedPegawai) {
+                $('#nama_pegawai_penilai').val(selectedPegawai.nama);
+                $('#nip_pegawai_penilai').val(selectedPegawai.nip || '');
+            } else {
+                $('#nama_pegawai_penilai').val('');
+                $('#nip_pegawai_penilai').val('');
+            }
+        });
+
+        // Hitung nilai perilaku + isi uraian
+        $('#orientasi_pelayanan, #integritas, #komitmen, #disiplin, #kerjasama, #kepemimpinan').on('input', function () {
+            let total = 0;
+            let count = 0;
+
+            const values = {
+                orientasi: $('#orientasi_pelayanan').val(),
+                integritas: $('#integritas').val(),
+                komitmen: $('#komitmen').val(),
+                disiplin: $('#disiplin').val(),
+                kerjasama: $('#kerjasama').val(),
+                kepemimpinan: $('#kepemimpinan').val()
+            };
+
+            Object.values(values).forEach(val => {
+                const num = parseFloat(val);
+                if (!isNaN(num)) {
+                    total += num;
+                    count++;
+                }
+            });
+
+            const avg = count > 0 ? (total / count).toFixed(2) : '';
+            $('#nilai_perilaku').val(avg);
+
+            // Gabungkan ke uraian
+            const uraianText = 
+            `Aspek Perilaku Pegawai
+
+            Orientasi Pelayanan : ${values.orientasi || '-'}
+            Integritas          : ${values.integritas || '-'}
+            Komitmen            : ${values.komitmen || '-'}
+            Disiplin            : ${values.disiplin || '-'}
+            Kerjasama           : ${values.kerjasama || '-'}
+            Kepemimpinan        : ${values.kepemimpinan || '-'}`;
+            $('#uraian').val(uraianText);
+        });
 
         // Validasi form sebelum submit
         document.getElementById('skpForm').addEventListener('submit', function(e) {

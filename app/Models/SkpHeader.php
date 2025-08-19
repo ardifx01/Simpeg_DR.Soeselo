@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
  * Model untuk tabel skp_headers.
@@ -59,11 +60,20 @@ class SkpHeader extends Model
     }
 
     /**
+     * Relasi ke model SkpTambahan.
+     * Sebuah SKP Header memiliki banyak Tugas Tambahan.
+     */
+    public function tugasTambahan()
+    {
+        return $this->hasMany(SkpTambahan::class, 'skp_header_id');
+    }
+
+    /**
      * Relasi ke model SkpCatatanPenilaian.
      * Sebuah SKP Header memiliki satu catatan penilaian.
      */
-    public function catatanPenilaian(): HasMany
+    public function catatanPenilaian(): HasOne
     {
-        return $this->hasMany(SkpCatatanPenilaian::class, 'skp_header_id');
+        return $this->hasOne(SkpCatatanPenilaian::class, 'skp_header_id');
     }
 }

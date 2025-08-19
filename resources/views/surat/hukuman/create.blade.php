@@ -267,7 +267,7 @@
                                         <label for="tanggal" class="form-label">Tanggal</label>
                                         <div class="input-group">
                                             <input type="text" class="form-control @error('tanggal') is-invalid @enderror" name="tanggal" id="tanggal_hukuman" value="{{ old('tanggal') }}">
-                                            <button class="btn btn-outline-secondary" type="button" id="btn_tanggal_hukuman" for="tanggal">
+                                            <button class="btn btn-outline-secondary" type="button" id="btn_tanggal_hukuman" for="tanggal_hukuman">
                                                 <i class="bi bi-calendar3"></i>
                                             </button>
                                         </div>                                        

@@ -151,7 +151,6 @@
     </div>
 
     <!-- Kegiatan Tugas Jabatan -->
-    @if($skp->kegiatan->where('jenis_kegiatan', 'tugas_jabatan')->count() > 0)
     <div class="card shadow-sm mb-4">
         <div class="card-header bg-primary text-white">
             <h5 class="mb-0"><i class="bi bi-briefcase"></i> Kegiatan Tugas Jabatan</h5>
@@ -166,95 +165,78 @@
                             <th rowspan="2" class="text-center align-middle">AK</th>
                             <th colspan="4" class="text-center">Target</th>
                             <th colspan="4" class="text-center">Realisasi</th>
-                            <th rowspan="2" class="text-center align-middle">Nilai Kegiatan</th>
+                            <th rowspan="2" class="text-center align-middle">Nilai Capaian SKP</th>
                         </tr>
                         <tr>
                             <th class="text-center">Output</th>
-                            <th class="text-center">Mutu</th>
-                            <th class="text-center">Waktu</th>
-                            <th class="text-center">Biaya</th>
+                            <th class="text-center">Mutu (%)</th>
+                            <th class="text-center">Waktu (Bulan)</th>
+                            <th class="text-center">Biaya (Rp)</th>
                             <th class="text-center">Output</th>
-                            <th class="text-center">Mutu</th>
-                            <th class="text-center">Waktu</th>
-                            <th class="text-center">Biaya</th>
+                            <th class="text-center">Mutu (%)</th>
+                            <th class="text-center">Waktu (Bulan)</th>
+                            <th class="text-center">Biaya (Rp)</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($skp->kegiatan->where('jenis_kegiatan', 'tugas_jabatan') as $index => $kegiatan)
-                        <tr>
-                            <td class="text-center">{{ $index + 1 }}</td>
-                            <td>{{ $kegiatan->nama_kegiatan }}</td>
-                            <td class="text-center">{{ $kegiatan->ak ?? '-' }}</td>
-                            <td class="text-center">{{ $kegiatan->target_kuantitatif_output }}</td>
-                            <td class="text-center">{{ $kegiatan->target_kualitatif_mutu }}</td>
-                            <td class="text-center">{{ $kegiatan->target_waktu_bulan }}</td>
-                            <td class="text-end">{{ number_format($kegiatan->target_biaya ?? 0, 0, ',', '.') }}</td>
-                            <td class="text-center">{{ $kegiatan->realisasi_kuantitatif_output }}</td>
-                            <td class="text-center">{{ $kegiatan->realisasi_kualitatif_mutu }}</td>
-                            <td class="text-center">{{ $kegiatan->realisasi_waktu_bulan }}</td>
-                            <td class="text-end">{{ number_format($kegiatan->realisasi_biaya ?? 0, 0, ',', '.') }}</td>
-                            <td class="text-center fw-bold">{{ number_format($kegiatan->nilai_kegiatan, 2) }}</td>
-                        </tr>
-                        @endforeach
+                        @forelse($skp->kegiatan as $index => $kegiatan)
+                            <tr>
+                                <td class="text-center">{{ $index + 1 }}</td>
+                                <td>{{ $kegiatan->nama_kegiatan }}</td>
+                                <td class="text-center">{{ $kegiatan->ak ?? '-' }}</td>
+                                <td class="text-center">{{ $kegiatan->target_kuantitatif_output }}</td>
+                                <td class="text-center">{{ $kegiatan->target_kualitatif_mutu }}</td>
+                                <td class="text-center">{{ $kegiatan->target_waktu_bulan }} Bulan</td>
+                                <td class="text-end">{{ number_format($kegiatan->target_biaya ?? 0, 0, ',', '.') }}</td>
+                                <td class="text-center">{{ $kegiatan->realisasi_kuantitatif_output ?? '-' }}</td>
+                                <td class="text-center">{{ $kegiatan->realisasi_kualitatif_mutu ?? '-' }}</td>
+                                <td class="text-center">{{ $kegiatan->realisasi_waktu_bulan ?? '-' }} Bulan</td>
+                                <td class="text-end">{{ number_format($kegiatan->realisasi_biaya ?? 0, 0, ',', '.') }}</td>
+                                <td class="text-center fw-bold">{{ number_format($kegiatan->nilai_kegiatan / 4, 2) }}</td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="12" class="text-center">Tidak ada data kegiatan tugas jabatan</td>
+                            </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
-    @endif
 
-    <!-- Kegiatan Tugas Tambahan -->
-    @if($skp->kegiatan->where('jenis_kegiatan', 'tugas_tambahan')->count() > 0)
+    <!-- Tugas Tambahan -->
     <div class="card shadow-sm mb-4">
         <div class="card-header bg-success text-white">
-            <h5 class="mb-0"><i class="bi bi-plus-square"></i> Kegiatan Tugas Tambahan</h5>
+            <h5 class="mb-0"><i class="bi bi-person-plus"></i> Tugas Tambahan</h5>
         </div>
         <div class="card-body">
             <div class="table-responsive">
                 <table class="table table-bordered">
                     <thead class="table-light">
                         <tr>
-                            <th rowspan="2" class="text-center align-middle">No</th>
-                            <th rowspan="2" class="text-center align-middle">Kegiatan</th>
-                            <th rowspan="2" class="text-center align-middle">AK</th>
-                            <th colspan="4" class="text-center">Target</th>
-                            <th colspan="4" class="text-center">Realisasi</th>
-                            <th rowspan="2" class="text-center align-middle">Nilai Kegiatan</th>
-                        </tr>
-                        <tr>
-                            <th class="text-center">Output</th>
-                            <th class="text-center">Mutu</th>
-                            <th class="text-center">Waktu</th>
-                            <th class="text-center">Biaya</th>
-                            <th class="text-center">Output</th>
-                            <th class="text-center">Mutu</th>
-                            <th class="text-center">Waktu</th>
-                            <th class="text-center">Biaya</th>
+                            <th class="text-center">No</th>
+                            <th class="text-center">Nama Kegiatan</th>
+                            <th class="text-center">Nilai Tambahan</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($skp->kegiatan->where('jenis_kegiatan', 'tugas_tambahan') as $index => $kegiatan)
-                        <tr>
-                            <td class="text-center">{{ $index + 1 }}</td>
-                            <td>{{ $kegiatan->nama_kegiatan }}</td>
-                            <td class="text-center">{{ $kegiatan->ak ?? '-' }}</td>
-                            <td class="text-center">{{ $kegiatan->target_kuantitatif_output }}</td>
-                            <td class="text-center">{{ $kegiatan->target_kualitatif_mutu }}</td>
-                            <td class="text-center">{{ $kegiatan->target_waktu_bulan }}</td>
-                            <td class="text-end">{{ number_format($kegiatan->target_biaya ?? 0, 0, ',', '.') }}</td>
-                            <td class="text-center">{{ $kegiatan->realisasi_kuantitatif_output }}</td>
-                            <td class="text-center">{{ $kegiatan->realisasi_kualitatif_mutu }}</td>
-                            <td class="text-center">{{ $kegiatan->realisasi_waktu_bulan }}</td>
-                            <td class="text-end">{{ number_format($kegiatan->realisasi_biaya ?? 0, 0, ',', '.') }}</td>
-                            <td class="text-center fw-bold">{{ number_format($kegiatan->nilai_kegiatan, 2) }}</td>
-                        </tr>
-                        @endforeach
+                        @forelse($skp->tugasTambahan as $index => $tugas)
+                            <tr>
+                                <td class="text-center">{{ $index + 1 }}</td>
+                                <td>{{ $tugas->nama_tambahan }}</td>
+                                <td class="text-center">{{ $tugas->nilai_tambahan }}</td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="3" class="text-center">Tidak ada tugas tambahan</td>
+                            </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
-    @endif
 
     <!-- Rekapitulasi Nilai -->
     <div class="card shadow-sm mb-4">
@@ -306,28 +288,35 @@
     </div>
 
     <!-- Catatan Penilaian -->
-    @if($skp->catatanPenilaian->count() > 0)
+    @if($skp->catatanPenilaian)
     <div class="card shadow-sm mb-4">
         <div class="card-header bg-info text-white">
             <h5 class="mb-0"><i class="bi bi-journal-text"></i> Catatan Penilaian</h5>
         </div>
         <div class="card-body">
-            @foreach($skp->catatanPenilaian as $catatan)
             <div class="border-start border-4 border-info ps-3 mb-3">
                 <div class="row">
                     <div class="col-md-8">
-                        <p class="mb-2">{{ $catatan->uraian }}</p>
-                    </div>
+                    <div class="col-md-8">
+                    <ul class="list-group">
+                        @foreach($formattedUraian as $aspek => $data)
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                {{ ucfirst(str_replace('_', ' ', $aspek)) }}
+                                <span>{{ $data['nilai'] }} ({{ $data['kategori'] }})</span>
+                            </li>
+                        @endforeach
+                    </ul>
+                </div>
+                </div>
                     <div class="col-md-4 text-end">
                         <small class="text-muted">
-                            <strong>{{ $catatan->nama_pegawai_penilai }}</strong><br>
-                            NIP: {{ $catatan->nip_pegawai_penilai }}<br>
-                            {{ \Carbon\Carbon::parse($catatan->tanggal)->format('d F Y') }}
+                            <strong>{{ $skp->catatanPenilaian->nama_pegawai_penilai }}</strong><br>
+                            NIP: {{ $skp->catatanPenilaian->nip_pegawai_penilai }}<br>
+                            {{ \Carbon\Carbon::parse($skp->catatanPenilaian->tanggal)->format('d F Y') }}
                         </small>
                     </div>
                 </div>
             </div>
-            @endforeach
         </div>
     </div>
     @endif

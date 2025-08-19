@@ -3,17 +3,33 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Keterangan extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
-        'pegawai_id', 'jenis_keterangan', 'nama', 'nik', 'tempat_lahir',
-        'tanggal_lahir', 'agama', 'pekerjaan', 'alamat', 'hubungan',
-        'status_rawat'
+        'nomor',
+        'pegawai_id',
+        'keterangan',
+        'tempat_ditetapkan',
+        'tanggal_ditetapkan',
+        'penandatangan_id',
+        'tembusan',
+    ];
+
+    protected $casts = [
+        'tanggal_ditetapkan' => 'date',
     ];
 
     public function pegawai()
     {
-        return $this->belongsTo(Pegawai::class);
+        return $this->belongsTo(Pegawai::class, 'pegawai_id');
+    }
+
+    public function penandatangan()
+    {
+        return $this->belongsTo(Pegawai::class, 'penandatangan_id');
     }
 }

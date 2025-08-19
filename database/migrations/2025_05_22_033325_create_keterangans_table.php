@@ -13,17 +13,13 @@ return new class extends Migration
     {
         Schema::create('keterangans', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('pegawai_id')->constrained()->onDelete('cascade');
-            $table->string('jenis_keterangan')->nullable();
-            $table->string('nama')->nullable();
-            $table->string('nik')->nullable();
-            $table->string('tempat_lahir')->nullable();
-            $table->date('tanggal_lahir')->nullable();
-            $table->string('agama')->nullable();
-            $table->string('pekerjaan')->nullable();
-            $table->string('alamat')->nullable();
-            $table->string('hubungan')->nullable();
-            $table->string('status_rawat')->nullable();
+            $table->string('nomor')->nullable();
+            $table->foreignId('pegawai_id')->constrained('pegawais')->onDelete('cascade');
+            $table->text('keterangan');
+            $table->string('tempat_ditetapkan')->default('Slawi');
+            $table->date('tanggal_ditetapkan');
+            $table->foreignId('penandatangan_id')->constrained('pegawais')->onDelete('cascade');
+            $table->text('tembusan')->nullable();
             $table->timestamps();
         });
     }

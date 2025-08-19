@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\Pegawai;
 use App\Models\Keterangan;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use PhpOffice\PhpWord\Element\TextRun;
 use PhpOffice\PhpWord\TemplateProcessor;
 
 class KeteranganController extends Controller
@@ -15,33 +18,26 @@ class KeteranganController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Keterangan::query()->with('pegawai.jabatan');
+        $query = Keterangan::with(['pegawai', 'penandatangan']);
 
-        // Filter berdasarkan pegawai
-        if ($request->has('pegawai_id') && $request->pegawai_id != 'all') {
-            $query->where('pegawai_id', $request->pegawai_id);
-        }
-
-        // Filter berdasarkan keterangan
-        if ($request->has('jenis_keterangan') && $request->jenis_keterangan != 'all') {
-            $query->where('jenis_keterangan', $request->jenis_keterangan);
-        }
-
-        // Pencarian
+        // Logika pencarian
         if ($request->filled('search')) {
-            $search = $request->search;
+            $search = $request->input('search');
+            
             $query->where(function ($q) use ($search) {
-                // Cari di relasi pegawai
-                $q->whereHas('pegawai', function ($pegawai) use ($search) {
-                    $pegawai->where('nama', 'like', "%$search%")
-                        ->orWhere('nip', 'like', "%$search%");
-                })
-                // Atau di tugas belajar
-                ->orWhere('jenis_keterangan', 'like', "%$search%");
+                $q->where('nomor', 'like', "%{$search}%")
+                  ->orWhereHas('pegawai', function ($subQuery) use ($search) {
+                      $subQuery->where('nama', 'like', "%{$search}%");
+                  })
+                  ->orWhereHas('penandatangan', function ($subQuery) use ($search) {
+                      $subQuery->where('nama', 'like', "%{$search}%");
+                  });
             });
         }
 
-        $keterangans = $query->latest()->paginate(10)->appends($request->query());
+        // Eksekusi query dengan paginasi
+        $keterangans = $query->latest()->paginate(10)->withQueryString();
+        
         return view('surat.keterangan.index', compact('keterangans'));
     }
 
@@ -59,23 +55,23 @@ class KeteranganController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+        // Validasi data yang masuk dari formulir
+        $validatedData = $request->validate([
+            'nomor' => 'nullable|string|max:255|unique:keterangans,nomor',
             'pegawai_id' => 'required|exists:pegawais,id',
-            'jenis_keterangan' => 'required',
-            'nama' => 'nullable|string|max:255',
-            'nik' => 'nullable|string|max:255',
-            'tempat_lahir' => 'nullable|string|max:255',
-            'tanggal_lahir' => 'nullable|string|max:255',
-            'agama' => 'nullable|string|max:255',
-            'pekerjaan' => 'nullable|string|max:255',
-            'alamat' => 'nullable|string|max:255',
-            'hubungan' => 'nullable|string|max:255',
-            'status_rawat' => 'nullable|string|max:255',
+            'keterangan' => 'required|string',
+            'tanggal_ditetapkan' => 'required|date_format:d-m-Y',
+            'penandatangan_id' => 'required|exists:pegawais,id',
+            'tembusan' => 'nullable|string',
         ]);
 
-        Keterangan::create($request->all());
+        // Konversi format tanggal dari dd-mm-yyyy ke Y-m-d
+        $validatedData['tanggal_ditetapkan'] = Carbon::createFromFormat('d-m-Y', $validatedData['tanggal_ditetapkan'])->format('Y-m-d');
 
-        return redirect()->route('keterangan.index')->with('success', 'Pengajuan surat keterangan berhasil!');
+        // Simpan data ke database
+        Keterangan::create($validatedData);
+
+        return redirect()->route('keterangan.index')->with('success', 'Surat Keterangan berhasil dibuat.');
     }
 
     /**
@@ -112,37 +108,60 @@ class KeteranganController extends Controller
 
     public function export($id)
     {
-        $keterangan = Keterangan::with('pegawai.jabatan')->findOrFail($id);
+        // Ambil data dengan relasi yang dibutuhkan
+        $keterangan = Keterangan::with(['pegawai.jabatan', 'penandatangan.jabatan'])->findOrFail($id);
+        
+        $templatePath = storage_path('app/templates/keterangan_template.docx');
 
-        $template = new TemplateProcessor(storage_path('app/templates/keterangan_template.docx'));
+        if (!file_exists($templatePath)) {
+            throw new \Exception('File template keterangan_template.docx tidak ditemukan!');
+        }
 
-        $template->setValue('tanggal_surat', \Carbon\Carbon::now()->translatedFormat('d F Y'));
-        $template->setValue('nama_pegawai', $keterangan->pegawai->nama);
-        $template->setValue('nip', $keterangan->pegawai->nip ?? '-');
-        $template->setValue('tempat_lahir_pegawai', $keterangan->pegawai->tempat_lahir ?? '-');
-        $template->setValue('tanggal_lahir_pegawai', \Carbon\Carbon::parse($keterangan->pegawai->tanggal_lahir)->format('d-m-Y'));
-        $template->setValue('jabatan', $keterangan->pegawai->jabatan->nama_jabatan ?? '-');
-        $template->setValue('pendidikan', $keterangan->pegawai->pendidikan->tingkat ?? '-');
-        $template->setValue('alamat_pegawai', $keterangan->pegawai->alamat ?? '-');
-        $template->setValue('unit_kerja', $keterangan->pegawai->jabatan->unit_kerja ?? '-');
-        $status = $keterangan->pegawai->jabatan->jenis_kepegawaian ?? null;
-        $statusFinal = in_array($status, ['PNS', 'PPPK', 'CPNS']) ? 'ASN' : ($status === 'BLUD' ? 'BLUD' : '-');
-        $template->setValue('status', $statusFinal);
-        $template->setValue('status_rawat', $keterangan->status_rawat);
-        $template->setValue('nama', $keterangan->nama);
-        $template->setValue('nik', $keterangan->nik ?? '-');
-        $template->setValue('tempat_lahir', $keterangan->tempat_lahir ?? '-');
-        $template->setValue('tanggal_lahir', \Carbon\Carbon::parse($keterangan->tanggal_lahir)->format('d-m-Y'));
-        $template->setValue('agama', $keterangan->agama ?? '-');
-        $template->setValue('alamat', $keterangan->alamat);
-        $template->setValue('pekerjaan', $keterangan->pekerjaan);
-        $template->setValue('hubungan', ucfirst($keterangan->hubungan));
+        $template = new TemplateProcessor($templatePath);
 
-        $filename = 'surat_keterangan_' . str_replace(' ', '_', strtolower($keterangan->pegawai->nama)) . '.docx';
+        // --- Mengisi Data Utama ---
+        $template->setValue('nomor', $keterangan->nomor ?? '...');
 
-        $path = storage_path("app/public/{$filename}");
-        $template->saveAs($path);
+        // --- Mengisi Data Penandatangan ---
+        $penandatangan = $keterangan->penandatangan;
+        $template->setValue('nama_penandatangan', optional($penandatangan)->nama ?? '-');
+        $template->setValue('nip_penandatangan', optional($penandatangan)->nip ?? '-');
+        $template->setValue('pangkat_penandatangan', optional($penandatangan->jabatan)->pangkat_golongan ?? '-');
+        $template->setValue('jabatan_penandatangan', optional($penandatangan->jabatan)->nama_jabatan ?? '-');
+        
+        // --- Mengisi Data Pegawai yang Diterangkan ---
+        $pegawai = $keterangan->pegawai;
+        $template->setValue('nama_pegawai', optional($pegawai)->nama ?? '-');
+        $template->setValue('nip_pegawai', optional($pegawai)->nip ?? '-');
+        $template->setValue('pangkat_pegawai', optional($pegawai)->pangkat_golongan ?? '-');
+        $template->setValue('jabatan_pegawai', optional($pegawai->jabatan)->nama_jabatan ?? '-');
 
-        return response()->download($path)->deleteFileAfterSend(true);
+        // --- Mengisi Keterangan & Tanggal ---
+        $template->setValue('keterangan', strip_tags($keterangan->keterangan));
+        $template->setValue('tempat_tanggal', 'Slawi, ' . Carbon::parse($keterangan->tanggal_ditetapkan)->translatedFormat('d F Y'));
+        
+        // --- Mengisi Tembusan ---
+        if ($keterangan->tembusan) {
+            $tembusanArray = explode(',', $keterangan->tembusan);
+            $tr = new TextRun();
+
+            foreach ($tembusanArray as $i => $item) {
+                if ($i > 0) {
+                    $tr->addTextBreak();
+                }
+                $tr->addText(($i + 1) . '. ' . trim($item));
+            }
+
+            $template->setComplexBlock('tembusan', $tr);
+        } else {
+            $template->setValue('tembusan', '-');
+        }
+
+        // --- Simpan dan Unduh File ---
+        $fileName = 'surat_keterangan_' . Str::slug(optional($pegawai)->nama, '_') . '.docx';
+        $tempFile = tempnam(sys_get_temp_dir(), $fileName);
+        $template->saveAs($tempFile);
+
+        return response()->download($tempFile, $fileName)->deleteFileAfterSend(true);
     }
 }

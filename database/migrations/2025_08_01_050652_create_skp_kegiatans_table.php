@@ -21,14 +21,14 @@ return new class extends Migration
             // Target dan Realisasi
             $table->string('target_kuantitatif_output');
             $table->string('realisasi_kuantitatif_output')->nullable();
-            $table->float('target_kualitatif_mutu');
-            $table->float('realisasi_kualitatif_mutu')->nullable();
+            $table->string('target_kualitatif_mutu');
+            $table->string('realisasi_kualitatif_mutu')->nullable();
             $table->integer('target_waktu_bulan');
             $table->integer('realisasi_waktu_bulan')->nullable();
             $table->decimal('target_biaya', 15, 2)->nullable();
             $table->decimal('realisasi_biaya', 15, 2)->nullable();
 
-            $table->float('nilai_kegiatan')->nullable();
+            $table->string('nilai_kegiatan')->nullable();
             $table->timestamps();
         });
     }

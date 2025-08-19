@@ -18,9 +18,6 @@
             <a href="{{ route('skp.show', $skp->id) }}" class="btn btn-info btn-sm text-white me-2">
                 <i class="bi bi-eye"></i> Detail
             </a>
-            <a href="{{ route('skp.index') }}" class="btn btn-secondary btn-sm">
-                <i class="bi bi-arrow-left"></i> Kembali
-            </a>
         </div>
     </div>
 </div>
@@ -87,14 +84,6 @@
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
-                    
-                    <div class="col-md-6">
-                        <label for="nilai_perilaku" class="form-label">Nilai Perilaku <span class="text-danger">*</span></label>
-                        <input type="number" name="nilai_perilaku" id="nilai_perilaku" class="form-control @error('nilai_perilaku') is-invalid @enderror" value="{{ old('nilai_perilaku') ?? $skp->nilai_perilaku }}" min="0" max="100" step="0.01" required>
-                        @error('nilai_perilaku')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
                 </div>
             </div>
 
@@ -112,17 +101,119 @@
                 </div>
             </div>
 
-            {{-- Catatan Penilaian --}}
+            {{-- Tugas Tambahan --}}
             <div class="mb-4">
                 <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h5 class="card-title text-primary border-bottom pb-2 mb-0">Catatan Penilaian</h5>
-                    <button type="button" class="btn btn-info btn-sm" id="addCatatan">
-                        <i class="bi bi-plus-circle"></i> Tambah Catatan
+                    <h5 class="card-title text-primary border-bottom pb-2 mb-0">Tugas Tambahan</h5>
+                    <button type="button" class="btn btn-warning btn-sm" id="addTugasTambahan">
+                        <i class="bi bi-plus-circle"></i> Tambah Tugas Tambahan
                     </button>
                 </div>
                 
-                <div id="catatanContainer">
-                    {{-- Catatan existing akan dimuat di sini --}}
+                <div id="tugasTambahanContainer">
+                    {{-- Tugas Tambahan existing akan dimuat di sini --}}
+                </div>
+            </div>
+            
+            {{-- Catatan Penilaian --}}
+            <div class="mb-4">
+                <h5 class="card-title text-primary border-bottom pb-2">Catatan Penilaian</h5>
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <label for="catatan_tanggal" class="form-label">Tanggal</label>
+                        <div class="input-group">
+                            <input type="text" name="catatan_tanggal" id="catatan_tanggal" class="form-control" placeholder="Pilih tanggal" value="{{ old('catatan_tanggal', $skp->catatanPenilaian?->tanggal ? \Carbon\Carbon::parse($skp->catatanPenilaian->tanggal)->format('d-m-Y') : '') }}">
+                            <button class="btn btn-outline-secondary" type="button" for="catatan_tanggal">
+                                <i class="bi bi-calendar3"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="col-12 mb-4">
+                        <label class="form-label">Uraian</label>
+                        <textarea name="uraian" id="uraian" class="form-control bg-light" rows="8" readonly style="resize:none">{{ old('uraian', $skp->catatanPenilaian?->uraian) }}</textarea>
+                    </div>
+                    <div class="col-12">
+                        <h6 class="pb-2">Aspek Perilaku</h6>
+                    </div>
+
+                    @php
+                        $uraianText = $skp->catatanPenilaian?->uraian ?? '';
+
+                        $extractedValues = [
+                            'orientasi_pelayanan' => null,
+                            'integritas' => null,
+                            'komitmen' => null,
+                            'disiplin' => null,
+                            'kerjasama' => null,
+                            'kepemimpinan' => null,
+                        ];
+
+                        if ($uraianText) {
+                            // Regex yang lebih tepat untuk mengambil nilai numeric
+                            preg_match('/Orientasi Pelayanan\s*:\s*([0-9]*\.?[0-9]+)/', $uraianText, $matches);
+                            if (isset($matches[1])) {
+                                $extractedValues['orientasi_pelayanan'] = trim($matches[1]);
+                            }
+
+                            preg_match('/Integritas\s*:\s*([0-9]*\.?[0-9]+)/', $uraianText, $matches);
+                            if (isset($matches[1])) {
+                                $extractedValues['integritas'] = trim($matches[1]);
+                            }
+
+                            preg_match('/Komitmen\s*:\s*([0-9]*\.?[0-9]+)/', $uraianText, $matches);
+                            if (isset($matches[1])) {
+                                $extractedValues['komitmen'] = trim($matches[1]);
+                            }
+
+                            preg_match('/Disiplin\s*:\s*([0-9]*\.?[0-9]+)/', $uraianText, $matches);
+                            if (isset($matches[1])) {
+                                $extractedValues['disiplin'] = trim($matches[1]);
+                            }
+                            
+                            preg_match('/Kerjasama\s*:\s*([0-9]*\.?[0-9]+)/', $uraianText, $matches);
+                            if (isset($matches[1])) {
+                                $extractedValues['kerjasama'] = trim($matches[1]);
+                            }
+
+                            preg_match('/Kepemimpinan\s*:\s*([0-9]*\.?[0-9]+)/', $uraianText, $matches);
+                            if (isset($matches[1])) {
+                                $extractedValues['kepemimpinan'] = trim($matches[1]);
+                            }
+                        }
+                    @endphp
+
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label class="form-label">Orientasi Pelayanan</label>
+                            <input type="number" class="form-control" name="orientasi_pelayanan" id="orientasi_pelayanan" min="0" max="100" step="0.01" value="{{ old('orientasi_pelayanan', $extractedValues['orientasi_pelayanan']) }}" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Integritas</label>
+                            <input type="number" class="form-control" name="integritas" id="integritas" min="0" max="100" step="0.01" value="{{ old('integritas', $extractedValues['integritas']) }}" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Komitmen</label>
+                            <input type="number" class="form-control" name="komitmen" id="komitmen" min="0" max="100" step="0.01" value="{{ old('komitmen', $extractedValues['komitmen']) }}" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Disiplin</label>
+                            <input type="number" class="form-control" name="disiplin" id="disiplin" min="0" max="100" step="0.01" value="{{ old('disiplin', $extractedValues['disiplin']) }}" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Kerjasama</label>
+                            <input type="number" class="form-control" name="kerjasama" id="kerjasama" min="0" max="100" step="0.01" value="{{ old('kerjasama', $extractedValues['kerjasama']) }}" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Kepemimpinan</label>
+                            <input type="number" class="form-control" name="kepemimpinan" id="kepemimpinan" min="0" max="100" step="0.01" value="{{ old('kepemimpinan', $extractedValues['kepemimpinan']) }}">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Nilai Perilaku</label>
+                            <input type="number" class="form-control" name="nilai_perilaku" id="nilai_perilaku" readonly value="{{ old('nilai_perilaku', $skp->nilai_perilaku) }}">
+                        </div>
+                        <input type="hidden" name="catatan_id" value="{{ old('catatan_id', $skp->catatan?->id) }}">
+                    </div>
                 </div>
             </div>
 
@@ -149,10 +240,10 @@ document.addEventListener('DOMContentLoaded', function() {
         addKegiatanForm(kegiatan, index);
     });
 
-    // Load existing catatan
-    const existingCatatan = @json($skp->catatanPenilaian);
-    existingCatatan.forEach(function(catatan, index) {
-        addCatatanForm(catatan, index);
+    // Load existing tugas tambahan
+    const existingTugasTambahan = @json($skp->tugasTambahan ?? []);
+    existingTugasTambahan.forEach(function(tugasTambahan, index) {
+        addTugasTambahanForm(tugasTambahan, index);
     });
 
     // Jika tidak ada kegiatan, tambah form kosong
@@ -165,9 +256,9 @@ document.addEventListener('DOMContentLoaded', function() {
         addKegiatanForm();
     });
 
-    // Event listener untuk tombol tambah catatan
-    document.getElementById('addCatatan').addEventListener('click', function() {
-        addCatatanForm();
+    // Event listener untuk tombol tambah tugas tambahan
+    document.getElementById('addTugasTambahan').addEventListener('click', function() {
+        addTugasTambahanForm();
     });
 
     // Fungsi untuk mendapatkan index kegiatan berikutnya
@@ -180,12 +271,12 @@ document.addEventListener('DOMContentLoaded', function() {
         return indices.length > 0 ? Math.max(...indices) + 1 : 0;
     }
 
-    // Fungsi untuk mendapatkan index catatan berikutnya
-    function getNextCatatanIndex() {
-        const existingItems = document.querySelectorAll('.catatan-item');
+    // Fungsi untuk mendapatkan index tugas tambahan berikutnya
+    function getNextTugasTambahanIndex() {
+        const existingItems = document.querySelectorAll('.tugas-tambahan-item');
         const indices = Array.from(existingItems).map(item => {
             const id = item.id;
-            return parseInt(id.replace('catatan-', ''));
+            return parseInt(id.replace('tugas-tambahan-', ''));
         });
         return indices.length > 0 ? Math.max(...indices) + 1 : 0;
     }
@@ -281,129 +372,45 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Fungsi untuk menambah form catatan
-    function addCatatanForm(data = null, index = null) {
-        const currentIndex = index !== null ? index : getNextCatatanIndex();
-        const container = document.getElementById('catatanContainer');
-        const displayNumber = document.querySelectorAll('.catatan-item').length + 1;
+    // Fungsi untuk menambah form tugas tambahan
+    function addTugasTambahanForm(data = null, index = null) {
+        const currentIndex = index !== null ? index : getNextTugasTambahanIndex();
+        const container = document.getElementById('tugasTambahanContainer');
+        const displayNumber = document.querySelectorAll('.tugas-tambahan-item').length + 1;
         
-        // Buat opsi select pegawai
-        let optionsHtml = '<option value="">-- Pilih Pegawai Penilai --</option>';
-        if (pegawais) {
-            pegawais.forEach(pegawai => {
-                const isSelected = data && data.pegawai_penilai_id == pegawai.id ? 'selected' : '';
-                optionsHtml += `<option value="${pegawai.id}" ${isSelected}>${pegawai.nama} - ${pegawai.nip}</option>`;
-            });
-        }
-        
-        // Format tanggal untuk display
-        let displayDate = '';
-        if (data && data.tanggal) {
-            // Jika tanggal dalam format Y-m-d, konversi ke d-m-Y untuk display
-            const dateObj = new Date(data.tanggal);
-            if (!isNaN(dateObj.getTime())) {
-                displayDate = String(dateObj.getDate()).padStart(2, '0') + '-' + 
-                            String(dateObj.getMonth() + 1).padStart(2, '0') + '-' + 
-                            dateObj.getFullYear();
-            } else {
-                displayDate = data.tanggal;
-            }
-        }
-        
-        const catatanHtml = `
-            <div class="card mb-3 catatan-item" id="catatan-${currentIndex}">
-                <div class="card-header bg-light d-flex justify-content-between align-items-center">
-                    <h6 class="mb-0">Catatan ${displayNumber}</h6>
-                    <button type="button" class="btn btn-danger btn-sm remove-catatan">
+        const tugasTambahanHtml = `
+            <div class="card mb-3 tugas-tambahan-item" id="tugas-tambahan-${currentIndex}">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h6 class="mb-0">Tugas Tambahan ${displayNumber}</h6>
+                    <button type="button" class="btn btn-danger btn-sm remove-tugas-tambahan">
                         <i class="bi bi-trash"></i> Hapus
                     </button>
                 </div>
                 <div class="card-body">
                     <div class="row g-3 mt-1">
                         <div class="col-md-6">
-                            <label for="catatan_tanggal_${currentIndex}" class="form-label">Tanggal</label>
-                            <div class="input-group">
-                                <input type="text" name="catatan[${currentIndex}][tanggal]" id="catatan_tanggal_${currentIndex}" class="form-control" value="${displayDate}">
-                                <button class="btn btn-outline-secondary" type="button" for="catatan_tanggal_${currentIndex}">
-                                    <i class="bi bi-calendar3"></i>
-                                </button>
-                            </div>
+                            <label class="form-label">Nama Tugas Tambahan <span class="text-danger">*</span></label>
+                            <input type="text" name="tugas_tambahan[${currentIndex}][nama_tambahan]" class="form-control" value="${data ? data.nama_tambahan || '' : ''}">
                         </div>
                         <div class="col-md-6">
-                            <label for="pegawai_penilai_id_catatan_${currentIndex}" class="form-label">Pegawai Penilai <span class="text-danger">*</span></label>
-                            <select name="catatan[${currentIndex}][pegawai_penilai_id]" id="pegawai_penilai_id_catatan_${currentIndex}" class="form-select" required>
-                                ${optionsHtml}
-                            </select>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Nama Pegawai Penilai</label>
-                            <input type="text" name="catatan[${currentIndex}][nama_pegawai_penilai]" id="nama_pegawai_penilai_${currentIndex}" class="form-control" value="${data ? data.nama_pegawai_penilai || '' : ''}">
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">NIP Pegawai Penilai</label>
-                            <input type="text" name="catatan[${currentIndex}][nip_pegawai_penilai]" id="nip_pegawai_penilai_${currentIndex}" class="form-control" value="${data ? data.nip_pegawai_penilai || '' : ''}">
-                        </div>
-                        <div class="col-md-12">
-                            <label class="form-label">Uraian</label>
-                            <textarea name="catatan[${currentIndex}][uraian]" class="form-control" rows="3">${data ? data.uraian || '' : ''}</textarea>
+                            <label class="form-label">Nilai Tugas Tambahan <span class="text-danger">*</span></label>
+                            <input type="number" name="tugas_tambahan[${currentIndex}][nilai_tambahan]" class="form-control" min="0" max="100" step="0.01" value="${data ? data.nilai_tambahan || '' : ''}">
                         </div>
                     </div>
                 </div>
             </div>
         `;
         
-        container.insertAdjacentHTML('beforeend', catatanHtml);
+        container.insertAdjacentHTML('beforeend', tugasTambahanHtml);
         
-        // Inisialisasi datepicker setelah elemen ditambahkan (sesuai dengan dashboard)
-        const dateInput = $(`#catatan_tanggal_${currentIndex}`);
-        if (!dateInput.data('datepicker')) {
-            dateInput.datepicker({
-                autoclose: true,
-                clearBtn: true,
-                format: "dd-mm-yyyy",
-                todayHighlight: true,
-                orientation: "bottom auto"
-            });
-        }
-
-        // Event listener untuk tombol calendar datepicker
-        $(`button[for="catatan_tanggal_${currentIndex}"]`).off('click').on('click', function () {
-            $(`#catatan_tanggal_${currentIndex}`).datepicker('show');
-        });
-
-        // Inisialisasi Select2 untuk pegawai penilai (sesuai dengan dashboard)
-        const selectElement = $(`#pegawai_penilai_id_catatan_${currentIndex}`);
-        selectElement.select2({
-            placeholder: "-- Pilih Pegawai Penilai --",
-            allowClear: true,
-            width: '100%'
-        });
-
-        // Event listener untuk perubahan pegawai penilai menggunakan Select2
-        selectElement.on('change', function () {
-            const selectedId = this.value;
-            const selectedPegawai = pegawais.find(p => p.id == selectedId);
-
-            const namaInput = document.getElementById(`nama_pegawai_penilai_${currentIndex}`);
-            const nipInput = document.getElementById(`nip_pegawai_penilai_${currentIndex}`);
-
-            if (selectedPegawai) {
-                namaInput.value = selectedPegawai.nama_lengkap || selectedPegawai.nama || '';
-                nipInput.value = selectedPegawai.nip || '';
-            } else {
-                namaInput.value = '';
-                nipInput.value = '';
-            }
-        });
-
         // Update nomor setelah menambah
-        updateCatatanNumbers();
+        updateTugasTambahanNumbers();
         
-        // Event listener untuk tombol hapus catatan
-        const newItem = document.getElementById(`catatan-${currentIndex}`);
-        newItem.querySelector('.remove-catatan').addEventListener('click', function() {
+        // Event listener untuk tombol hapus tugas tambahan
+        const newItem = document.getElementById(`tugas-tambahan-${currentIndex}`);
+        newItem.querySelector('.remove-tugas-tambahan').addEventListener('click', function() {
             newItem.remove();
-            updateCatatanNumbers();
+            updateTugasTambahanNumbers();
         });
     }
 
@@ -416,12 +423,53 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Fungsi untuk update nomor catatan
-    function updateCatatanNumbers() {
-        const catatanItems = document.querySelectorAll('.catatan-item');
-        catatanItems.forEach(function(item, index) {
+    // Fungsi untuk update nomor tugas tambahan
+    function updateTugasTambahanNumbers() {
+        const tugasTambahanItems = document.querySelectorAll('.tugas-tambahan-item');
+        tugasTambahanItems.forEach(function(item, index) {
             const header = item.querySelector('.card-header h6');
-            header.textContent = `Catatan ${index + 1}`;
+            header.textContent = `Tugas Tambahan ${index + 1}`;
+        });
+    }
+
+    // Hitung nilai perilaku + isi uraian
+    const orientasiPelayananInput = document.getElementById('orientasi_pelayanan');
+    if (orientasiPelayananInput) {
+        $('#orientasi_pelayanan, #integritas, #komitmen, #disiplin, #kerjasama, #kepemimpinan').on('input', function () {
+            let total = 0;
+            let count = 0;
+
+            const values = {
+                orientasi: $('#orientasi_pelayanan').val(),
+                integritas: $('#integritas').val(),
+                komitmen: $('#komitmen').val(),
+                disiplin: $('#disiplin').val(),
+                kerjasama: $('#kerjasama').val(),
+                kepemimpinan: $('#kepemimpinan').val()
+            };
+
+            Object.values(values).forEach(val => {
+                const num = parseFloat(val);
+                if (!isNaN(num)) {
+                    total += num;
+                    count++;
+                }
+            });
+
+            const avg = count > 0 ? (total / count).toFixed(2) : '';
+            $('#nilai_perilaku').val(avg);
+
+            // Gabungkan ke uraian
+            const uraianText = 
+            `Aspek Perilaku Pegawai
+
+            Orientasi Pelayanan : ${values.orientasi || '-'}
+            Integritas          : ${values.integritas || '-'}
+            Komitmen            : ${values.komitmen || '-'}
+            Disiplin            : ${values.disiplin || '-'}
+            Kerjasama           : ${values.kerjasama || '-'}
+            Kepemimpinan        : ${values.kepemimpinan || '-'}`;
+            $('#uraian').val(uraianText);
         });
     }
 

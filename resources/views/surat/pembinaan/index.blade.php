@@ -34,20 +34,22 @@
         </div>
     </form>
 
-    <table class="table table-bordered table-striped">
+    <table class="table table-bordered table-striped table-hover align-middle text-center">
         <thead>
-            <tr>
+            <tr class="text-center align-middle">
+                <th style="width: 50px;">No</th>
                 <th>Nama</th>
                 <th>NIP</th>
                 <th>Jabatan</th>
                 <th>Nama Suami/Istri</th>
                 <th>Hubungan</th>
-                <th>Aksi</th>
+                <th style="width: 100px;">Action</th>
             </tr>
         </thead>
         <tbody>
-            @forelse ($pembinaans as $pembinaan)
+            @forelse ($pembinaans as $index => $pembinaan)
             <tr>
+                <td>{{ $pembinaans->firstItem() + $index }}</td>
                 <td>{{ $pembinaan->pegawai->nama }}</td>
                 <td>{{ $pembinaan->pegawai->nip }}</td>
                 <td>{{ $pembinaan->pegawai->jabatan->nama ?? '-' }}</td>

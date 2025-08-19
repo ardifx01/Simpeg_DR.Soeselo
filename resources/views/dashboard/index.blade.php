@@ -5,7 +5,7 @@
     <div class="pagetitle">
         <div class="d-flex justify-content-between">
             <div>
-                <h1>Dashboard <small>Overview & statistic Kepegawaian</small></h1>
+                <h1>Dashboard <small>Data & Statistik Kepegawaian</small></h1>
                 <nav>
                     <ol class="breadcrumb">
                     <li class="breadcrumb-item active">Dashboard</li>
@@ -25,7 +25,7 @@
             <!-- E-personal Card -->
             <div class="col-xxl-3 col-md-6">
                 <a href="{{ route('dashboard.epersonal') }}">
-                    <div class="card info-card pegawai-card" data-aos="zoom-in">
+                    <div class="card pegawai-card" data-aos="zoom-in">
                     <div class="card-body">
                         <h5 class="card-title">E-personal</h5>
                         <div class="d-flex align-items-center">
@@ -33,9 +33,9 @@
                                 <i class="bi bi-person-fill"></i>
                             </div>
                             <div class="ps-3">
-                                <h6>{{ $jumlahPegawai }}</h6>
+                                <h6 class="fs-4 fw-bold text-primary mb-0">{{ $jumlahPegawai }}</h6>
                                 <hr class="dropdown-divider">
-                                <span class="text-muted small pt-2 ps-1">Total Data Pegawai</span>
+                                <span class="text-muted pt-2 ps-1">Total Data Pegawai</span>
                             </div>
                         </div>
                     </div>
@@ -45,7 +45,7 @@
             <!-- E-surat Card -->
             <div class="col-xxl-3 col-md-6">
                 <a href="{{ route('surat') }}">
-                    <div class="card info-card opd-card" data-aos="zoom-in">
+                    <div class="card opd-card" data-aos="zoom-in">
                     <div class="card-body">
                         <h5 class="card-title">E-surat</h5>
                         <div class="d-flex align-items-center">
@@ -54,7 +54,7 @@
                             </div>
                             <div class="ps-3">
                                 <h6></h6>
-                                <span class="text-muted small pt-2 ps-1">Surat Pegawai</span>
+                                <span class="text-muted pt-2 ps-1">Surat Pegawai</span>
                             </div>
                         </div>
                     </div>
@@ -64,7 +64,7 @@
             <!-- Diklat Card -->
             <div class="col-xxl-3 col-md-6">
                 <a href="">
-                    <div class="card info-card diklat-card" data-aos="zoom-in">
+                    <div class="card diklat-card" data-aos="zoom-in">
                     <div class="card-body">
                         <h5 class="card-title">Diklat</h5>
                         <div class="d-flex align-items-center">
@@ -72,8 +72,8 @@
                                 <i class="bi bi-clock-fill"></i>
                             </div>
                             <div class="ps-3">
-                                <h6>{{ $jumlahdiklat }}</h6>
-                                <span class="text-muted small pt-2 ps-1">Total data Diklat</span>
+                                <h6 class="fs-4 fw-bold text-primary mb-0">{{ $jumlahdiklat }}</h6>
+                                <span class="text-muted pt-2 ps-1">Total data Diklat</span>
                             </div>
                         </div>
                     </div>
@@ -83,7 +83,7 @@
             <!-- Penghargaan Card -->
             <div class="col-xxl-3 col-md-6">
                 <a href="{{ route('penghargaan.index') }}">
-                    <div class="card info-card penghargaan-card" data-aos="zoom-in">
+                    <div class="card penghargaan-card" data-aos="zoom-in">
                     <div class="card-body">
                         <h5 class="card-title">Penghargaan</h5>
                         <div class="d-flex align-items-center">
@@ -91,8 +91,8 @@
                                 <i class="bi bi-star-fill"></i>
                             </div>
                             <div class="ps-3">
-                                <h6>{{ $jumlahPenghargaan }}</h6>
-                                <span class="text-muted small pt-2 ps-1">Total data Penghargaan</span>
+                                <h6 class="fs-4 fw-bold text-primary mb-0">{{ $jumlahPenghargaan }}</h6>
+                                <span class="text-muted pt-2 ps-1">Total data Penghargaan</span>
                             </div>
                         </div>
                     </div>

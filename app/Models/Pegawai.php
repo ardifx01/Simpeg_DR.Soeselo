@@ -78,7 +78,6 @@ class Pegawai extends Model
         return '-';
     }
     
-    // Accessor agar tetap bisa tampil d-m-Y jika ingin
     public function getTanggalLahirAttribute($value)
     {
         return Carbon::parse($value)->format('Y-m-d');

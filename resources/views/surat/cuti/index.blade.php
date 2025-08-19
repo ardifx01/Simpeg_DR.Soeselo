@@ -33,21 +33,23 @@
         </div>
     </form>
     
-    <table class="table table-bordered table-striped">
+    <table class="table table-bordered table-striped table-hover align-middle text-center">
         <thead>
-            <tr>
+            <tr class="text-center align-middle">
+                <th style="width: 50px;">No</th>
                 <th>Nama</th>
                 <th>NIP</th>
                 <th>Jabatan</th>
                 <th>Jenis Cuti</th>
                 <th>Tanggal Mulai</th>
                 <th>Tanggal Selesai</th>
-                <th>Aksi</th>
+                <th style="width: 150px;">Action</th>
             </tr>
         </thead>
         <tbody>
-            @forelse ($cutis as $cuti)
+            @forelse ($cutis as $index => $cuti)
                 <tr>
+                    <td>{{ $cutis->firstItem() + $index }}</td>
                     <td>{{ $cuti->pegawai->nama }}</td>
                     <td>{{ $cuti->pegawai->nip }}</td>
                     <td>{{ $cuti->pegawai->jabatan->nama_jabatan ?? '-' }}</td>

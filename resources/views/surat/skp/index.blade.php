@@ -48,9 +48,9 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse ($skpHeaders as $skp)
+                    @forelse ($skpHeaders as $index => $skp)
                         <tr>
-                            <th scope="row">{{ $loop->iteration }}</th>
+                            <td>{{ $skpHeaders->firstItem() + $index }}</td>
                             <td>{{ $skp->tahun }}</td>
                             <td>{{ $skp->pegawaiDinilai->nama ?? 'N/A' }}</td>
                             <td>{{ $skp->pegawaiPenilai->nama ?? 'N/A' }}</td>

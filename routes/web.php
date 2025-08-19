@@ -1,25 +1,30 @@
 <?php
 
-use App\Models\Keterangan;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SkpController;
 use App\Http\Controllers\AnakController;
 use App\Http\Controllers\CutiController;
 use App\Http\Controllers\ArsipController;
+use App\Http\Controllers\DinasController;
 use App\Http\Controllers\IstriController;
+use App\Http\Controllers\KuasaController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\SuratController;
+use App\Http\Controllers\EdaranController;
 use App\Http\Controllers\HukumanController;
 use App\Http\Controllers\JabatanController;
 use App\Http\Controllers\PegawaiController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DisposisiController;
 use App\Http\Controllers\EpersonalController;
 use App\Http\Controllers\NominatifController;
+use App\Http\Controllers\NotaDinasController;
 use App\Http\Controllers\PembinaanController;
 use App\Http\Controllers\StatistikController;
 use App\Http\Controllers\KeteranganController;
 use App\Http\Controllers\OrganisasiController;
 use App\Http\Controllers\PendidikanController;
+use App\Http\Controllers\BeritaAcaraController;
 use App\Http\Controllers\IjinBelajarController;
 use App\Http\Controllers\PenghargaanController;
 use App\Http\Controllers\DiklatteknikController;
@@ -27,7 +32,9 @@ use App\Http\Controllers\PegawaiPrintController;
 use App\Http\Controllers\TugasBelajarController;
 use App\Http\Controllers\DiklatJabatanController;
 use App\Http\Controllers\ResetPasswordController;
+use App\Http\Controllers\KeteranganRawatController;
 use App\Http\Controllers\DiklatFungsionalController;
+use App\Http\Controllers\NotulaController;
 
 Route::middleware('guest')->group(function () {
     Route::redirect('/', '/login');
@@ -88,14 +95,31 @@ Route::middleware('auth')->group(function () {
     Route::get('/api/pegawai/{id}', [PegawaiController::class, 'getData']);
     Route::resource('cuti', CutiController::class);
     Route::get('/cuti/{id}/export', [CutiController::class, 'export'])->name('cuti.export');
-    Route::resource('keterangan', KeteranganController::class);
-    Route::get('/keterangan/{id}/export', [KeteranganController::class, 'export'])->name('keterangan.export');
+    Route::resource('rawat', KeteranganRawatController::class);
+    Route::get('/rawat/{id}/export', [KeteranganRawatController::class, 'export'])->name('rawat.export');
     Route::resource('tugas_belajar', TugasBelajarController::class);
     Route::get('/tugas_belajar/{id}/export', [TugasBelajarController::class, 'export'])->name('tugas_belajar.export');
     Route::resource('hukuman', HukumanController::class);
     Route::get('/hukuman/{id}/export', [HukumanController::class, 'export'])->name('hukuman.export');
     Route::resource('pembinaan', PembinaanController::class);
     Route::get('/pembinaan/{id}/export', [PembinaanController::class, 'export'])->name('pembinaan.export');
+    Route::resource('berita_acara', BeritaAcaraController::class);
+    Route::get('/berita_acara/{id}/export', [BeritaAcaraController::class, 'export'])->name('berita_acara.export');
+    Route::resource('dinas', DinasController::class);
+    Route::get('/dinas/{id}/export', [DinasController::class, 'export'])->name('dinas.export');
+    Route::resource('disposisi', DisposisiController::class);
+    Route::get('/disposisi/{id}/export', [DisposisiController::class, 'export'])->name('disposisi.export');
+    Route::resource('edaran', EdaranController::class);
+    Route::get('/edaran/{id}/export', [EdaranController::class, 'export'])->name('edaran.export');
+    Route::resource('keterangan', KeteranganController::class);
+    Route::get('/keterangan/{id}/export', [KeteranganController::class, 'export'])->name('keterangan.export');
+    Route::resource('kuasa', KuasaController::class);
+    Route::get('kuasa/{id}/export', [KuasaController::class, 'export'])->name('kuasa.export');
+    Route::resource('nota_dinas', NotaDinasController::class);
+    Route::get('nota_dinas/{id}/export', [NotaDinasController::class, 'export'])->name('nota_dinas.export');
+    Route::resource('notula', NotulaController::class);
+    Route::get('notula/{id}/export', [NotulaController::class, 'export'])->name('notula.export');
+
     
     Route::resource('skp', SkpController::class);
     Route::get('/skp/{skp}/cetak/pdf', [SkpController::class, 'cetakPdf'])->name('skp.cetak.pdf');
