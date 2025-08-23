@@ -11,6 +11,7 @@ use App\Http\Controllers\KuasaController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\SuratController;
 use App\Http\Controllers\EdaranController;
+use App\Http\Controllers\NotulaController;
 use App\Http\Controllers\HukumanController;
 use App\Http\Controllers\JabatanController;
 use App\Http\Controllers\PegawaiController;
@@ -19,7 +20,10 @@ use App\Http\Controllers\DisposisiController;
 use App\Http\Controllers\EpersonalController;
 use App\Http\Controllers\NominatifController;
 use App\Http\Controllers\NotaDinasController;
+use App\Http\Controllers\PanggilanController;
 use App\Http\Controllers\PembinaanController;
+use App\Http\Controllers\PenetapanController;
+use App\Http\Controllers\PengantarController;
 use App\Http\Controllers\StatistikController;
 use App\Http\Controllers\KeteranganController;
 use App\Http\Controllers\OrganisasiController;
@@ -31,10 +35,17 @@ use App\Http\Controllers\DiklatteknikController;
 use App\Http\Controllers\PegawaiPrintController;
 use App\Http\Controllers\TugasBelajarController;
 use App\Http\Controllers\DiklatJabatanController;
+use App\Http\Controllers\PemberianIzinController;
 use App\Http\Controllers\ResetPasswordController;
 use App\Http\Controllers\KeteranganRawatController;
 use App\Http\Controllers\DiklatFungsionalController;
-use App\Http\Controllers\NotulaController;
+use App\Http\Controllers\PengumumanController;
+use App\Http\Controllers\PerintahController;
+use App\Http\Controllers\PerjalananDinasController;
+use App\Http\Controllers\PernyataanController;
+use App\Http\Controllers\SertifikatController;
+use App\Http\Controllers\TelaahanController;
+use App\Http\Controllers\TugasController;
 
 Route::middleware('guest')->group(function () {
     Route::redirect('/', '/login');
@@ -42,7 +53,8 @@ Route::middleware('guest')->group(function () {
 });
 
 Route::post('/login', [LoginController::class, 'authenticate']);
-Route::post('/logout', [LoginController::class, 'logout']);
+Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard/change-password', [ResetPasswordController::class, 'showChangePasswordForm'])->name('password.change');
@@ -119,6 +131,28 @@ Route::middleware('auth')->group(function () {
     Route::get('nota_dinas/{id}/export', [NotaDinasController::class, 'export'])->name('nota_dinas.export');
     Route::resource('notula', NotulaController::class);
     Route::get('notula/{id}/export', [NotulaController::class, 'export'])->name('notula.export');
+    Route::resource('panggilan', PanggilanController::class);
+    Route::get('panggilan/{id}/export', [PanggilanController::class, 'export'])->name('panggilan.export');
+    Route::resource('pemberian_izin', PemberianIzinController::class);
+    Route::get('pemberian_izin/{id}/export', [PemberianIzinController::class, 'export'])->name('pemberian_izin.export');
+    Route::resource('penetapan', PenetapanController::class);
+    Route::get('penetapan/{id}/export', [PenetapanController::class, 'export'])->name('penetapan.export');
+    Route::resource('pengantar', PengantarController::class);
+    Route::get('pengantar/{id}/export', [PengantarController::class, 'export'])->name('pengantar.export');
+    Route::resource('pengumuman', PengumumanController::class);
+    Route::get('pengumuman/{id}/export', [PengumumanController::class, 'export'])->name('pengumuman.export');
+    Route::resource('perintah', PerintahController::class);
+    Route::get('perintah/{id}/export', [PerintahController::class, 'export'])->name('perintah.export');
+    Route::resource('perjalanan_dinas', PerjalananDinasController::class);
+    Route::get('perjalanan_dinas/{id}/export', [PerjalananDinasController::class, 'export'])->name('perjalanan_dinas.export');
+    Route::resource('pernyataan', PernyataanController::class);
+    Route::get('pernyataan/{id}/export', [PernyataanController::class, 'export'])->name('pernyataan.export');
+    Route::resource('sertifikat', SertifikatController::class);
+    Route::get('sertifikat/{id}/export', [SertifikatController::class, 'export'])->name('sertifikat.export');
+    Route::resource('telaahan', TelaahanController::class);
+    Route::get('telaahan/{id}/export', [TelaahanController::class, 'export'])->name('telaahan.export');
+    Route::resource('tugas', TugasController::class);
+    Route::get('tugas/{id}/export', [TugasController::class, 'export'])->name('tugas.export');
 
     
     Route::resource('skp', SkpController::class);

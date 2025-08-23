@@ -832,14 +832,163 @@ h6 {
   background: #ffecdf;
 }
 
+.dashboard .pns-card .card-icon {
+  color: #198754;
+  background: #e9f7ef;
+}
+
+.dashboard .pppk-card .card-icon {
+  color: #0dcaf0;
+  background: #e6faff;
+}
+
+.dashboard .cpns-card .card-icon {
+  color: #ffc107;
+  background: #fff7e6;
+}
+
+.dashboard .blud-card .card-icon {
+  color: #6f42c1;
+  background: #f3e8ff;
+}
+
+.dashboard .cuti-card .card-icon {
+  color: #4154f1;
+  background: #f0f4ff;
+}
+
+.dashboard .tugas-belajar-card .card-icon {
+  color: #2eca6a;
+  background: #e0f8e9;
+}
+
+.dashboard .rawat-card .card-icon {
+  color: #dc3545;
+  background: #ffe5e9;
+}
+
+.dashboard .hukuman-card .card-icon {
+  color: #ffc107;
+  background: #fff7e6;
+}
+
 .dashboard .pembinaan-card .card-icon {
   color: #ff478f;
   background: #ffe3f0;
 }
 
-.dashboard .info-card .card-icon {
-  color: #17a2b8;
-  background: #e2f7fb;
+.dashboard .berita-acara-card .card-icon {
+  color: #6c757d;
+  background: #f1f3f5;
+}
+
+.dashboard .dinas-card .card-icon {
+  color: #212529;
+  background: #e9ecef;
+}
+
+.dashboard .disposisi-card .card-icon {
+  color: #0d6efd;
+  background: #e6f0ff;
+}
+
+.dashboard .edaran-card .card-icon {
+  color: #198754;
+  background: #e9f7ef;
+}
+
+.dashboard .keterangan-card .card-icon {
+  color: #0dcaf0;
+  background: #e6faff;
+}
+
+.dashboard .kuasa-card .card-icon {
+  color: #dc3545;
+  background: #ffe5e9;
+}
+
+.dashboard .nota-dinas-card .card-icon {
+  color: #ffc107;
+  background: #fff7e6;
+}
+
+.dashboard .notula-card .card-icon {
+  color: #6c757d;
+  background: #f1f3f5;
+}
+
+.dashboard .panggilan-card .card-icon {
+  color: #0d6efd;
+  background: #e6f0ff;
+}
+
+.dashboard .izin-card .card-icon {
+  color: #198754;
+  background: #e9f7ef;
+}
+
+.dashboard .penetapan-card .card-icon {
+  color: #0dcaf0;
+  background: #e6faff;
+}
+
+.dashboard .pengantar-card .card-icon {
+  color: #ffc107;
+  background: #fff7e6;
+}
+
+.dashboard .pengumuman-card .card-icon {
+  color: #dc3545;
+  background: #ffe5e9;
+}
+
+.dashboard .perintah-card .card-icon {
+  color: #0d6efd;
+  background: #e6f0ff;
+}
+
+.dashboard .perjalanan-dinas-card .card-icon {
+  color: #198754;
+  background: #e9f7ef;
+}
+
+.dashboard .skp-card .card-icon {
+  color: #212529;
+  background: #e9ecef;
+}
+
+/* Efek hover ke seluruh card */
+.dashboard .card {
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+/* Efek hover ke icon */
+.dashboard .card-icon {
+  transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+.dashboard .card:hover .card-icon {
+  transform: scale(1.15) rotate(5deg); /* Membesar + miring dikit */
+  filter: brightness(1.15);            /* Lebih terang */
+}
+
+/* Card effect */
+.dashboard .info-card {
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.dashboard .info-card:hover {
+  transform: translateY(-6px);          /* card naik dikit */
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15); /* shadow lebih tebal */
+}
+
+/* Icon effect */
+.dashboard .card-icon {
+  transition: transform 0.3s ease, background 0.3s ease, color 0.3s ease;
+}
+.dashboard .info-card:hover .card-icon {
+  transform: scale(1.15) rotate(5deg);  /* membesar + miring dikit */
+  filter: brightness(1.1);              /* warna lebih terang */
 }
 
 /* Activity */
@@ -1353,6 +1502,12 @@ h6 {
   border-color: #0984e3;
   box-shadow: 0 0 0 3px rgba(9,132,227,0.1);
   outline: none;
+}
+
+.with {
+  textarea, select, input {
+    field-sizing: content;
+  }
 }
 
 /* Responsive Design */

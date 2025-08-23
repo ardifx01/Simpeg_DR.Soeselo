@@ -59,10 +59,7 @@
                             <label for="tujuan" class="form-label">Yth. (Penerima)</label>
                             <select class="form-select @error('tujuan') is-invalid @enderror" id="tujuan" name="tujuan[]" multiple="multiple" required>
                                 @foreach ($pegawais as $pegawai)
-                                    <option value="{{ $pegawai->id }}" {{ in_array($pegawai->id, old('tujuan', [])) ? 'selected' : '' }}>
-                                        {{-- Menampilkan Nama dan NIP --}}
-                                        {{ $pegawai->nama }} - (NIP: {{ $pegawai->nip ?? 'N/A' }})
-                                    </option>
+                                <option value="{{ $pegawai->id }}" {{ old('pegawai_id') == $pegawai->id ? 'selected' : '' }}>{{ $pegawai->nama_lengkap }}</option>
                                 @endforeach
                             </select>
                             @error('tujuan')

@@ -65,7 +65,7 @@
                             <select name="pihak_pertama_id" id="pihak_pertama_id" class="form-select @error('pihak_pertama_id') is-invalid @enderror" required>
                                 <option value="">Pilih Pihak Pertama</option>
                                 @foreach($pegawais as $pegawai)
-                                    <option value="{{ $pegawai->id }}" {{ old('pihak_pertama_id') == $pegawai->id ? 'selected' : '' }}>{{ $pegawai->nama }}</option>
+                                <option value="{{ $pegawai->id }}" {{ old('pegawai_id') == $pegawai->id ? 'selected' : '' }}>{{ $pegawai->nama_lengkap }}</option>
                                 @endforeach
                             </select>
                             @error('pihak_pertama_id')
@@ -78,7 +78,7 @@
                             <select name="pihak_kedua_id" id="pihak_kedua_id" class="form-select @error('pihak_kedua_id') is-invalid @enderror">
                                 <option value="">Pilih Pihak Kedua</option>
                                 @foreach($pegawais as $pegawai)
-                                    <option value="{{ $pegawai->id }}" {{ old('pihak_kedua_id') == $pegawai->id ? 'selected' : '' }}>{{ $pegawai->nama }}</option>
+                                <option value="{{ $pegawai->id }}" {{ old('pihak_kedua_id') == $pegawai->id ? 'selected' : '' }}>{{ $pegawai->nama_lengkap }}</option>
                                 @endforeach
                             </select>
                             @error('pihak_kedua_id')
@@ -91,18 +91,10 @@
                             <select name="atasan_id" id="atasan_id" class="form-select @error('atasan_id') is-invalid @enderror" required>
                                 <option value="">Pilih Atasan</option>
                                 @foreach($pegawais as $pegawai)
-                                    <option value="{{ $pegawai->id }}" {{ old('atasan_id') == $pegawai->id ? 'selected' : '' }}>{{ $pegawai->nama }}</option>
+                                <option value="{{ $pegawai->id }}" {{ old('atasan_id') == $pegawai->id ? 'selected' : '' }}>{{ $pegawai->nama_lengkap }}</option>
                                 @endforeach
                             </select>
                             @error('atasan_id')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="tempat" class="form-label">Tempat</label>
-                            <input type="text" name="tempat" id="tempat" class="form-control @error('tempat') is-invalid @enderror" value="{{ old('tempat') }}" required>
-                            @error('tempat')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>

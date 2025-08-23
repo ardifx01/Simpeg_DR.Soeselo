@@ -30,7 +30,7 @@
                         <h5 class="card-title">E-personal</h5>
                         <div class="d-flex align-items-center">
                             <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                <i class="bi bi-person-fill"></i>
+                                <i class="bi bi-people-fill"></i>
                             </div>
                             <div class="ps-3">
                                 <h6 class="fs-4 fw-bold text-primary mb-0">{{ $jumlahPegawai }}</h6>
@@ -50,7 +50,7 @@
                         <h5 class="card-title">E-surat</h5>
                         <div class="d-flex align-items-center">
                             <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                <i class="bi bi-send-fill"></i>
+                                <i class="bi bi-envelope-fill"></i>
                             </div>
                             <div class="ps-3">
                                 <h6></h6>
@@ -69,7 +69,7 @@
                         <h5 class="card-title">Diklat</h5>
                         <div class="d-flex align-items-center">
                             <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                <i class="bi bi-clock-fill"></i>
+                                <i class="bi bi-journal-bookmark-fill"></i>
                             </div>
                             <div class="ps-3">
                                 <h6 class="fs-4 fw-bold text-primary mb-0">{{ $jumlahdiklat }}</h6>
@@ -88,7 +88,7 @@
                         <h5 class="card-title">Penghargaan</h5>
                         <div class="d-flex align-items-center">
                             <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-award-fill"></i>
                             </div>
                             <div class="ps-3">
                                 <h6 class="fs-4 fw-bold text-primary mb-0">{{ $jumlahPenghargaan }}</h6>

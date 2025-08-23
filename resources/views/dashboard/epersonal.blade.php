@@ -32,7 +32,7 @@
                         <h5 class="card-title">Pegawai</h5>
                         <div class="d-flex align-items-center">
                             <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                <i class="bi bi-person-fill"></i>
+                                <i class="bi bi-people-fill"></i>
                             </div>
                             <div class="ps-3">
                                 <span class="fs-4 fw-bold text-primary mb-0">{{ $jumlahPegawai }}</span>
@@ -47,12 +47,12 @@
             <!-- PNS Card -->
             <div class="col-xxl-3 col-md-6">
                 <a href="{{ route('pegawai.index', ['per_page' => 10, 'jenis_kepegawaian' => 'PNS', 'search' => '']) }}">
-                    <div class="card opd-card" data-aos="zoom-in">
+                    <div class="card pns-card" data-aos="zoom-in">
                     <div class="card-body">
                         <h5 class="card-title">PNS</h5>
                         <div class="d-flex align-items-center">
                             <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                <i class="bi bi-person-lines-fill"></i>
+                                <i class="bi bi-person-badge-fill"></i>
                             </div>
                             <div class="ps-3">
                                 <span class="fs-4 fw-bold text-primary mb-0">{{ $jumlahPNS }}</span>
@@ -67,12 +67,12 @@
             <!-- PPPK Card -->
             <div class="col-xxl-3 col-md-6">
                 <a href="{{ route('pegawai.index', ['per_page' => 10, 'jenis_kepegawaian' => 'PPPK', 'search' => '']) }}">
-                    <div class="card pegawai-card" data-aos="zoom-in">
+                    <div class="card pppk-card" data-aos="zoom-in">
                         <div class="card-body">
                             <h5 class="card-title">PPPK</h5>
                             <div class="d-flex align-items-center">
                                 <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                    <i class="bi bi-person-lines-fill"></i>
+                                    <i class="bi bi-person-workspace"></i>
                                 </div>
                                 <div class="ps-3">
                                     <span class="fs-4 fw-bold text-primary mb-0">{{ $jumlahPPPK }}</span>
@@ -88,12 +88,12 @@
             <!-- CPNS Card -->
             <div class="col-xxl-3 col-md-6">
                 <a href="{{ route('pegawai.index', ['per_page' => 10, 'jenis_kepegawaian' => 'CPNS', 'search' => '']) }}">
-                    <div class="card penghargaan-card" data-aos="zoom-in">
+                    <div class="card cpns-card" data-aos="zoom-in">
                         <div class="card-body">
                             <h5 class="card-title">CPNS</h5>
                             <div class="d-flex align-items-center">
                                 <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                    <i class="bi bi-person-lines-fill"></i>
+                                    <i class="bi bi-person-plus-fill"></i>
                                 </div>
                                 <div class="ps-3">
                                     <span class="fs-4 fw-bold text-primary mb-0">{{ $jumlahCPNS }}</span>
@@ -109,12 +109,12 @@
             <!-- BLUD Card -->
             <div class="col-xxl-3 col-md-6">
                 <a href="{{ route('pegawai.index', ['per_page' => 10, 'jenis_kepegawaian' => 'BLUD', 'search' => '']) }}">
-                    <div class="card diklat-card" data-aos="zoom-in">
+                    <div class="card blud-card" data-aos="zoom-in">
                         <div class="card-body">
                             <h5 class="card-title">BLUD</h5>
                             <div class="d-flex align-items-center">
                                 <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                    <i class="bi bi-person-lines-fill"></i>
+                                    <i class="bi bi-building"></i>
                                 </div>
                                 <div class="ps-3">
                                     <span class="fs-4 fw-bold text-primary mb-0">{{ $jumlahBLUD }}</span>

@@ -25,11 +25,11 @@ class NotaDinasController extends Controller
             $s = $request->input('search');
             $query->where(function ($q) use ($s) {
                 $q->where('nomor', 'like', "%{$s}%")
-                  ->orWhere('hal', 'like', "%{$s}%")
-                  ->orWhere('sifat', 'like', "%{$s}%")
-                  ->orWhere('isi', 'like', "%{$s}%")
-                  ->orWhereHas('pemberi', fn($qq)=>$qq->where('nama','like',"%{$s}%"))
-                  ->orWhereHas('penerima', fn($qq)=>$qq->where('nama','like',"%{$s}%"));
+                    ->orWhere('hal', 'like', "%{$s}%")
+                    ->orWhere('sifat', 'like', "%{$s}%")
+                    ->orWhere('isi', 'like', "%{$s}%")
+                    ->orWhereHas('pemberi', fn($qq)=>$qq->where('nama','like',"%{$s}%"))
+                    ->orWhereHas('penerima', fn($qq)=>$qq->where('nama','like',"%{$s}%"));
             });
         }
 

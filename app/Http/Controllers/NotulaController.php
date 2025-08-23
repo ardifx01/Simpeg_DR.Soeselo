@@ -26,23 +26,23 @@ class NotulaController extends Controller
             $search = $request->search;
             $query->where(function ($q) use ($search) {
                 $q->where('sidang_rapat', 'like', "%$search%")
-                  ->orWhere('acara', 'like', "%$search%")
-                  ->orWhere('kegiatan_rapat', 'like', "%$search%")
-                  ->orWhere('surat_undangan', 'like', "%$search%")
-                  ->orWhere('tanggal', 'like', "%$search%")
-                  ->orWhere('waktu', 'like', "%$search%")
-                  ->orWhereHas('ketua', function ($qq) use ($search) {
-                      $qq->where('nama', 'like', "%$search%")
-                         ->orWhere('nip', 'like', "%$search%");
-                  })
-                  ->orWhereHas('sekretaris', function ($qq) use ($search) {
-                      $qq->where('nama', 'like', "%$search%")
-                         ->orWhere('nip', 'like', "%$search%");
-                  })
-                  ->orWhereHas('pencatat', function ($qq) use ($search) {
-                      $qq->where('nama', 'like', "%$search%")
-                         ->orWhere('nip', 'like', "%$search%");
-                  });
+                    ->orWhere('acara', 'like', "%$search%")
+                    ->orWhere('kegiatan_rapat', 'like', "%$search%")
+                    ->orWhere('surat_undangan', 'like', "%$search%")
+                    ->orWhere('tanggal', 'like', "%$search%")
+                    ->orWhere('waktu', 'like', "%$search%")
+                    ->orWhereHas('ketua', function ($qq) use ($search) {
+                        $qq->where('nama', 'like', "%$search%")
+                            ->orWhere('nip', 'like', "%$search%");
+                    })
+                    ->orWhereHas('sekretaris', function ($qq) use ($search) {
+                        $qq->where('nama', 'like', "%$search%")
+                            ->orWhere('nip', 'like', "%$search%");
+                    })
+                    ->orWhereHas('pencatat', function ($qq) use ($search) {
+                        $qq->where('nama', 'like', "%$search%")
+                            ->orWhere('nip', 'like', "%$search%");
+                });
             });
         }
 

@@ -18,9 +18,13 @@
 </div>
 
 <section class="row mt-4">
-    <div class="col-12">
-        <div class="card shadow-sm border-0">
-            <div class="card-body">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white py-3">
+                    <h4 class="mb-0">Form Pengajuan Notula</h4>
+                </div>
+                <div class="card-body p-4">
                 <form action="{{ route('notula.store') }}" method="POST">
                     @csrf
 
@@ -82,9 +86,7 @@
                                     class="form-select @error('ketua_id') is-invalid @enderror" required>
                                 <option value="">-- Pilih Ketua --</option>
                                 @foreach ($pegawais as $pegawai)
-                                    <option value="{{ $pegawai->id }}" {{ old('ketua_id') == $pegawai->id ? 'selected' : '' }}>
-                                        {{ $pegawai->nama }}
-                                    </option>
+                                    <option value="{{ $pegawai->id }}" {{ old('ketua_id') == $pegawai->id ? 'selected' : '' }}>{{ $pegawai->nama_lengkap }}</option>
                                 @endforeach
                             </select>
                             @error('ketua_id')
@@ -98,9 +100,7 @@
                                     class="form-select @error('sekretaris_id') is-invalid @enderror">
                                 <option value="">-- Pilih Sekretaris --</option>
                                 @foreach ($pegawais as $pegawai)
-                                    <option value="{{ $pegawai->id }}" {{ old('sekretaris_id') == $pegawai->id ? 'selected' : '' }}>
-                                        {{ $pegawai->nama }}
-                                    </option>
+                                    <option value="{{ $pegawai->id }}" {{ old('sekretaris_id') == $pegawai->id ? 'selected' : '' }}>{{ $pegawai->nama_lengkap }}</option>
                                 @endforeach
                             </select>
                             @error('sekretaris_id')
@@ -114,9 +114,7 @@
                                     class="form-select @error('pencatat_id') is-invalid @enderror" required>
                                 <option value="">-- Pilih Pencatat --</option>
                                 @foreach ($pegawais as $pegawai)
-                                    <option value="{{ $pegawai->id }}" {{ old('pencatat_id') == $pegawai->id ? 'selected' : '' }}>
-                                        {{ $pegawai->nama }}
-                                    </option>
+                                    <option value="{{ $pegawai->id }}" {{ old('pencatat_id') == $pegawai->id ? 'selected' : '' }}>{{ $pegawai->nama_lengkap }}</option>
                                 @endforeach
                             </select>
                             @error('pencatat_id')
@@ -130,9 +128,7 @@
                         <label for="peserta" class="form-label fw-bold">Peserta</label>
                         <select name="peserta[]" id="peserta" class="form-select @error('peserta') is-invalid @enderror" multiple required>
                             @foreach($pegawais as $pegawai)
-                                <option value="{{ $pegawai->id }}" {{ in_array($pegawai->id, old('peserta', [])) ? 'selected' : '' }}>
-                                    {{ $pegawai->nama }} - {{ $pegawai->nip ?? '' }}
-                                </option>
+                            <option value="{{ $pegawai->id }}" {{ in_array($pegawai->id, old('peserta', [])) ? 'selected' : '' }}>{{ $pegawai->nama_lengkap }} - {{ $pegawai->nip ?? '' }}</option>
                             @endforeach
                         </select>
                         <small class="text-muted">* Tekan Ctrl / Cmd untuk memilih lebih dari satu peserta</small>
@@ -144,9 +140,7 @@
                     <!-- Kegiatan Rapat -->
                     <div class="mb-3">
                         <label for="kegiatan_rapat" class="form-label fw-bold">Kegiatan Rapat</label>
-                        <textarea name="kegiatan_rapat" id="kegiatan_rapat" rows="4"
-                                  class="form-control @error('kegiatan_rapat') is-invalid @enderror"
-                                  required>{{ old('kegiatan_rapat') }}</textarea>
+                        <textarea name="kegiatan_rapat" id="kegiatan_rapat" rows="4" class="form-control @error('kegiatan_rapat') is-invalid @enderror" required>{{ old('kegiatan_rapat') }}</textarea>
                         @error('kegiatan_rapat')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -154,11 +148,11 @@
 
                     <!-- Tombol -->
                     <div class="d-flex justify-content-end gap-2">
-                        <a href="{{ route('notula.index') }}" class="btn btn-secondary">Batal</a>
-                        <button type="submit" class="btn btn-primary">Simpan</button>
+                        <button type="submit" class="btn btn-primary">Simpan Notula</button>
                     </div>
 
                 </form>
+                </div>
             </div>
         </div>
     </div>

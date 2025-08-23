@@ -26,11 +26,18 @@ class Panggilan extends Model
         'tembusan',
     ];
 
+    protected $casts = [
+        'tembusan'        => 'array',
+        'tanggal_surat'   => 'date',
+        'jadwal_tanggal'  => 'date',
+    ];
+
     public function pegawai()
     {
         return $this->belongsTo(Pegawai::class, 'pegawai_id');
     }
 
+    // Pejabat yang menandatangani
     public function penandatangan()
     {
         return $this->belongsTo(Pegawai::class, 'penandatangan_id');

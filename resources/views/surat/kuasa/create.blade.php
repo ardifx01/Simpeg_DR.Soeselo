@@ -66,9 +66,7 @@
                                     <select class="form-select @error('pemberi_id') is-invalid @enderror" id="pemberi_id" name="pemberi_id" required>
                                         <option value="" disabled selected>-- Pilih Pemberi Kuasa --</option>
                                         @foreach ($pegawais as $pegawai)
-                                            <option value="{{ $pegawai->id }}" {{ old('pemberi_id') == $pegawai->id ? 'selected' : '' }}>
-                                                {{ $pegawai->nama }} - (NIP: {{ $pegawai->nip ?? 'N/A' }})
-                                            </option>
+                                            <option value="{{ $pegawai->id }}" {{ old('pemberi_id') == $pegawai->id ? 'selected' : '' }}>{{ $pegawai->nama_lengkap }} - (NIP: {{ $pegawai->nip ?? 'N/A' }})</option>
                                         @endforeach
                                     </select>
                                     @error('pemberi_id')
@@ -80,9 +78,7 @@
                                     <select class="form-select @error('penerima_id') is-invalid @enderror" id="penerima_id" name="penerima_id" required>
                                         <option value="" disabled selected>-- Pilih Penerima Kuasa --</option>
                                         @foreach ($pegawais as $pegawai)
-                                            <option value="{{ $pegawai->id }}" {{ old('penerima_id') == $pegawai->id ? 'selected' : '' }}>
-                                                {{ $pegawai->nama }} - (NIP: {{ $pegawai->nip ?? 'N/A' }})
-                                            </option>
+                                            <option value="{{ $pegawai->id }}" {{ old('penerima_id') == $pegawai->id ? 'selected' : '' }}>{{ $pegawai->nama }} - (NIP: {{ $pegawai->nip ?? 'N/A' }})</option>
                                         @endforeach
                                     </select>
                                     @error('penerima_id')

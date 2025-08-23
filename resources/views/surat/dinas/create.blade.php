@@ -114,7 +114,7 @@
                             <select name="penandatangan_id" id="penandatangan_id" class="form-select @error('penandatangan_id') is-invalid @enderror" required>
                                 <option value="">Pilih Penandatangan</option>
                                 @foreach($pegawais as $pegawai)
-                                    <option value="{{ $pegawai->id }}" {{ old('penandatangan_id') == $pegawai->id ? 'selected' : '' }}>{{ $pegawai->nama }}</option>
+                                <option value="{{ $pegawai->id }}" {{ old('penandatangan_id') == $pegawai->id ? 'selected' : '' }}>{{ $pegawai->nama_lengkap }}</option>
                                 @endforeach
                             </select>
                             @error('penandatangan_id')

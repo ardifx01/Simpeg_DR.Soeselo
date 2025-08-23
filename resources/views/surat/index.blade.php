@@ -20,269 +20,56 @@
             </div>
         </div><!-- End E-surat Title -->
 
+        @php
+        $cards = [
+            ['route' => 'cuti.index',             'title' => 'Surat Cuti',              'icon' => 'bi-file-text',             'subtitle' => 'Ajukan Surat',  'class' => 'cuti-card'],
+            ['route' => 'tugas_belajar.index',    'title' => 'Surat Tugas Belajar',     'icon' => 'bi-mortarboard',           'subtitle' => 'Ajukan Surat',  'class' => 'tugas-belajar-card'],
+            ['route' => 'rawat.index',            'title' => 'Surat Keterangan Rawat',  'icon' => 'bi-heart-pulse',           'subtitle' => 'Ajukan Surat',  'class' => 'rawat-card'],
+            ['route' => 'hukuman.index',          'title' => 'Surat Hukuman Disiplin',  'icon' => 'bi-exclamation-octagon',   'subtitle' => 'Ajukan Surat',  'class' => 'hukuman-card'],
+            ['route' => 'pembinaan.index',        'title' => 'Surat Pembinaan',         'icon' => 'bi-chat-square-quote',     'subtitle' => 'Ajukan Surat',  'class' => 'pembinaan-card'],
+            ['route' => 'berita_acara.index',     'title' => 'Berita Acara',            'icon' => 'bi-journal-text',          'subtitle' => 'Ajukan Surat',  'class' => 'berita-acara-card'],
+            ['route' => 'dinas.index',            'title' => 'Surat Dinas',             'icon' => 'bi-briefcase',             'subtitle' => 'Ajukan Surat',  'class' => 'dinas-card'],
+            ['route' => 'disposisi.index',        'title' => 'Surat Disposisi',         'icon' => 'bi-inbox',                 'subtitle' => 'Ajukan Surat',  'class' => 'disposisi-card'],
+            ['route' => 'edaran.index',           'title' => 'Surat Edaran',            'icon' => 'bi-megaphone',             'subtitle' => 'Ajukan Surat',  'class' => 'edaran-card'],
+            ['route' => 'keterangan.index',       'title' => 'Surat Keterangan',        'icon' => 'bi-card-checklist',        'subtitle' => 'Ajukan Surat',  'class' => 'keterangan-card'],
+            ['route' => 'kuasa.index',            'title' => 'Surat Kuasa',             'icon' => 'bi-shield-check',          'subtitle' => 'Ajukan Surat',  'class' => 'kuasa-card'],
+            ['route' => 'nota_dinas.index',       'title' => 'Nota Dinas',              'icon' => 'bi-stickies',              'subtitle' => 'Ajukan Surat',  'class' => 'nota-dinas-card'],
+            ['route' => 'notula.index',           'title' => 'Notula',                  'icon' => 'bi-pen',                   'subtitle' => 'Ajukan Surat',  'class' => 'notula-card'],
+            ['route' => 'panggilan.index',        'title' => 'Surat Panggilan',         'icon' => 'bi-telephone',             'subtitle' => 'Ajukan Surat',  'class' => 'panggilan-card'],
+            ['route' => 'pemberian_izin.index',   'title' => 'Surat Pemberian Izin',    'icon' => 'bi-person-check',          'subtitle' => 'Ajukan Surat',  'class' => 'izin-card'],
+            ['route' => 'penetapan.index',        'title' => 'Surat Penetapan',         'icon' => 'bi-check2-square',         'subtitle' => 'Ajukan Surat',  'class' => 'penetapan-card'],
+            ['route' => 'pengantar.index',        'title' => 'Surat Pengantar',         'icon' => 'bi-send',                  'subtitle' => 'Ajukan Surat',  'class' => 'pengantar-card'],
+            ['route' => 'pengumuman.index',       'title' => 'Surat Pengumuman',        'icon' => 'bi-broadcast',             'subtitle' => 'Ajukan Surat',  'class' => 'pengumuman-card'],
+            ['route' => 'perintah.index',         'title' => 'Surat Perintah',          'icon' => 'bi-flag',                  'subtitle' => 'Ajukan Surat',  'class' => 'perintah-card'],
+            ['route' => 'perjalanan_dinas.index', 'title' => 'Surat Perjalanan Dinas',  'icon' => 'bi-geo-alt',               'subtitle' => 'Ajukan Surat',  'class' => 'perjalanan-dinas-card'],
+            ['route' => 'pernyataan.index',       'title' => 'Surat Pernyataan Pegawai','icon' => '',               'subtitle' => 'Ajukan Surat',  'class' => 'pernyataan-card'],
+            ['route' => 'sertifikat.index',       'title' => 'Sertifikat Pegawai','icon' => '',               'subtitle' => 'Ajukan Surat',  'class' => 'pernyataan-card'],
+            ['route' => 'telaahan.index',       'title' => 'telaahan Pegawai','icon' => '',               'subtitle' => 'Ajukan Surat',  'class' => 'pernyataan-card'],
+            ['route' => 'tugas.index',       'title' => 'tugas Pegawai','icon' => '',               'subtitle' => 'Ajukan Surat',  'class' => 'pernyataan-card'],
+            ['route' => 'skp.index',              'title' => 'Penilaian Capaian SKP',   'icon' => 'bi-file-earmark-bar-graph','subtitle'=> 'Kelola Penilaian','class' => 'skp-card'],
+        ];
+        @endphp
+
         <section class="section dashboard">
-        <div class="row">
-
-            <!-- Surat Cuti Card -->
-            <div class="col-xxl-3 col-md-6">
-                <a href="{{ route('cuti.index') }}">
-                    <div class="card penghargaan-card" data-aos="zoom-in">
-                    <div class="card-body">
-                        <h5 class="card-title">Surat Cuti</h5>
-                        <div class="d-flex align-items-center">
-                            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                <i class="bi bi-file-text"></i>
-                            </div>
-                            <div class="ps-3">
-                                <span class="text-muted pt-2 ps-1">Ajukan Surat</span>
-                            </div>
+            <div class="row g-3">
+                @foreach ($cards as $c)
+                <div class="col-xxl-3 col-md-6">
+                    <a href="{{ route($c['route']) }}" aria-label="{{ $c['title'] }}" class="text-decoration-none">
+                    <div class="card info-card shadow-sm border-0 h-100 {{ $c['class'] }}" data-aos="zoom-in">
+                        <div class="card-body d-flex align-items-center gap-3">
+                        <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                            <i class="bi {{ $c['icon'] }}"></i>
+                        </div>
+                        <div>
+                            <h6 class="mb-0">{{ $c['title'] }}</h6>
+                            <small class="text-muted">{{ $c['subtitle'] }}</small>
+                        </div>
                         </div>
                     </div>
-                </div></a>
-            </div><!-- End Surat Cuti Card -->
-
-            <!-- Surat Tugas Belajar Card -->
-            <div class="col-xxl-3 col-md-6">
-                <a href="{{ route('tugas_belajar.index') }}">
-                    <div class="card pegawai-card" data-aos="zoom-in">
-                    <div class="card-body">
-                        <h5 class="card-title">Surat Tugas Belajar</h5>
-                        <div class="d-flex align-items-center">
-                            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                <i class="bi bi-file-text"></i>
-                            </div>
-                            <div class="ps-3">
-                                <hr class="dropdown-divider">
-                                <span class="text-muted pt-2 ps-1">Ajukan Surat</span>
-                            </div>
-                        </div>
-                    </div>
-                </div></a>
-            </div><!-- End Surat Tugas Belajar Card -->
-
-            <!-- Surat Keterangan Rawat Pegawai Card -->
-            <div class="col-xxl-3 col-md-6">
-                <a href="{{ route('rawat.index') }}">
-                    <div class="card opd-card" data-aos="zoom-in">
-                    <div class="card-body">
-                        <h5 class="card-title">Surat Keterangan Rawat Pegawai</h5>
-                        <div class="d-flex align-items-center">
-                            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                <i class="bi bi-file-text"></i>
-                            </div>
-                            <div class="ps-3">
-                                <span class="text-muted pt-2 ps-1">Ajukan Surat</span>
-                            </div>
-                        </div>
-                    </div>
-                </div></a>
-            </div><!-- End Surat Keterangan Rawat Pegawai Card -->
-
-            <!-- Surat Hukuman Disiplin Card -->
-            <div class="col-xxl-3 col-md-6">
-                <a href="{{ route('hukuman.index') }}">
-                    <div class="card diklat-card" data-aos="zoom-in">
-                    <div class="card-body">
-                        <h5 class="card-title">Surat Hukuman Disiplin</h5>
-                        <div class="d-flex align-items-center">
-                            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                <i class="bi bi-file-text"></i>
-                            </div>
-                            <div class="ps-3">
-                                <span class="text-muted pt-2 ps-1">Ajukan Surat</span>
-                            </div>
-                        </div>
-                    </div>
-                </div></a>
-            </div><!-- End Surat Hukuman Disiplin Card -->
-            
-            <!-- Surat Pembinaan Card -->
-            <div class="col-xxl-3 col-md-6">
-                <a href="{{ route('pembinaan.index') }}">
-                    <div class="card pembinaan-card" data-aos="zoom-in">
-                    <div class="card-body">
-                        <h5 class="card-title">Surat Pembinaan</h5>
-                        <div class="d-flex align-items-center">
-                            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                <i class="bi bi-file-text text-danger"></i>
-                            </div>
-                            <div class="ps-3">
-                                <span class="text-muted pt-2 ps-1">Ajukan Surat</span>
-                            </div>
-                        </div>
-                    </div>
-                </div></a>
-            </div><!-- End Surat Pembinaan Card -->
-
-            <!-- Surat Berita Acara Card -->
-            <div class="col-xxl-3 col-md-6">
-                <a href="{{ route('berita_acara.index') }}">
-                    <div class="card berita-acara-card" data-aos="zoom-in">
-                        <div class="card-body">
-                            <h5 class="card-title">Surat Berita Acara</h5>
-                            <div class="d-flex align-items-center">
-                                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                    <i class="bi bi-file-text"></i>
-                                </div>
-                                <div class="ps-3">
-                                    <span class="text-muted pt-2 ps-1">Ajukan Surat</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </a>
-            </div><!-- End Surat Berita Acara Card -->
-            
-            <!-- Surat Dinas Card -->
-            <div class="col-xxl-3 col-md-6">
-                <a href="{{ route('dinas.index') }}">
-                    <div class="card dinas-card" data-aos="zoom-in">
-                        <div class="card-body">
-                            <h5 class="card-title">Surat Dinas</h5>
-                            <div class="d-flex align-items-center">
-                                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                    <i class="bi bi-file-text"></i>
-                                </div>
-                                <div class="ps-3">
-                                    <span class="text-muted pt-2 ps-1">Ajukan Surat</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </a>
-            </div><!-- End Surat Dinas Card -->
-            
-            <!-- Surat Disposisi Card -->
-            <div class="col-xxl-3 col-md-6">
-                <a href="{{ route('disposisi.index') }}">
-                    <div class="card disposisi-card" data-aos="zoom-in">
-                        <div class="card-body">
-                            <h5 class="card-title">Surat Disposisi</h5>
-                            <div class="d-flex align-items-center">
-                                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                    <i class="bi bi-file-text"></i>
-                                </div>
-                                <div class="ps-3">
-                                    <span class="text-muted pt-2 ps-1">Ajukan Surat</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </a>
-            </div><!-- End Surat Disposisi Card -->
-            
-            <!-- Surat Edaran Card -->
-            <div class="col-xxl-3 col-md-6">
-                <a href="{{ route('edaran.index') }}">
-                    <div class="card edaran-card" data-aos="zoom-in">
-                        <div class="card-body">
-                            <h5 class="card-title">Surat Edaran</h5>
-                            <div class="d-flex align-items-center">
-                                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                    <i class="bi bi-file-text"></i>
-                                </div>
-                                <div class="ps-3">
-                                    <span class="text-muted pt-2 ps-1">Ajukan Surat</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </a>
-            </div><!-- End Surat Edaran Card -->
-            
-            <!-- Surat Keterangan Card -->
-            <div class="col-xxl-3 col-md-6">
-                <a href="{{ route('keterangan.index') }}">
-                    <div class="card keterangan-card" data-aos="zoom-in">
-                        <div class="card-body">
-                            <h5 class="card-title">Surat Keterangan</h5>
-                            <div class="d-flex align-items-center">
-                                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                    <i class="bi bi-file-text"></i>
-                                </div>
-                                <div class="ps-3">
-                                    <span class="text-muted pt-2 ps-1">Ajukan Surat</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </a>
-            </div><!-- End Surat Keterangan Card -->
-            
-            <!-- Surat Kuasa Card -->
-            <div class="col-xxl-3 col-md-6">
-                <a href="{{ route('kuasa.index') }}">
-                    <div class="card kuasa-card" data-aos="zoom-in">
-                        <div class="card-body">
-                            <h5 class="card-title">Surat Kuasa</h5>
-                            <div class="d-flex align-items-center">
-                                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                    <i class="bi bi-file-text"></i>
-                                </div>
-                                <div class="ps-3">
-                                    <span class="text-muted pt-2 ps-1">Ajukan Surat</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </a>
-            </div><!-- End Surat Kuasa Card -->
-            
-            <!-- Surat Nota Dinas Card -->
-            <div class="col-xxl-3 col-md-6">
-                <a href="{{ route('nota_dinas.index') }}">
-                    <div class="card nota-dinas-card" data-aos="zoom-in">
-                        <div class="card-body">
-                            <h5 class="card-title">Surat Nota Dinas</h5>
-                            <div class="d-flex align-items-center">
-                                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                    <i class="bi bi-file-text"></i>
-                                </div>
-                                <div class="ps-3">
-                                    <span class="text-muted pt-2 ps-1">Ajukan Surat</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </a>
-            </div><!-- End Surat Nota Dinas Card -->
-            
-            <!-- Surat Notula Card -->
-            <div class="col-xxl-3 col-md-6">
-                <a href="{{ route('notula.index') }}">
-                    <div class="card notula-card" data-aos="zoom-in">
-                        <div class="card-body">
-                            <h5 class="card-title">Surat Notula</h5>
-                            <div class="d-flex align-items-center">
-                                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                    <i class="bi bi-file-text"></i>
-                                </div>
-                                <div class="ps-3">
-                                    <span class="text-muted pt-2 ps-1">Ajukan Surat</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </a>
-            </div><!-- End Surat Notula Card -->
-            
-            <!-- Penilaian Capaian SKP Card -->
-            <div class="col-xxl-3 col-md-6">
-                <a href="{{ route('skp.index') }}">
-                    <div class="card info-card" data-aos="zoom-in">
-                        <div class="card-body">
-                            <h5 class="card-title">Penilaian Capaian SKP</h5>
-                            <div class="d-flex align-items-center">
-                                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                    <i class="bi bi-file-earmark-bar-graph"></i>
-                                </div>
-                                <div class="ps-3">
-                                    <span class="text-muted pt-2 ps-1">Kelola Penilaian</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </a>
-            </div><!-- End Penilaian Capaian SKP Card -->
+                    </a>
+                </div>
+                @endforeach
+            </div>
         </section>
+
 @endsection

@@ -12,7 +12,6 @@ class Pegawai extends Model
 {
     use HasFactory;
 
-    protected $table = 'pegawais';
     protected $fillable = [
         'image',
         'nip',

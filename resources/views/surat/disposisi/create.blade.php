@@ -108,10 +108,9 @@
                         <div class="mb-3">
                             <label for="diteruskan_kepada" class="form-label">Diteruskan Kepada</label>
                             <select name="diteruskan_kepada[]" id="diteruskan_kepada" class="form-select @error('diteruskan_kepada') is-invalid @enderror" multiple required>
+                                <option value="">Pilih Diteruskan</option>
                                 @foreach($pegawais as $pegawai)
-                                    <option value="{{ $pegawai->id }}" {{ in_array($pegawai->id, old('diteruskan_kepada', [])) ? 'selected' : '' }}>
-                                        {{ $pegawai->nama }} - {{ $pegawai->nip ?? '' }}
-                                    </option>
+                                <option value="{{ $pegawai->id }}" {{ old('pegawai_id') == $pegawai->id ? 'selected' : '' }}>{{ $pegawai->nama_lengkap }}</option>
                                 @endforeach
                             </select>
                             @error('diteruskan_kepada')
@@ -151,7 +150,7 @@
                             <select name="penandatangan_id" id="penandatangan_id" class="form-select @error('penandatangan_id') is-invalid @enderror" required>
                                 <option value="">Pilih Penandatangan</option>
                                 @foreach($pegawais as $pegawai)
-                                    <option value="{{ $pegawai->id }}" {{ old('penandatangan_id') == $pegawai->id ? 'selected' : '' }}>{{ $pegawai->nama_lengkap }}</option>
+                                <option value="{{ $pegawai->id }}" {{ old('penandatangan_id') == $pegawai->id ? 'selected' : '' }}>{{ $pegawai->nama_lengkap }}</option>
                                 @endforeach
                             </select>
                             @error('penandatangan_id')

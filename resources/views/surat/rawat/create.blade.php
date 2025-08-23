@@ -36,7 +36,7 @@
                                     <select class="form-select" aria-label="Default select example" name="pegawai_id" id="pegawai_id" required>
                                         <option selected>-- Pilih Pegawai --</option>
                                         @foreach($pegawais as $pegawai)
-                                        <option value="{{ $pegawai->id }}">{{ $pegawai->gelar_depan }}. {{ $pegawai->nama }}, {{ $pegawai->gelar_belakang }}</option>
+                                        <option value="{{ $pegawai->id }}" {{ old('pegawai_id') == $pegawai->id ? 'selected' : '' }}>{{ $pegawai->nama_lengkap }}</option>
                                         @endforeach
                                     </select>
                                     <small id="pegawai-loading" class="form-text text-muted" style="display:none;">

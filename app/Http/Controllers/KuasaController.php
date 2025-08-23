@@ -26,13 +26,13 @@ class KuasaController extends Controller
 
             $query->where(function ($q) use ($search) {
                 $q->where('nomor', 'like', "%{$search}%")
-                  ->orWhere('keperluan', 'like', "%{$search}%")
-                  ->orWhereHas('pemberi', function ($sub) use ($search) {
-                      $sub->where('nama', 'like', "%{$search}%");
-                  })
-                  ->orWhereHas('penerima', function ($sub) use ($search) {
-                      $sub->where('nama', 'like', "%{$search}%");
-                  });
+                    ->orWhere('keperluan', 'like', "%{$search}%")
+                    ->orWhereHas('pemberi', function ($sub) use ($search) {
+                        $sub->where('nama', 'like', "%{$search}%");
+                    })
+                    ->orWhereHas('penerima', function ($sub) use ($search) {
+                        $sub->where('nama', 'like', "%{$search}%");
+                });
             });
         }
 

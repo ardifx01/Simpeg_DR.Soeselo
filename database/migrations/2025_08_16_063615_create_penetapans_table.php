@@ -17,11 +17,10 @@ return new class extends Migration
             $table->string('nomor_surat');
             $table->integer('tahun_surat');
             $table->string('tentang');
+            $table->date('tanggal_penetapan');
             $table->text('menimbang');
             $table->text('mengingat');
-            $table->text('memutuskan_satu');
-            $table->text('memutuskan_dua')->nullable();
-            $table->text('memutuskan_tiga')->nullable();
+            $table->text('memutuskan');
             $table->timestamps();
         });
     }

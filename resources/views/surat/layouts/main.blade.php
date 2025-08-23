@@ -34,6 +34,10 @@
     <!-- Template Main CSS File -->
     <link href="{{ asset('assets/css/dashboard/style.css') }}" rel="stylesheet">
 
+    <!-- Trix Editor -->
+    <link rel="stylesheet" type="text/css" href="https://unpkg.com/trix@2.0.8/dist/trix.css">
+    <script type="text/javascript" src="https://unpkg.com/trix@2.0.8/dist/trix.umd.min.js"></script>
+
 </head>
 
 <body>
@@ -156,27 +160,53 @@
                 {inputSelector: '[id^="tanggal_ditetapkan"]', buttonSelector: '[id^="btn_tanggal_ditetapkan"]'},
                 {inputSelector: '[id^="tanggal_kuasa"]', buttonSelector: '[id^="btn_tanggal_kuasa"]'},
                 {inputSelector: '[id^="tanggal_nota"]', buttonSelector: '[id^="btn_tanggal_nota"]'},
-                {inputSelector: '[id^="tanggal_notula"]', buttonSelector: '[id^="btn_tanggal_notula"]'}
+                {inputSelector: '[id^="tanggal_notula"]', buttonSelector: '[id^="btn_tanggal_notula"]'},
+                {inputSelector: '[id^="tanggal_surat"]', buttonSelector: '[id^="btn_tanggal_surat"]'},
+                {inputSelector: '[id^="jadwal_tanggal"]', buttonSelector: '[id^="btn_jadwal_tanggal"]'},
+                {inputSelector: '[id^="tanggal_penetapan"]', buttonSelector: '[id^="btn_tanggal_penetapan"]'},
+                {inputSelector: '[id^="tanggal_terbit"]', buttonSelector: '[id^="btn_tanggal_terbit"]'},
+                {inputSelector: '[id^="tanggal_dikeluarkan"]', buttonSelector: '[id^="btn_tanggal_dikeluarkan"]'}
             ];
 
-            dateFields.forEach(function(field) {
-                $(field.inputSelector).each(function () {
-                    if (!$(this).data('datepicker')) {
-                        $(this).datepicker({
-                            autoclose: true,
-                            clearBtn: true,
-                            format: "dd-mm-yyyy",
-                            todayHighlight: true,
-                            orientation: "bottom auto"
-                        });
-                    }
-                });
+            // Fungsi untuk inisialisasi datepicker
+            function initializeDatepickers() {
+                dateFields.forEach(function(field) {
+                    $(field.inputSelector).each(function () {
+                        if (!$(this).data('datepicker')) {
+                            $(this).datepicker({
+                                autoclose: true,
+                                clearBtn: true,
+                                format: "dd-mm-yyyy",
+                                todayHighlight: true,
+                                orientation: "bottom auto"
+                            });
+                        }
+                    });
 
-                // Pastikan tombol show datepicker bekerja untuk semua ID dengan prefix sama
-                $(field.buttonSelector).off('click').on('click', function () {
-                    let targetId = $(this).attr('for');
-                    $('#' + targetId).datepicker('show');
+                    // Event listener untuk tombol datepicker
+                    $(document).off('click', field.buttonSelector).on('click', field.buttonSelector, function () {
+                        let targetId = $(this).attr('for');
+                        if (!targetId) {
+                            // Jika tidak ada atribut 'for', coba ambil dari ID button
+                            let buttonId = $(this).attr('id');
+                            if (buttonId && buttonId.startsWith('btn_')) {
+                                targetId = buttonId.replace('btn_', '');
+                            }
+                        }
+                        if (targetId) {
+                            $('#' + targetId).datepicker('show');
+                        }
+                    });
                 });
+            }
+
+            // Inisialisasi datepicker saat dokumen ready
+            initializeDatepickers();
+
+            // Re-inisialisasi datepicker setelah konten dinamis ditambahkan
+            $(document).on('DOMNodeInserted', function() {
+                // Tunggu sebentar agar elemen benar-benar ada di DOM
+                setTimeout(initializeDatepickers, 100);
             });
         });
 
@@ -219,6 +249,10 @@
                     placeholder: "-- Pilih Penerima Surat --",
                     allowClear: true
                 },
+                '#pegawai': {
+                    placeholder: "-- Pilih Pegawai --",
+                    allowClear: true
+                },
                 '#pegawai_id': {
                     placeholder: "-- Pilih Pegawai --",
                     allowClear: true
@@ -238,15 +272,68 @@
                 '#peserta': {
                     placeholder: "-- Pilih Pegawai --",
                     allowClear: true
+                },
+                '#pemberi_izin_id': {
+                    placeholder: "-- Pilih Pegawai --",
+                    allowClear: true
+                },
+                '#pemberi_id': {
+                    placeholder: "-- Pilih Pegawai --",
+                    allowClear: true
+                },
+                '#penerima_id': {
+                    placeholder: "-- Pilih Pegawai --",
+                    allowClear: true
+                },
+                '#pengirim_id': {
+                    placeholder: "-- Pilih Pegawai --",
+                    allowClear: true
+                },
+                '#pengirim': {
+                    placeholder: "-- Pilih Pegawai --",
+                    allowClear: true
+                },
+                '#penerima': {
+                    placeholder: "-- Pilih Pegawai --",
+                    allowClear: true
+                },
+                '#kuasa_pengguna_anggaran_id': {
+                    placeholder: "-- Pilih Pegawai --",
+                    allowClear: true
+                },
+                '#kepala_berangkat_id': {
+                    placeholder: "-- Pilih Pegawai --",
+                    allowClear: true
+                },
+                '#kepala_tiba_id': {
+                    placeholder: "-- Pilih Pegawai --",
+                    allowClear: true
+                },
+                '#pejabat_id': {
+                    placeholder: "-- Pilih Pegawai --",
+                    allowClear: true
+                },
+                '#yth_id': {
+                    placeholder: "-- Pilih Pegawai --",
+                    allowClear: true
+                },
+                '#dari_id': {
+                    placeholder: "-- Pilih Pegawai --",
+                    allowClear: true
                 }
             };
             
             // Initialize semua Select2 elements
             Object.entries(select2Configs).forEach(([selector, config]) => {
-                $(selector).select2({
-                    ...config,
-                    width: '100%' // Default option tambahan
-                });
+                const $element = $(selector);
+                
+                // Hanya inisialisasi jika elemen ada DAN merupakan select
+                if ($element.length && $element.is('select')) {
+                    $element.select2({
+                        ...config,
+                        width: '100%'
+                    });
+                }
             });
 
             const select2ConfigDinamis = {

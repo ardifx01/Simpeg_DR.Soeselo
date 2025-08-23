@@ -42,9 +42,7 @@
                                     <select class="form-select @error('pegawai_id') is-invalid @enderror" id="pegawai_id" name="pegawai_id" required>
                                         <option value="" disabled selected>-- Pilih Pegawai --</option>
                                         @foreach ($pegawais as $pegawai)
-                                            <option value="{{ $pegawai->id }}" {{ old('pegawai_id') == $pegawai->id ? 'selected' : '' }}>
-                                                {{ $pegawai->nama }} - (NIP: {{ $pegawai->nip ?? 'N/A' }})
-                                            </option>
+                                            <option value="{{ $pegawai->id }}" {{ old('pegawai_id') == $pegawai->id ? 'selected' : '' }}>{{ $pegawai->nama_lengkap }} - (NIP: {{ $pegawai->nip ?? 'N/A' }})</option>
                                         @endforeach
                                     </select>
                                     @error('pegawai_id')
@@ -81,9 +79,7 @@
                                     <select class="form-select @error('penandatangan_id') is-invalid @enderror" id="penandatangan_id" name="penandatangan_id" required>
                                         <option value="" disabled selected>-- Pilih Penandatangan --</option>
                                         @foreach ($pegawais as $pegawai)
-                                            <option value="{{ $pegawai->id }}" {{ old('penandatangan_id') == $pegawai->id ? 'selected' : '' }}>
-                                                {{ $pegawai->nama }}
-                                            </option>
+                                            <option value="{{ $pegawai->id }}" {{ old('penandatangan_id') == $pegawai->id ? 'selected' : '' }}>{{ $pegawai->nama_lengkap }}</option>
                                         @endforeach
                                     </select>
                                     @error('penandatangan_id')
