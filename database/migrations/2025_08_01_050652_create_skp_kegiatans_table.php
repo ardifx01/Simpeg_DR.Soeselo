@@ -17,8 +17,6 @@ return new class extends Migration
             $table->string('jenis_kegiatan');
             $table->string('nama_kegiatan');
             $table->string('ak')->nullable();
-            
-            // Target dan Realisasi
             $table->string('target_kuantitatif_output');
             $table->string('realisasi_kuantitatif_output')->nullable();
             $table->string('target_kualitatif_mutu');
@@ -27,8 +25,8 @@ return new class extends Migration
             $table->integer('realisasi_waktu_bulan')->nullable();
             $table->decimal('target_biaya', 15, 2)->nullable();
             $table->decimal('realisasi_biaya', 15, 2)->nullable();
-
             $table->string('nilai_kegiatan')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

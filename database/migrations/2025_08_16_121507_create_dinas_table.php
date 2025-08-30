@@ -19,16 +19,11 @@ return new class extends Migration
             $table->string('hal');
             $table->date('tanggal_surat');
             $table->string('tempat');
-            
-            // Kolom untuk penerima surat
             $table->string('kepada_yth');
             $table->string('alamat_tujuan');
-
-            // Relasi ke pegawai yang menandatangani surat
             $table->foreignId('penandatangan_id')->constrained('pegawais')->onDelete('cascade');
-
             $table->text('tembusan')->nullable();
-            
+            $table->softDeletes();
             $table->timestamps();
         });
     }

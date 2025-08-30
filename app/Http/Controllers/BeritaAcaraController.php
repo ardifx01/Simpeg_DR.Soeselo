@@ -148,7 +148,46 @@ class BeritaAcaraController extends Controller
     public function destroy(BeritaAcara $beritaAcara)
     {
         $beritaAcara->delete();
-        return redirect()->route('berita_acara.index')->with('success', 'Berita Acara Berhasil Dihapus.');
+        return back()->with('success', 'Berita acara dipindahkan ke tong sampah.');
+    }
+
+    public function trash(Request $request)
+    {
+        $search = $request->input('search');
+
+        $beritaAcaras = BeritaAcara::onlyTrashed()
+            ->when($search, function ($q) use ($search) {
+                $q->where('tanggal', 'like', "%{$search}%")
+                    ->orWhereHas('pihakPertama', fn($qp) =>
+                            $qp->where('nama', 'like', "%{$search}%")
+                    )
+                    ->orWhereHas('pihakKedua', fn($qk) =>
+                            $qk->where('nama', 'like', "%{$search}%")
+                    )
+                    ->orWhereHas('atasan', fn($qa) =>
+                            $qa->where('nama', 'like', "%{$search}%")
+                    );
+            })
+            ->orderByDesc('deleted_at')
+            ->paginate(10);
+
+        return view('berita_acara.trash', compact('beritaAcaras', 'search'));
+    }
+
+    public function restore($id)
+    {
+        $beritaAcara = BeritaAcara::onlyTrashed()->findOrFail($id);
+        $beritaAcara->restore();
+
+        return back()->with('success', 'Berita acara berhasil dipulihkan.');
+    }
+
+    public function forceDelete($id)
+    {
+        $beritaAcara = BeritaAcara::onlyTrashed()->findOrFail($id);
+        $beritaAcara->forceDelete();
+
+        return back()->with('success', 'Berita acara dihapus permanen.');
     }
 
     public function export($id)

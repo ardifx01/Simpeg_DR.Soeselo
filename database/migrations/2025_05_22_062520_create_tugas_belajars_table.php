@@ -24,6 +24,7 @@ return new class extends Migration
             $table->string('atasan_pangkat')->nullable();
             $table->string('atasan_golongan_ruang')->nullable();
             $table->string('atasan_jabatan')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

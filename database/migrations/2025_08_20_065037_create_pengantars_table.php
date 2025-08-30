@@ -17,14 +17,10 @@ return new class extends Migration
             $table->date('tanggal_surat')->nullable();
             $table->string('tujuan')->nullable();   // Yth ...
             $table->string('alamat_tujuan')->nullable();
-
-            // Isi tabel daftar barang/naskah
             $table->json('daftar_item')->nullable();
-            // Data penerima
             $table->foreignId('penerima_id')->constrained('pegawais')->onDelete('cascade');
-            // Data pengirim
             $table->foreignId('pengirim_id')->constrained('pegawais')->onDelete('cascade');
-
+            $table->softDeletes();
             $table->timestamps();
         });
     }

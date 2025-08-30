@@ -21,6 +21,7 @@ return new class extends Migration
             $table->text('menimbang');
             $table->text('mengingat');
             $table->text('memutuskan');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

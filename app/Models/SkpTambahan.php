@@ -2,11 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class SkpTambahan extends Model
 {
-    protected $table = 'skp_tambahans';
+    use HasFactory, SoftDeletes;
     
     protected $fillable = [
         'skp_header_id',

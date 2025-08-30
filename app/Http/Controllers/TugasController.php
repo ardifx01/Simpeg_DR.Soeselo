@@ -19,18 +19,59 @@ class TugasController extends Controller
     {
         $search = $request->input('search');
 
-        $tugas = Tugas::with(['pegawai.jabatan','penandatangan.jabatan'])
+        $tugas = Tugas::with(['penandatangan.jabatan'])
             ->when($search, function ($q) use ($search) {
-                $q->where('nomor', 'like', "%{$search}%")
+                $q->where(function ($qq) use ($search) {
+                    $qq->where('nomor', 'like', "%{$search}%")
                     ->orWhere('tempat_dikeluarkan', 'like', "%{$search}%")
                     ->orWhere('dasar', 'like', "%{$search}%")
                     ->orWhere('untuk', 'like', "%{$search}%")
-                    ->orWhereHas('pegawai', fn($qq)=> $qq->where('nama','like',"%{$search}%")->orWhere('nip','like',"%{$search}%"))
-                    ->orWhereHas('penandatangan', fn($qq)=> $qq->where('nama','like',"%{$search}%")->orWhere('nip','like',"%{$search}%"));
+                    ->orWhereRaw("CAST(pegawai AS CHAR) LIKE ?", ["%{$search}%"]);
+                });
             })
             ->orderByDesc('tanggal_dikeluarkan')
             ->paginate(10)
             ->appends(['search' => $search]);
+
+        $allIds = collect($tugas->items())
+            ->flatMap(function ($row) {
+                $arr = is_array($row->pegawai) ? $row->pegawai : [];
+                return collect($arr)->map(function ($v) {
+                    return is_array($v) ? ($v['id'] ?? null) : (is_numeric($v) ? (int) $v : null);
+                })->filter();
+            })->unique()->values();
+
+        $pegawaiIndex = \App\Models\Pegawai::whereIn('id', $allIds)
+            ->with('jabatan')
+            ->get()
+            ->keyBy('id')
+            ->map(fn($p) => [
+                'nama' => $p->nama_lengkap ?? $p->nama ?? '-',
+                'nip'  => $p->nip ?? '-',
+                'pang' => $p->pangkat_golongan ?? '-',
+                'jab'  => optional($p->jabatan)->nama_jabatan ?? '-',
+            ]);
+
+        $tugas->setCollection(
+            $tugas->getCollection()->map(function ($row) use ($pegawaiIndex) {
+                $arr = is_array($row->pegawai) ? $row->pegawai : [];
+                $row->total_pegawai = count($arr);
+
+                $preview = [];
+                foreach ($arr as $v) {
+                    if (count($preview) >= 2) break;
+                    if (is_array($v)) {
+                        $preview[] = $v['nama'] ?? $v['nama_lengkap'] ?? ($v['nip'] ?? '-');
+                    } else {
+                        $info = $pegawaiIndex[$v] ?? null;
+                        $preview[] = $info['nama'] ?? '-';
+                    }
+                }
+                $row->nama_preview = implode(', ', array_filter($preview)) ?: '-';
+
+                return $row;
+            })
+        );
 
         return view('surat.tugas.index', compact('tugas','search'));
     }
@@ -106,47 +147,123 @@ class TugasController extends Controller
      */
     public function destroy(Tugas $tugas)
     {
-        //
+        $tugas->delete();
+        return back()->with('success', 'Surat tugas dipindahkan ke tong sampah.');
+    }
+
+    public function trash(Request $request)
+    {
+        $search = $request->input('search');
+
+        $tugases = Tugas::onlyTrashed()
+            ->when($search, function ($q) use ($search) {
+                $q->where('nomor', 'like', "%{$search}%")
+                    ->orWhere('tempat_dikeluarkan', 'like', "%{$search}%")
+                    ->orWhere('dasar', 'like', "%{$search}%")
+                    ->orWhere('untuk', 'like', "%{$search}%")
+                    ->orWhereHas('penandatangan', fn($qp) =>
+                            $qp->where('nama', 'like', "%{$search}%")
+                            ->orWhere('nama_lengkap', 'like', "%{$search}%")
+                            ->orWhere('nip', 'like', "%{$search}%")
+                    );
+            })
+            ->orderByDesc('deleted_at')
+            ->paginate(10)
+            ->withQueryString();
+
+        return view('tugas.trash', compact('tugases', 'search'));
+    }
+
+    public function restore($id)
+    {
+        $tugas = Tugas::onlyTrashed()->findOrFail($id);
+        $tugas->restore();
+
+        return back()->with('success', 'Surat tugas berhasil dipulihkan.');
+    }
+
+    public function forceDelete($id)
+    {
+        $tugas = Tugas::onlyTrashed()->findOrFail($id);
+        $tugas->forceDelete();
+
+        return back()->with('success', 'Surat tugas dihapus permanen.');
     }
 
     public function export($id)
     {
-        $tugas = Tugas::with(['pegawai.jabatan','penandatangan.jabatan'])->findOrFail($id);
+        $tugas = Tugas::with(['penandatangan.jabatan'])->findOrFail($id);
         $template = new TemplateProcessor(storage_path('app/templates/tugas_template.docx'));
 
-        // formatter sesuai format kamu (pakai titik & ; untuk Dasar, numbering untuk Untuk)
-        $dotSemi = function ($tugasrOrArr) {
-            $arr = is_array($tugasrOrArr) ? $tugasrOrArr : preg_split('/\r\n|\n|\r|;|,/', (string)$tugasrOrArr);
+        // formatter: ". item;" dan "1. item;"
+        $dotSemi = function ($strOrArr) {
+            $arr = is_array($strOrArr) ? $strOrArr : preg_split('/\r\n|\n|\r|;|,/', (string) $strOrArr);
             $arr = array_values(array_filter(array_map('trim', $arr)));
             if (!$arr) return '. -;';
-            return implode("\n", array_map(fn($x)=>'. '.$x.';', $arr));
+            return implode("\n", array_map(fn($x) => '. '.$x.';', $arr));
         };
-        $numSemi = function ($tugasrOrArr) {
-            $arr = is_array($tugasrOrArr) ? $tugasrOrArr : preg_split('/\r\n|\n|\r|;|,/', (string)$tugasrOrArr);
+        $numSemi = function ($strOrArr) {
+            $arr = is_array($strOrArr) ? $strOrArr : preg_split('/\r\n|\n|\r|;|,/', (string) $strOrArr);
             $arr = array_values(array_filter(array_map('trim', $arr)));
             if (!$arr) return '1. -;';
             $out = '';
-            foreach ($arr as $i=>$x) { $out .= ($i? "\n":"").(($i+1).'. '.$x.';'); }
+            foreach ($arr as $i => $x) {
+                $out .= ($i ? "\n" : '').(($i + 1).'. '.$x.';');
+            }
             return $out;
         };
 
         // header
         $template->setValue('nomor', $tugas->nomor);
-        $template->setValue('tempat_tanggal', $tugas->tempat_dikeluarkan.', '.$tugas->tanggal_dikeluarkan->translatedFormat('d F Y'));
+        $template->setValue(
+            'tempat_tanggal',
+            ($tugas->tempat_dikeluarkan ?? '-') . ', ' . $tugas->tanggal_dikeluarkan->translatedFormat('d F Y')
+        );
 
         // isi
-        $template->setValue('dasar_text', $dotSemi($tugas->dasar));
+        $template->setValue('dasar', $dotSemi($tugas->dasar));
 
-        // Kepada (single)
-        $pegawais = $tugas->pegawai;
-        $kepada = "1. Nama : ".($pegawais->nama_lengkap ?? $pegawais->nama ?? '-')."\n"
-                . "   Pangkat (Gol.Ruang): ".($pegawais->pangkat_golongan ?? '-')."\n"
-                . "   NIP : ".($pegawais->nip ?? '-')."\n"
-                . "   Jabatan : ".(optional($pegawais->jabatan)->nama_jabatan ?? '-');
-        $template->setValue('kepada_list', $kepada);
+        // === Kepada ===
+
+        $rawPegawai = is_array($tugas->pegawai) ? $tugas->pegawai : [];
+
+        // kalau array ID → lookup sekali
+        $ids = collect($rawPegawai)
+            ->map(fn($v) => is_array($v) ? ($v['id'] ?? null) : (is_numeric($v) ? (int)$v : null))
+            ->filter()->unique()->values();
+
+        $lookup = $ids->isNotEmpty()
+            ? Pegawai::whereIn('id', $ids)->with('jabatan')->get()->keyBy('id')
+            : collect();
+
+        $kepadaBlocks = [];
+        foreach ($rawPegawai as $i => $v) {
+            if (is_array($v)) {
+                // snapshot
+                $nama = $v['nama'] ?? $v['nama_lengkap'] ?? '-';
+                $nip  = $v['nip'] ?? '-';
+                $pang = $v['pangkat_golongan'] ?? '-';
+                $jab  = $v['jabatan'] ?? '-';
+            } else {
+                // id → ambil dari lookup
+                $p = $lookup[$v] ?? null;
+                $nama = $p?->nama_lengkap ?? $p?->nama ?? '-';
+                $nip  = $p?->nip ?? '-';
+                $pang = $p?->pangkat_golongan ?? '-';
+                $jab  = optional($p?->jabatan)->nama_jabatan ?? '-';
+            }
+
+            $kepadaBlocks[] =
+                ($i + 1).". Nama : {$nama}\n".
+                "   Pangkat (Gol.Ruang): {$pang}\n".
+                "   NIP : {$nip}\n".
+                "   Jabatan : {$jab}";
+        }
+
+        $template->setValue('kepada_list', $kepadaBlocks ? implode("\n\n", $kepadaBlocks) : "1. Nama : -\n   Pangkat (Gol.Ruang): -\n   NIP : -\n   Jabatan : -");
 
         // Untuk
-        $template->setValue('untuk_text', $numSemi($tugas->untuk));
+        $template->setValue('untuk', $numSemi($tugas->untuk));
 
         // penandatangan
         $pen = $tugas->penandatangan;

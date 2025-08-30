@@ -22,6 +22,7 @@ return new class extends Migration
             $table->foreignId('penandatangan_id')->constrained('pegawais')->onDelete('cascade');
             $table->json('tujuan');
             $table->text('tembusan')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

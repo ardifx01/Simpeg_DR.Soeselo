@@ -111,7 +111,54 @@ class SertifikatController extends Controller
      */
     public function destroy(Sertifikat $sertifikat)
     {
-        //
+        $sertifikat->delete();
+        return back()->with('success', 'Sertifikat dipindahkan ke tong sampah.');
+    }
+
+    public function trash(Request $request)
+    {
+        $search = $request->input('search');
+
+        $sertifikat = Sertifikat::onlyTrashed()
+            ->when($search, function ($q) use ($search) {
+                $q->where('nomor', 'like', "%{$search}%")
+                    ->orWhere('instansi', 'like', "%{$search}%")
+                    ->orWhere('nama_kegiatan', 'like', "%{$search}%")
+                    ->orWhere('penyelenggara', 'like', "%{$search}%")
+                    ->orWhere('lokasi', 'like', "%{$search}%")
+                    ->orWhere('tempat_terbit', 'like', "%{$search}%")
+                    ->orWhereHas('penerima', fn($qp) =>
+                            $qp->where('nama', 'like', "%{$search}%")
+                            ->orWhere('nama_lengkap', 'like', "%{$search}%")
+                            ->orWhere('nip', 'like', "%{$search}%")
+                    )
+                    ->orWhereHas('penandatangan', fn($qt) =>
+                            $qt->where('nama', 'like', "%{$search}%")
+                            ->orWhere('nama_lengkap', 'like', "%{$search}%")
+                            ->orWhere('nip', 'like', "%{$search}%")
+                    );
+            })
+            ->orderByDesc('deleted_at')
+            ->paginate(10)
+            ->withQueryString();
+
+        return view('sertifikat.trash', compact('sertifikat', 'search'));
+    }
+
+    public function restore($id)
+    {
+        $sertifikat = Sertifikat::onlyTrashed()->findOrFail($id);
+        $sertifikat->restore();
+
+        return back()->with('success', 'Sertifikat berhasil dipulihkan.');
+    }
+
+    public function forceDelete($id)
+    {
+        $sertifikat = Sertifikat::onlyTrashed()->findOrFail($id);
+        $sertifikat->forceDelete();
+
+        return back()->with('success', 'Sertifikat dihapus permanen.');
     }
 
     public function export($id)

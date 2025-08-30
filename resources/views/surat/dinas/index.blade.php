@@ -58,6 +58,13 @@
                         <a href="{{ route('dinas.export', $item->id) }}" class="btn btn-success btn-sm">
                             <i class="fas fa-file-word"></i> Export
                         </a>
+                        <form action="{{ route('dinas.destroy', $item->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin hapus surat dinas ini?')">
+                            @csrf
+                            @method('DELETE')
+                            <button class="btn btn-danger btn-sm">
+                                <i class="bi bi-trash"></i> Hapus
+                            </button>
+                        </form>
                     </td>
                 </tr>
             @empty

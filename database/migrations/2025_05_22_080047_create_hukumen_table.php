@@ -37,6 +37,7 @@ return new class extends Migration
             $table->string('atasan_nip')->nullable();
             $table->string('atasan_pangkat')->nullable();
             $table->string('atasan_golongan_ruang')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

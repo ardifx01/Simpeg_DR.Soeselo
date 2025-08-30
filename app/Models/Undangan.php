@@ -7,24 +7,34 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Edaran extends Model
+class Undangan extends Model
 {
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
+        'tempat_surat',
+        'tanggal_surat',
         'nomor',
-        'tahun',
-        'tentang',
-        'isi_edaran',
-        'tempat_ditetapkan',
-        'tanggal_ditetapkan',
+        'sifat',
+        'lampiran',
+        'hal',
+        'yth',
+        'alamat',
+        'pembuka_surat',
+        'tanggal_acara',
+        'hari',
+        'waktu',
+        'tempat',
+        'acara',
+        'penutup_surat',
         'penandatangan_id',
-        'tujuan',
+        'tembusan',
     ];
 
     protected $casts = [
-        'tujuan' => 'array',
-        'tanggal_ditetapkan' => 'date',
+        'tanggal_surat'  => 'date',
+        'tanggal_acara'  => 'date',
+        'tembusan'       => 'array',
     ];
 
     public function penandatangan(): BelongsTo

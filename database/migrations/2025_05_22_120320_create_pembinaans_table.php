@@ -24,6 +24,7 @@ return new class extends Migration
             $table->string('atasan_nama')->nullable();
             $table->string('atasan_nip')->nullable();
             $table->string('atasan_jabatan')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

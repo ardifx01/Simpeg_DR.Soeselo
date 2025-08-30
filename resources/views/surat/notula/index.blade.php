@@ -25,8 +25,7 @@
         </div>
         <div class="col-12 col-md-4">
             <div class="input-group">
-                <input type="search" name="search" id="search" class="form-control" value="{{ request('search') }}"
-                       placeholder="Cari sidang/rapat, acara, kegiatan, undangan, nama ketua/sekretaris/pencatat...">
+                <input type="search" name="search" id="search" class="form-control" value="{{ request('search') }}" placeholder="Cari sidang/rapat, acara, kegiatan, undangan, nama ketua/sekretaris/pencatat...">
                 <button type="submit" class="btn btn-outline-primary">
                     <i class="bi bi-search"></i> Search
                 </button>
@@ -64,6 +63,13 @@
                             <a href="{{ route('notula.export', $notula->id) }}" class="btn btn-success btn-sm">
                                 <i class="fas fa-file-word"></i> Export
                             </a>
+                            <form action="{{ route('notula.destroy', $notula->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin hapus notula ini?')">
+                                @csrf
+                                @method('DELETE')
+                                <button class="btn btn-danger btn-sm">
+                                    <i class="bi bi-trash"></i> Hapus
+                                </button>
+                            </form>
                         </td>
                     </tr>
                 @empty

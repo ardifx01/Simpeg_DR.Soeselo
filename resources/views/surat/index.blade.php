@@ -42,10 +42,11 @@
             ['route' => 'pengumuman.index',       'title' => 'Surat Pengumuman',        'icon' => 'bi-broadcast',             'subtitle' => 'Ajukan Surat',  'class' => 'pengumuman-card'],
             ['route' => 'perintah.index',         'title' => 'Surat Perintah',          'icon' => 'bi-flag',                  'subtitle' => 'Ajukan Surat',  'class' => 'perintah-card'],
             ['route' => 'perjalanan_dinas.index', 'title' => 'Surat Perjalanan Dinas',  'icon' => 'bi-geo-alt',               'subtitle' => 'Ajukan Surat',  'class' => 'perjalanan-dinas-card'],
-            ['route' => 'pernyataan.index',       'title' => 'Surat Pernyataan Pegawai','icon' => '',               'subtitle' => 'Ajukan Surat',  'class' => 'pernyataan-card'],
-            ['route' => 'sertifikat.index',       'title' => 'Sertifikat Pegawai','icon' => '',               'subtitle' => 'Ajukan Surat',  'class' => 'pernyataan-card'],
-            ['route' => 'telaahan.index',       'title' => 'telaahan Pegawai','icon' => '',               'subtitle' => 'Ajukan Surat',  'class' => 'pernyataan-card'],
-            ['route' => 'tugas.index',       'title' => 'tugas Pegawai','icon' => '',               'subtitle' => 'Ajukan Surat',  'class' => 'pernyataan-card'],
+            ['route' => 'pernyataan.index',       'title' => 'Surat Pernyataan Pegawai','icon' => 'bi-pencil-square',         'subtitle' => 'Ajukan Surat',  'class' => 'pernyataan-card'],
+            ['route' => 'sertifikat.index',       'title' => 'Sertifikat Pegawai',      'icon' => 'bi-award',                 'subtitle' => 'Ajukan Surat',  'class' => 'sertifikat-card'],
+            ['route' => 'telaahan.index',         'title' => 'telaahan Pegawai',        'icon' => 'bi-search',                'subtitle' => 'Ajukan Surat',  'class' => 'telaahan-card'],
+            ['route' => 'tugas.index',            'title' => 'tugas Pegawai',           'icon' => 'bi-clipboard-check',       'subtitle' => 'Ajukan Surat',  'class' => 'tugas-card'],
+            ['route' => 'undangan.index',         'title' => 'undangan Pegawai',        'icon' => 'bi-envelope-open',         'subtitle' => 'Ajukan Surat',  'class' => 'undangan-card'],
             ['route' => 'skp.index',              'title' => 'Penilaian Capaian SKP',   'icon' => 'bi-file-earmark-bar-graph','subtitle'=> 'Kelola Penilaian','class' => 'skp-card'],
         ];
         @endphp

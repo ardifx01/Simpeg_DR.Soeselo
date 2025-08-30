@@ -13,17 +13,13 @@ return new class extends Migration
     {
         Schema::create('panggilans', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('pegawai_id')->constrained('pegawais')->onDelete('cascade'); // Pegawai yang dipanggil
-            $table->foreignId('penandatangan_id')->constrained('pegawais')->onDelete('cascade'); // Pejabat yang menandatangani
-
-            // Detail surat
+            $table->foreignId('pegawai_id')->constrained('pegawais')->onDelete('cascade');
+            $table->foreignId('penandatangan_id')->constrained('pegawais')->onDelete('cascade');
             $table->string('nomor_surat')->unique();
             $table->string('sifat')->default('Biasa');
             $table->string('lampiran')->nullable();
             $table->date('tanggal_surat');
             $table->text('perihal');
-
-            // Detail jadwal pertemuan
             $table->string('jadwal_hari');
             $table->date('jadwal_tanggal');
             $table->string('jadwal_pukul');
@@ -31,7 +27,7 @@ return new class extends Migration
             $table->string('menghadap_kepada');
             $table->string('alamat_menghadap');
             $table->json('tembusan')->nullable();
-
+            $table->softDeletes();
             $table->timestamps();
         });
     }

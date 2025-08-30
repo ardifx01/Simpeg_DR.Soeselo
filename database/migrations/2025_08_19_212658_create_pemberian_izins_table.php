@@ -15,8 +15,6 @@ return new class extends Migration
             $table->id();
             $table->foreignId('pegawai_id')->constrained('pegawais')->onDelete('cascade');
             $table->foreignId('pemberi_izin_id')->constrained('pegawais')->onDelete('cascade');
-
-            // Detail Surat Izin
             $table->string('nomor_surat')->unique();
             $table->string('tentang');
             $table->text('dasar_hukum')->nullable();
@@ -24,7 +22,7 @@ return new class extends Migration
             $table->string('ditetapkan_di');
             $table->date('tanggal_penetapan');
             $table->text('tembusan')->nullable();
-
+            $table->softDeletes();
             $table->timestamps();
         });
     }

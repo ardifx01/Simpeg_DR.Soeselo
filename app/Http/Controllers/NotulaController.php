@@ -130,7 +130,51 @@ class NotulaController extends Controller
      */
     public function destroy(Notula $notula)
     {
-        //
+        $notula->delete();
+        return back()->with('success', 'Notula dipindahkan ke tong sampah.');
+    }
+
+    public function trash(Request $request)
+    {
+        $search = $request->input('search');
+
+        $notulas = Notula::onlyTrashed()
+            ->when($search, function ($q) use ($search) {
+                $q->where('sidang_rapat', 'like', "%{$search}%")
+                    ->orWhere('acara', 'like', "%{$search}%")
+                    ->orWhere('surat_undangan', 'like', "%{$search}%")
+                    ->orWhere('tanggal', 'like', "%{$search}%")
+                    ->orWhereHas('ketua', fn($qp) =>
+                            $qp->where('nama', 'like', "%{$search}%")->orWhere('nip', 'like', "%{$search}%")
+                    )
+                    ->orWhereHas('sekretaris', fn($qs) =>
+                            $qs->where('nama', 'like', "%{$search}%")->orWhere('nip', 'like', "%{$search}%")
+                    )
+                    ->orWhereHas('pencatat', fn($qc) =>
+                            $qc->where('nama', 'like', "%{$search}%")->orWhere('nip', 'like', "%{$search}%")
+                    );
+            })
+            ->orderByDesc('deleted_at')
+            ->paginate(10)
+            ->withQueryString();
+
+        return view('notula.trash', compact('notulas', 'search'));
+    }
+
+    public function restore($id)
+    {
+        $notula = Notula::onlyTrashed()->findOrFail($id);
+        $notula->restore();
+
+        return back()->with('success', 'Notula berhasil dipulihkan.');
+    }
+
+    public function forceDelete($id)
+    {
+        $notula = Notula::onlyTrashed()->findOrFail($id);
+        $notula->forceDelete();
+
+        return back()->with('success', 'Notula dihapus permanen.');
     }
 
     public function export($id)

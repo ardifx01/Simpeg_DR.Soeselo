@@ -44,6 +44,7 @@ return new class extends Migration
                 'Ujian Dinas', 
                 'Penyesuaian Ijazah']);
             $table->string('file')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

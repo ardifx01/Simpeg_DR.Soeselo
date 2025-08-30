@@ -20,13 +20,10 @@ return new class extends Migration
             $table->string('hal');
             $table->text('isi');
             $table->json('tembusan')->nullable();
-
-            // relasi pegawai
             $table->foreignId('pemberi_id')->constrained('pegawais')->cascadeOnDelete();
             $table->foreignId('penerima_id')->constrained('pegawais')->cascadeOnDelete();
-
-            $table->timestamps();
             $table->softDeletes();
+            $table->timestamps();
         });
     }
 

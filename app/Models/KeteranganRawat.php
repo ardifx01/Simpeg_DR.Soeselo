@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class KeteranganRawat extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     // Nama tabel di database
     protected $table = 'keterangan_rawats';

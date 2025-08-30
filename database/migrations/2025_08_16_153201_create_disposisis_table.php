@@ -20,16 +20,12 @@ return new class extends Migration
             $table->string('no_agenda')->nullable();
             $table->enum('sifat', ['sangat_segera', 'segera', 'rahasia'])->nullable();
             $table->string('hal')->nullable();
-
             $table->json('diteruskan_kepada')->nullable();
-
             $table->json('harap')->nullable();
-
             $table->text('catatan')->nullable();
-
             $table->unsignedBigInteger('penandatangan_id')->nullable();
             $table->foreign('penandatangan_id')->references('id')->on('users')->nullOnDelete();
-
+            $table->softDeletes();
             $table->timestamps();
         });
     }

@@ -61,6 +61,13 @@
                     <a href="{{ route('tugas_belajar.export', $tugasbelajar->id) }}" class="btn btn-success btn-sm">
                         <i class="fas fa-file-word"></i> Export
                     </a>
+                    <form action="{{ route('tugas_belajar.destroy', $tugasbelajar->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin hapus tugas belajar ini?')">
+                        @csrf
+                        @method('DELETE')
+                        <button class="btn btn-sm btn-danger">
+                            <i class="bi bi-trash"></i> Hapus
+                        </button>
+                    </form>
                 </td>
             </tr>
             @empty

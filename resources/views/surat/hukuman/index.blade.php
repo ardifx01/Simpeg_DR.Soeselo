@@ -61,6 +61,13 @@
                     <a href="{{ route('hukuman.export', $hukuman->id) }}" class="btn btn-success btn-sm">
                         <i class="fas fa-file-word"></i> Export
                     </a>
+                    <form action="{{ route('hukuman.destroy', $hukuman->id) }}" method="POST" class="d-inline"  onsubmit="return confirm('Yakin hapus data hukuman ini?')">
+                        @csrf
+                        @method('DELETE')
+                        <button class="btn btn-sm btn-danger">
+                            <i class="bi bi-trash"></i> Hapus
+                        </button>
+                    </form>
                 </td>
             </tr>
             @empty

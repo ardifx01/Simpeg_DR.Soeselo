@@ -22,7 +22,6 @@ class PengumumanController extends Controller
 
         $pengumumen = Pengumuman::with('pegawai')
             ->when($search, function ($q) use ($search) {
-                // group biar OR nggak liar
                 $q->where(function ($qq) use ($search) {
                     $qq->where('nomor_surat', 'like', "%{$search}%")
                         ->orWhere('tentang', 'like', "%{$search}%")
@@ -71,7 +70,6 @@ class PengumumanController extends Controller
             'tentang'             => ['required', 'string'],
             'isi_pengumuman'      => ['required', 'string'],
             'dikeluarkan_di'      => ['required', 'string', 'max:191'],
-            // input form pakai d-m-Y biar konsisten sama controller lain
             'tanggal_dikeluarkan' => ['required', 'date_format:d-m-Y'],
         ]);
 
@@ -96,13 +94,7 @@ class PengumumanController extends Controller
      */
     public function edit($id)
     {
-        $pengumuman = Pengumuman::findOrFail($id);
-        $pegawais   = Pegawai::all();
-
-        // biar value form tampil d-m-Y
-        $pengumuman->tanggal_dikeluarkan_form = Carbon::parse($pengumuman->tanggal_dikeluarkan)->format('d-m-Y');
-
-        return view('surat.pengumuman.edit', compact('pengumuman', 'pegawais'));
+        //
     }
 
     /**
@@ -110,44 +102,55 @@ class PengumumanController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $pengumuman = Pengumuman::findOrFail($id);
-
-        $normalizeText = fn ($v) => is_string($v) ? trim(preg_replace("/\r\n|\r|\n/", PHP_EOL, $v)) : $v;
-
-        $request->merge([
-            'isi_pengumuman'     => $normalizeText($request->input('isi_pengumuman')),
-            'dikeluarkan_di'     => $normalizeText($request->input('dikeluarkan_di')),
-            'tentang'            => $normalizeText($request->input('tentang')),
-        ]);
-
-        $validated = $request->validate([
-            'pegawai_id'          => ['required', 'exists:pegawais,id'],
-            'nomor_surat'         => [
-                'required', 'string', 'max:191',
-                Rule::unique('pengumumen', 'nomor_surat')->ignore($pengumuman->id)
-            ],
-            'tentang'             => ['required', 'string'],
-            'isi_pengumuman'      => ['required', 'string'],
-            'dikeluarkan_di'      => ['required', 'string', 'max:191'],
-            'tanggal_dikeluarkan' => ['required', 'date_format:d-m-Y'],
-        ]);
-
-        $validated['tanggal_dikeluarkan'] = Carbon::createFromFormat('d-m-Y', $validated['tanggal_dikeluarkan'])->format('Y-m-d');
-
-        $pengumuman->update($validated);
-
-        return redirect()->route('pengumuman.index')->with('success', 'Surat pengumuman berhasil diperbarui.');
+        //
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id)
+    public function destroy(Pengumuman $pengumuman)
     {
-        $pengumuman = Pengumuman::findOrFail($id);
         $pengumuman->delete();
+        return back()->with('success', 'Pengumuman dipindahkan ke tong sampah.');
+    }
 
-        return redirect()->route('pengumuman.index')->with('success', 'Surat pengumuman berhasil dihapus.');
+    public function trash(Request $request)
+    {
+        $search = $request->input('search');
+
+        $pengumumen = Pengumuman::onlyTrashed()
+            ->when($search, function ($q) use ($search) {
+                $q->where('nomor_surat', 'like', "%{$search}%")
+                    ->orWhere('tentang', 'like', "%{$search}%")
+                    ->orWhere('dikeluarkan_di', 'like', "%{$search}%")
+                    ->orWhere('tanggal_dikeluarkan', 'like', "%{$search}%")
+                    ->orWhereHas('pegawai', fn($qp) =>
+                            $qp->where('nama', 'like', "%{$search}%")
+                            ->orWhere('nama_lengkap', 'like', "%{$search}%")
+                            ->orWhere('nip', 'like', "%{$search}%")
+                    );
+            })
+            ->orderByDesc('deleted_at')
+            ->paginate(10)
+            ->withQueryString();
+
+        return view('pengumuman.trash', compact('pengumumen', 'search'));
+    }
+
+    public function restore($id)
+    {
+        $pengumuman = Pengumuman::onlyTrashed()->findOrFail($id);
+        $pengumuman->restore();
+
+        return back()->with('success', 'Pengumuman berhasil dipulihkan.');
+    }
+
+    public function forceDelete($id)
+    {
+        $pengumuman = Pengumuman::onlyTrashed()->findOrFail($id);
+        $pengumuman->forceDelete();
+
+        return back()->with('success', 'Pengumuman dihapus permanen.');
     }
 
     public function export($id)

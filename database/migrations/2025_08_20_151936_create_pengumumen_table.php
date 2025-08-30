@@ -13,17 +13,13 @@ return new class extends Migration
     {
         Schema::create('pengumumen', function (Blueprint $table) {
             $table->id();
-
-            // Relasi ke pejabat yang mengeluarkan pengumuman
             $table->foreignId('pegawai_id')->constrained('pegawais')->onDelete('cascade');
-
-            // Detail Pengumuman
             $table->string('nomor_surat')->unique();
             $table->string('tentang');
             $table->text('isi_pengumuman');
             $table->string('dikeluarkan_di');
             $table->date('tanggal_dikeluarkan');
-
+            $table->softDeletes();
             $table->timestamps();
         });
     }

@@ -137,7 +137,48 @@ class PerintahController extends Controller
      */
     public function destroy(Perintah $perintah)
     {
-        //
+        $perintah->delete();
+        return back()->with('success', 'Surat perintah dipindahkan ke tong sampah.');
+    }
+
+    public function trash(Request $request)
+    {
+        $search = $request->input('search');
+
+        $perintah = Perintah::onlyTrashed()
+            ->when($search, function ($q) use ($search) {
+                $q->where('nomor_surat', 'like', "%{$search}%")
+                    ->orWhere('tempat_dikeluarkan', 'like', "%{$search}%")
+                    ->orWhere('menimbang', 'like', "%{$search}%")
+                    ->orWhere('dasar', 'like', "%{$search}%")
+                    ->orWhere('untuk', 'like', "%{$search}%")
+                    ->orWhereHas('pegawai', fn($qp) =>
+                            $qp->where('nama', 'like', "%{$search}%")
+                            ->orWhere('nama_lengkap', 'like', "%{$search}%")
+                            ->orWhere('nip', 'like', "%{$search}%")
+                    );
+            })
+            ->orderByDesc('deleted_at')
+            ->paginate(10)
+            ->withQueryString();
+
+        return view('perintah.trash', compact('perintah', 'search'));
+    }
+
+    public function restore($id)
+    {
+        $perintah = Perintah::onlyTrashed()->findOrFail($id);
+        $perintah->restore();
+
+        return back()->with('success', 'Surat perintah berhasil dipulihkan.');
+    }
+
+    public function forceDelete($id)
+    {
+        $perintah = Perintah::onlyTrashed()->findOrFail($id);
+        $perintah->forceDelete();
+
+        return back()->with('success', 'Surat perintah dihapus permanen.');
     }
 
     public function export($id)

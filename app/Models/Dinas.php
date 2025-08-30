@@ -4,15 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Dinas extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
-    // Nama tabel di database
-    protected $table = 'dinas';
-
-    // Kolom yang dapat diisi secara massal
     protected $fillable = [
         'nomor',
         'sifat',

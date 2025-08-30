@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use App\Models\Pegawai;
 use App\Models\SkpHeader;
 use App\Models\SkpKegiatan;
+use App\Models\SkpTambahan;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
@@ -426,10 +427,85 @@ class SkpController extends Controller
     public function destroy(SkpHeader $skp)
     {
         try {
-            $skp->delete();
-            return redirect()->route('skp.index')->with('success', 'SKP berhasil dihapus!');
-        } catch (\Exception $e) {
+            DB::transaction(function () use ($skp) {
+                // Soft delete anak-anak dulu biar konsisten
+                SkpKegiatan::where('skp_header_id', $skp->id)->delete();
+                SkpTambahan::where('skp_header_id', $skp->id)->delete();
+                SkpCatatanPenilaian::where('skp_header_id', $skp->id)->delete();
+
+                // Terus soft delete header
+                $skp->delete();
+            });
+
+            return redirect()->route('skp.index')->with('success', 'SKP berhasil dipindahkan ke tong sampah!');
+        } catch (\Throwable $e) {
             return back()->with('error', 'Gagal menghapus SKP: ' . $e->getMessage());
+        }
+    }
+
+    public function trash(Request $request)
+    {
+        $search = $request->input('search');
+
+        $skpHeaders = SkpHeader::onlyTrashed()
+            ->when($search, function ($q) use ($search) {
+                $q->where('tahun', 'like', "%{$search}%")
+                    ->orWhere('kategori', 'like', "%{$search}%")
+                    ->orWhereHas('pegawaiDinilai', fn($qp) =>
+                            $qp->where('nama', 'like', "%{$search}%")
+                            ->orWhere('nama_lengkap', 'like', "%{$search}%")
+                            ->orWhere('nip', 'like', "%{$search}%"))
+                    ->orWhereHas('pegawaiPenilai', fn($qr) =>
+                            $qr->where('nama', 'like', "%{$search}%")
+                            ->orWhere('nama_lengkap', 'like', "%{$search}%")
+                            ->orWhere('nip', 'like', "%{$search}%"));
+            })
+            ->orderByDesc('deleted_at')
+            ->paginate(10)
+            ->withQueryString();
+
+        return view('skp.trash', compact('skpHeaders', 'search'));
+    }
+
+    public function restore($id)
+    {
+        try {
+            DB::transaction(function () use ($id) {
+                $skp = SkpHeader::onlyTrashed()->findOrFail($id);
+
+                // Restore header dulu
+                $skp->restore();
+
+                // Lalu restore semua child yang terkait
+                SkpKegiatan::onlyTrashed()->where('skp_header_id', $skp->id)->restore();
+                SkpTambahan::onlyTrashed()->where('skp_header_id', $skp->id)->restore();
+                SkpCatatanPenilaian::onlyTrashed()->where('skp_header_id', $skp->id)->restore();
+            });
+
+            return back()->with('success', 'SKP beserta detailnya berhasil dipulihkan.');
+        } catch (\Throwable $e) {
+            return back()->with('error', 'Gagal memulihkan SKP: ' . $e->getMessage());
+        }
+    }
+
+    public function forceDelete($id)
+    {
+        try {
+            DB::transaction(function () use ($id) {
+                $skp = SkpHeader::onlyTrashed()->findOrFail($id);
+
+                // Force delete semua child dulu
+                SkpKegiatan::withTrashed()->where('skp_header_id', $skp->id)->forceDelete();
+                SkpTambahan::withTrashed()->where('skp_header_id', $skp->id)->forceDelete();
+                SkpCatatanPenilaian::withTrashed()->where('skp_header_id', $skp->id)->forceDelete();
+
+                // Terakhir force delete header
+                $skp->forceDelete();
+            });
+
+            return back()->with('success', 'SKP beserta detailnya dihapus permanen.');
+        } catch (\Throwable $e) {
+            return back()->with('error', 'Gagal menghapus permanen SKP: ' . $e->getMessage());
         }
     }
 

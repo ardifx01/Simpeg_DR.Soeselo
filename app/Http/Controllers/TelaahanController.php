@@ -63,12 +63,10 @@ class TelaahanController extends Controller
             'yth_id'            => 'required|exists:pegawais,id',
             'dari_id'           => 'required|exists:pegawais,id',
             'penandatangan_id'  => 'required|exists:pegawais,id',
-
             'nomor'     => 'required|string|max:191|unique:telaahans,nomor',
             'tanggal'   => 'required|date_format:d-m-Y',
             'lampiran'  => 'nullable|string|max:191',
             'hal'       => 'required|string|max:191',
-
             'persoalan'   => 'nullable|string',
             'praanggapan' => 'nullable|string',
             'fakta'       => 'nullable|string',
@@ -114,7 +112,59 @@ class TelaahanController extends Controller
      */
     public function destroy(Telaahan $telaahan)
     {
-        //
+        $telaahan->delete();
+        return back()->with('success', 'Telaahan dipindahkan ke tong sampah.');
+    }
+
+    public function trash(Request $request)
+    {
+        $search = $request->input('search');
+
+        $telaahans = Telaahan::onlyTrashed()
+            ->when($search, function ($q) use ($search) {
+                $q->where('nomor', 'like', "%{$search}%")
+                    ->orWhere('hal', 'like', "%{$search}%")
+                    ->orWhere('persoalan', 'like', "%{$search}%")
+                    ->orWhere('analisis', 'like', "%{$search}%")
+                    ->orWhere('kesimpulan', 'like', "%{$search}%")
+                    ->orWhere('saran', 'like', "%{$search}%")
+                    ->orWhereHas('yth', fn($qy) =>
+                            $qy->where('nama', 'like', "%{$search}%")
+                            ->orWhere('nama_lengkap', 'like', "%{$search}%")
+                            ->orWhere('nip', 'like', "%{$search}%")
+                    )
+                    ->orWhereHas('dari', fn($qd) =>
+                            $qd->where('nama', 'like', "%{$search}%")
+                            ->orWhere('nama_lengkap', 'like', "%{$search}%")
+                            ->orWhere('nip', 'like', "%{$search}%")
+                    )
+                    ->orWhereHas('penandatangan', fn($qp) =>
+                            $qp->where('nama', 'like', "%{$search}%")
+                            ->orWhere('nama_lengkap', 'like', "%{$search}%")
+                            ->orWhere('nip', 'like', "%{$search}%")
+                    );
+            })
+            ->orderByDesc('deleted_at')
+            ->paginate(10)
+            ->withQueryString();
+
+        return view('telaahan.trash', compact('telaahans', 'search'));
+    }
+
+    public function restore($id)
+    {
+        $telaahan = Telaahan::onlyTrashed()->findOrFail($id);
+        $telaahan->restore();
+
+        return back()->with('success', 'Telaahan berhasil dipulihkan.');
+    }
+
+    public function forceDelete($id)
+    {
+        $telaahan = Telaahan::onlyTrashed()->findOrFail($id);
+        $telaahan->forceDelete();
+
+        return back()->with('success', 'Telaahan dihapus permanen.');
     }
 
     public function export($id)

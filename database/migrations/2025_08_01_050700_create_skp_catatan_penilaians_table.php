@@ -18,6 +18,7 @@ return new class extends Migration
             $table->text('uraian');
             $table->string('nama_pegawai_penilai');
             $table->string('nip_pegawai_penilai');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

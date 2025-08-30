@@ -24,12 +24,9 @@ class EdaranController extends Controller
             $search = $request->input('search');
             
             $query->where(function ($q) use ($search) {
-                // Mencari di kolom-kolom tabel 'edarans'
                 $q->where('nomor', 'like', "%{$search}%")
                 ->orWhere('tahun', 'like', "%{$search}%")
                 ->orWhere('tentang', 'like', "%{$search}%")
-                
-                // Mencari di dalam relasi 'penandatangan' berdasarkan nama pegawai
                 ->orWhereHas('penandatangan', function ($subQuery) use ($search) {
                     $subQuery->where('nama', 'like', "%{$search}%");
                 });
@@ -56,7 +53,6 @@ class EdaranController extends Controller
      */
     public function store(Request $request)
     {
-        // Validasi semua data yang masuk dari formulir
         $validatedData = $request->validate([
             'nomor' => 'nullable|string|max:255|unique:edarans,nomor',
             'tahun' => 'required|digits:4',
@@ -69,10 +65,8 @@ class EdaranController extends Controller
             'tembusan' => 'nullable|string',
         ]);
 
-        // Konversi format tanggal dari dd-mm-yyyy (dari form) ke Y-m-d
         $validatedData['tanggal_ditetapkan'] = Carbon::createFromFormat('d-m-Y', $validatedData['tanggal_ditetapkan'])->format('Y-m-d');
 
-        // Simpan data 
         Edaran::create($validatedData);
 
         return redirect()->route('edaran.index')->with('success', 'Surat Edaran berhasil dibuat.');
@@ -107,7 +101,45 @@ class EdaranController extends Controller
      */
     public function destroy(Edaran $edaran)
     {
-        //
+        $edaran->delete();
+        return back()->with('success', 'Surat edaran dipindahkan ke tong sampah.');
+    }
+
+    public function trash(Request $request)
+    {
+        $search = $request->input('search');
+
+        $edarans = Edaran::onlyTrashed()
+            ->when($search, function ($q) use ($search) {
+                $q->where('tentang', 'like', "%{$search}%")
+                    ->orWhere('nomor', 'like', "%{$search}%")
+                    ->orWhere('tahun', 'like', "%{$search}%")
+                    ->orWhereHas('penandatangan', fn($qp) =>
+                            $qp->where('nama', 'like', "%{$search}%")
+                            ->orWhere('nip', 'like', "%{$search}%")
+                    );
+            })
+            ->orderByDesc('deleted_at')
+            ->paginate(10)
+            ->withQueryString();
+
+        return view('edaran.trash', compact('edarans', 'search'));
+    }
+
+    public function restore($id)
+    {
+        $edaran = Edaran::onlyTrashed()->findOrFail($id);
+        $edaran->restore();
+
+        return back()->with('success', 'Surat edaran berhasil dipulihkan.');
+    }
+
+    public function forceDelete($id)
+    {
+        $edaran = Edaran::onlyTrashed()->findOrFail($id);
+        $edaran->forceDelete();
+
+        return back()->with('success', 'Surat edaran dihapus permanen.');
     }
 
     public function export($id)

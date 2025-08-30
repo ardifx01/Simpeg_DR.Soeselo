@@ -114,7 +114,43 @@ class PenetapanController extends Controller
      */
     public function destroy(Penetapan $penetapan)
     {
-        //
+        $penetapan->delete();
+        return back()->with('success', 'Data penetapan dipindahkan ke tong sampah.');
+    }
+
+    public function trash(Request $request)
+    {
+        $search = $request->input('search');
+
+        $penetapans = Penetapan::onlyTrashed()
+            ->when($search, function ($q) use ($search) {
+                $q->where('nama_penetapan', 'like', "%{$search}%")
+                    ->orWhere('keterangan', 'like', "%{$search}%")
+                    ->orWhereHas('pegawai', fn ($qp) =>
+                            $qp->where('nama', 'like', "%{$search}%")
+                            ->orWhere('nip', 'like', "%{$search}%")
+                    );
+            })
+            ->orderByDesc('deleted_at')
+            ->paginate(10);
+
+        return view('penetapan.trash', compact('penetapans', 'search'));
+    }
+
+    public function restore($id)
+    {
+        $penetapan = Penetapan::onlyTrashed()->findOrFail($id);
+        $penetapan->restore();
+
+        return back()->with('success', 'Data penetapan berhasil dipulihkan.');
+    }
+
+    public function forceDelete($id)
+    {
+        $penetapan = Penetapan::onlyTrashed()->findOrFail($id);
+        $penetapan->forceDelete();
+
+        return back()->with('success', 'Data penetapan dihapus permanen.');
     }
 
     public function export($id)

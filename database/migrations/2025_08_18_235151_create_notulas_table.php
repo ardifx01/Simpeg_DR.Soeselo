@@ -23,6 +23,7 @@ return new class extends Migration
             $table->foreignId('pencatat_id')->constrained('pegawais')->onDelete('cascade');
             $table->json('peserta');
             $table->text('kegiatan_rapat');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

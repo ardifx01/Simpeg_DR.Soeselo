@@ -20,6 +20,7 @@ return new class extends Migration
             $table->date('tanggal_ditetapkan');
             $table->foreignId('penandatangan_id')->constrained('pegawais')->onDelete('cascade');
             $table->text('tembusan')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

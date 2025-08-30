@@ -162,11 +162,7 @@ class PerjalananDinasController extends Controller
      */
     public function edit(PerjalananDinas $perjalananDinas)
     {
-        $pegawais = Pegawai::orderBy('nama')->get();
-        return view('surat.perjalanan_dinas.edit', [
-            'item'     => $perjalananDinas,
-            'pegawais' => $pegawais,
-        ]);
+        //
     }
 
     /**
@@ -174,84 +170,64 @@ class PerjalananDinasController extends Controller
      */
     public function update(Request $request, PerjalananDinas $perjalanan_dina)
     {
-        $toLines = function ($val) {
-            if (is_array($val)) {
-                return implode(PHP_EOL, array_filter(array_map('trim', $val)));
-            }
-            return trim((string) $val);
-        };
-
-        $validated = $request->validate([
-            'lembar_ke'                  => 'nullable|string|max:191',
-            'kode_no'                    => 'nullable|string|max:191',
-            'nomor'                      => [
-                'required','string','max:191',
-                Rule::unique('perjalanan_dinas','nomor')->ignore($perjalanan_dina->id),
-            ],
-            'pegawai_id'                 => 'required|exists:pegawais,id',
-            'kuasa_pengguna_anggaran_id' => 'required|exists:pegawais,id',
-            'tingkat_biaya'              => 'required|string|max:191',
-            'maksud_perjalanan'          => 'required',
-            'alat_angkut'                => 'required|string|max:191',
-            'tempat_berangkat'           => 'required|string|max:191',
-            'tempat_tujuan'              => 'required|string|max:191',
-            'lama_perjalanan'            => 'required|integer|min:0',
-            'tanggal_berangkat'          => 'required|date_format:d-m-Y',
-            'tanggal_kembali'            => 'required|date_format:d-m-Y|after_or_equal:tanggal_berangkat',
-            'tanggal_dikeluarkan'        => 'required|date_format:d-m-Y',
-            'skpd_pembebanan'            => 'required|string|max:191',
-            'kode_rekening_pembebanan'   => 'required|string|max:191',
-            'keterangan_lain'            => 'nullable|string',
-
-            'pengikut'                   => 'nullable|array',
-            'pengikut.*.nama'            => 'required_with:pengikut|string|max:191',
-            'pengikut.*.tgl_lahir'       => 'nullable|string',
-            'pengikut.*.keterangan'      => 'nullable|string',
-
-            'riwayat_perjalanan'         => 'nullable|array',
-            'riwayat_perjalanan.*'       => 'array',
-        ]);
-
-        $validated['tanggal_berangkat']   = Carbon::createFromFormat('d-m-Y', $validated['tanggal_berangkat'])->format('Y-m-d');
-        $validated['tanggal_kembali']     = Carbon::createFromFormat('d-m-Y', $validated['tanggal_kembali'])->format('Y-m-d');
-        $validated['tanggal_dikeluarkan'] = Carbon::createFromFormat('d-m-Y', $validated['tanggal_dikeluarkan'])->format('Y-m-d');
-
-        $validated['maksud_perjalanan'] = $toLines($request->input('maksud_perjalanan'));
-        $validated['keterangan_lain']   = $toLines($request->input('keterangan_lain'));
-
-        $pengikut = collect($request->input('pengikut', []))
-            ->filter(fn($row) => is_array($row) && trim(implode('', array_map(fn($v)=>(string)$v, $row))) !== '')
-            ->map(function ($row) {
-                $tgl = $row['tgl_lahir'] ?? null;
-                if (is_string($tgl) && preg_match('/^\d{2}-\d{2}-\d{4}$/', $tgl)) {
-                    $tgl = Carbon::createFromFormat('d-m-Y', $tgl)->format('Y-m-d');
-                } elseif (!is_string($tgl) || $tgl === '') {
-                    $tgl = null;
-                }
-                return [
-                    'nama'       => trim((string)($row['nama'] ?? '')),
-                    'tgl_lahir'  => $tgl,
-                    'keterangan' => trim((string)($row['keterangan'] ?? '')),
-                ];
-            })
-            ->values()
-            ->all();
-
-        $validated['pengikut'] = $pengikut;
-        $validated['riwayat_perjalanan'] = $request->input('riwayat_perjalanan', null);
-
-        $perjalanan_dina->update($validated);
-
-        return redirect()->route('perjalanan_dinas.index')->with('success', 'Perjalanan dinas berhasil diperbarui.');
+        //
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(PerjalananDinas $perjalanan_dina)
+    public function destroy(PerjalananDinas $perjalananDinas)
     {
-        $perjalanan_dina->delete();
-        return redirect()->route('perjalanan_dinas.index')->with('success', 'Perjalanan dinas berhasil dihapus.');
+        $perjalananDinas->delete();
+        return back()->with('success', 'Perjalanan dinas dipindahkan ke tong sampah.');
+    }
+
+    public function trash(Request $request)
+    {
+        $search = $request->input('search');
+
+        $perjalananDinas = PerjalananDinas::onlyTrashed()
+            ->when($search, function ($q) use ($search) {
+                $q->where('nomor', 'like', "%{$search}%")
+                    ->orWhere('kode_no', 'like', "%{$search}%")
+                    ->orWhere('maksud_perjalanan', 'like', "%{$search}%")
+                    ->orWhere('alat_angkut', 'like', "%{$search}%")
+                    ->orWhere('tempat_berangkat', 'like', "%{$search}%")
+                    ->orWhere('tempat_tujuan', 'like', "%{$search}%")
+                    ->orWhere('skpd_pembebanan', 'like', "%{$search}%")
+                    ->orWhere('kode_rekening_pembebanan', 'like', "%{$search}%")
+                    ->orWhereHas('pegawai', fn($qp) =>
+                            $qp->where('nama', 'like', "%{$search}%")
+                            ->orWhere('nama_lengkap', 'like', "%{$search}%")
+                            ->orWhere('nip', 'like', "%{$search}%")
+                    )
+                    ->orWhereHas('kuasaPenggunaAnggaran', fn($qk) =>
+                            $qk->where('nama', 'like', "%{$search}%")
+                            ->orWhere('nama_lengkap', 'like', "%{$search}%")
+                            ->orWhere('nip', 'like', "%{$search}%")
+                    );
+            })
+            ->orderByDesc('deleted_at')
+            ->paginate(10)
+            ->withQueryString();
+
+        return view('perjalanan_dinas.trash', compact('perjalananDinas', 'search'));
+    }
+
+    public function restore($id)
+    {
+        $pd = PerjalananDinas::onlyTrashed()->findOrFail($id);
+        $pd->restore();
+
+        return back()->with('success', 'Perjalanan dinas berhasil dipulihkan.');
+    }
+
+    public function forceDelete($id)
+    {
+        $pd = PerjalananDinas::onlyTrashed()->findOrFail($id);
+        $pd->forceDelete();
+
+        return back()->with('success', 'Perjalanan dinas dihapus permanen.');
     }
 
     public function export($id)

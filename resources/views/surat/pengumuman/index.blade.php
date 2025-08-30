@@ -18,7 +18,6 @@
 </div>
 
 <section class="row mt-4">
-    {{-- Toolbar + Search --}}
     <form method="GET" action="{{ route('pengumuman.index') }}" class="d-flex flex-wrap align-items-center justify-content-between w-100 gap-2 mb-4">
         <div class="d-flex align-items-center">
             <a href="{{ route('pengumuman.create') }}" class="btn btn-primary">

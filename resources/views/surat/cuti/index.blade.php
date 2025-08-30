@@ -60,6 +60,13 @@
                         <a href="{{ route('cuti.export', $cuti->id) }}" class="btn btn-success btn-sm">
                             <i class="fas fa-file-word"></i> Export
                         </a>
+                        <form action="{{ route('cuti.destroy', $cuti->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin hapus pengajuan cuti ini?')">
+                            @csrf
+                            @method('DELETE')
+                            <button class="btn btn-sm btn-danger">
+                                <i class="bi bi-trash"></i> Hapus
+                            </button>
+                        </form>
                     </td>
                 </tr>
             @empty

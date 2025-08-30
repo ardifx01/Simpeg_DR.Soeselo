@@ -109,7 +109,43 @@ class DinasController extends Controller
      */
     public function destroy(Dinas $dinas)
     {
-        //
+        $dinas->delete();
+        return back()->with('success', 'Surat dinas dipindahkan ke tong sampah.');
+    }
+
+    public function trash(Request $request)
+    {
+        $search = $request->input('search');
+
+        $dinas = Dinas::onlyTrashed()
+            ->when($search, function ($q) use ($search) {
+                $q->where('kepada_yth', 'like', "%{$search}%")
+                    ->orWhere('tanggal_surat', 'like', "%{$search}%")
+                    ->orWhereHas('penandatangan', fn ($qp) =>
+                            $qp->where('nama', 'like', "%{$search}%")
+                            ->orWhere('nip', 'like', "%{$search}%")
+                    );
+            })
+            ->orderByDesc('deleted_at')
+            ->paginate(10);
+
+        return view('dinas.trash', compact('dinas', 'search'));
+    }
+
+    public function restore($id)
+    {
+        $dinas = Dinas::onlyTrashed()->findOrFail($id);
+        $dinas->restore();
+
+        return back()->with('success', 'Surat dinas berhasil dipulihkan.');
+    }
+
+    public function forceDelete($id)
+    {
+        $dinas = Dinas::onlyTrashed()->findOrFail($id);
+        $dinas->forceDelete();
+
+        return back()->with('success', 'Surat dinas dihapus permanen.');
     }
 
     /**

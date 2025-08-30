@@ -74,7 +74,13 @@
                                 <a href="{{ route('telaahan.export', $item->id) }}" class="btn btn-sm btn-success">
                                     <i class="fas fa-file-word"></i> Export
                                 </a>
-                                {{-- Optional: Edit/Hapus --}}
+                                <form action="{{ route('telaahan.destroy', $item->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin hapus telaahan ini?')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button class="btn btn-sm btn-danger">
+                                        <i class="bi bi-trash"></i> Hapus
+                                    </button>
+                                </form>
                             </div>
                         </td>
                     </tr>

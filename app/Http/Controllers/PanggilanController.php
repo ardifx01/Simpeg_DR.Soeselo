@@ -18,7 +18,6 @@ class PanggilanController extends Controller
      */
     public function index(Request $request)
     {
-        // Biarkan query builder tetap aktif
         $query = Panggilan::with(['pegawai', 'penandatangan']);
 
         // Pencarian dengan relasi
@@ -26,20 +25,18 @@ class PanggilanController extends Controller
             $search = $request->search;
             $query->where(function ($q) use ($search) {
                 $q->where('nomor_surat', 'like', "%$search%")
-                  ->orWhere('perihal', 'like', "%$search%")
-                  ->orWhere('sifat', 'like', "%$search%")
-                  ->orWhere('menghadap_kepada', 'like', "%$search%")
-                  ->orWhere('alamat_menghadap', 'like', "%$search%")
-                  ->orWhere('jadwal_hari', 'like', "%$search%")
-                  ->orWhere('jadwal_pukul', 'like', "%$search%")
-                  // cari di relasi pegawai yang dipanggil
-                  ->orWhereHas('pegawai', function ($qq) use ($search) {
+                    ->orWhere('perihal', 'like', "%$search%")
+                    ->orWhere('sifat', 'like', "%$search%")
+                    ->orWhere('menghadap_kepada', 'like', "%$search%")
+                    ->orWhere('alamat_menghadap', 'like', "%$search%")
+                    ->orWhere('jadwal_hari', 'like', "%$search%")
+                    ->orWhere('jadwal_pukul', 'like', "%$search%")
+                    ->orWhereHas('pegawai', function ($qq) use ($search) {
                     $qq->where('nama', 'like', "%$search%")
                         ->orWhere('nip', 'like', "%$search%")
                         ->orWhere('gelar_depan', 'like', "%$search%")
                         ->orWhere('gelar_belakang', 'like', "%$search%");
                 })
-                  // cari di relasi penandatangan
                 ->orWhereHas('penandatangan', function ($qq) use ($search) {
                     $qq->where('nama', 'like', "%$search%")
                         ->orWhere('nip', 'like', "%$search%")
@@ -49,7 +46,6 @@ class PanggilanController extends Controller
             });
         }
 
-        // Eksekusi kueri hanya di akhir
         $panggilans = $query->latest('tanggal_surat') ->paginate(10)->appends($request->query());
 
         return view('surat.panggilan.index', compact('panggilans'));
@@ -60,8 +56,7 @@ class PanggilanController extends Controller
      */
     public function create()
     {
-        // Ambil data pegawai untuk dropdown
-        $pegawais = Pegawai::with('jabatan')->orderBy('nama')->get();
+        $pegawais = Pegawai::all();
 
         return view('surat.panggilan.create', compact('pegawais'));
     }
@@ -133,9 +128,55 @@ class PanggilanController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Panggilan $panggilan)
     {
-        //
+        $panggilan->delete();
+        return back()->with('success', 'Surat panggilan dipindahkan ke tong sampah.');
+    }
+
+    public function trash(Request $request)
+    {
+        $search = $request->input('search');
+
+        $panggilans = Panggilan::onlyTrashed()
+            ->when($search, function ($q) use ($search) {
+                $q->where('nomor_surat', 'like', "%{$search}%")
+                    ->orWhere('sifat', 'like', "%{$search}%")
+                    ->orWhere('perihal', 'like', "%{$search}%")
+                    ->orWhere('jadwal_hari', 'like', "%{$search}%")
+                    ->orWhere('jadwal_tempat', 'like', "%{$search}%")
+                    ->orWhereHas('pegawai', fn($qp) =>
+                            $qp->where('nama', 'like', "%{$search}%")
+                            ->orWhere('nama_lengkap', 'like', "%{$search}%")
+                            ->orWhere('nip', 'like', "%{$search}%")
+                    )
+                    ->orWhereHas('penandatangan', fn($qa) =>
+                            $qa->where('nama', 'like', "%{$search}%")
+                            ->orWhere('nama_lengkap', 'like', "%{$search}%")
+                            ->orWhere('nip', 'like', "%{$search}%")
+                    );
+            })
+            ->orderByDesc('deleted_at')
+            ->paginate(10)
+            ->withQueryString();
+
+        return view('panggilan.trash', compact('panggilans', 'search'));
+    }
+
+    public function restore($id)
+    {
+        $panggilan = Panggilan::onlyTrashed()->findOrFail($id);
+        $panggilan->restore();
+
+        return back()->with('success', 'Surat panggilan berhasil dipulihkan.');
+    }
+
+    public function forceDelete($id)
+    {
+        $panggilan = Panggilan::onlyTrashed()->findOrFail($id);
+        $panggilan->forceDelete();
+
+        return back()->with('success', 'Surat panggilan dihapus permanen.');
     }
 
     public function export($id)

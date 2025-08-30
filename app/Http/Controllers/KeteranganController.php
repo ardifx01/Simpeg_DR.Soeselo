@@ -26,12 +26,12 @@ class KeteranganController extends Controller
             
             $query->where(function ($q) use ($search) {
                 $q->where('nomor', 'like', "%{$search}%")
-                  ->orWhereHas('pegawai', function ($subQuery) use ($search) {
-                      $subQuery->where('nama', 'like', "%{$search}%");
-                  })
-                  ->orWhereHas('penandatangan', function ($subQuery) use ($search) {
-                      $subQuery->where('nama', 'like', "%{$search}%");
-                  });
+                    ->orWhereHas('pegawai', function ($subQuery) use ($search) {
+                        $subQuery->where('nama', 'like', "%{$search}%");
+                    })
+                    ->orWhereHas('penandatangan', function ($subQuery) use ($search) {
+                        $subQuery->where('nama', 'like', "%{$search}%");
+                    });
             });
         }
 
@@ -103,7 +103,45 @@ class KeteranganController extends Controller
      */
     public function destroy(Keterangan $keterangan)
     {
-        //
+        $keterangan->delete();
+        return back()->with('success', 'Surat keterangan dipindahkan ke tong sampah.');
+    }
+
+    public function trash(Request $request)
+    {
+        $search = $request->input('search');
+
+        $keterangans = Keterangan::onlyTrashed()
+            ->when($search, function ($q) use ($search) {
+                $q->where('nomor', 'like', "%{$search}%")
+                    ->orWhereHas('pegawai', fn($qp) =>
+                            $qp->where('nama', 'like', "%{$search}%")
+                            ->orWhere('nip', 'like', "%{$search}%")
+                    )
+                    ->orWhereHas('penandatangan', fn($qt) =>
+                            $qt->where('nama', 'like', "%{$search}%")
+                    );
+            })
+            ->orderByDesc('deleted_at')
+            ->paginate(10);
+
+        return view('keterangan.trash', compact('keterangans', 'search'));
+    }
+
+    public function restore($id)
+    {
+        $keterangan = Keterangan::onlyTrashed()->findOrFail($id);
+        $keterangan->restore();
+
+        return back()->with('success', 'Surat keterangan berhasil dipulihkan.');
+    }
+
+    public function forceDelete($id)
+    {
+        $keterangan = Keterangan::onlyTrashed()->findOrFail($id);
+        $keterangan->forceDelete();
+
+        return back()->with('success', 'Surat keterangan dihapus permanen.');
     }
 
     public function export($id)

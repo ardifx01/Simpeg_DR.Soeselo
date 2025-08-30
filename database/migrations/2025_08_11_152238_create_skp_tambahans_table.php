@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('skp_header_id')->constrained('skp_headers')->onDelete('cascade');
             $table->string('nama_tambahan')->nullable();
             $table->string('nilai_tambahan')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

@@ -17,7 +17,6 @@
 </div>
 
 <section class="row mt-4">
-    {{-- Toolbar + Search --}}
     <form method="GET" action="{{ route('pernyataan.index') }}" class="d-flex flex-wrap align-items-center justify-content-between w-100 gap-2 mb-4">
         <div class="d-flex align-items-center">
             <a href="{{ route('pernyataan.create') }}" class="btn btn-primary">
@@ -93,15 +92,10 @@
                                 <a href="{{ route('pernyataan.export', $item->id) }}" class="btn btn-sm btn-success">
                                     <i class="fas fa-file-word"></i> Export
                                 </a>
-                                {{-- Optional future:
-                                <a href="{{ route('pernyataan.edit', $item->id) }}" class="btn btn-sm btn-warning">
-                                    <i class="bi bi-pencil-square"></i> Edit
-                                </a>
                                 <form action="{{ route('pernyataan.destroy', $item->id) }}" method="POST" onsubmit="return confirm('Yakin hapus data ini?')">
                                     @csrf @method('DELETE')
                                     <button class="btn btn-sm btn-danger"><i class="bi bi-trash"></i> Hapus</button>
                                 </form>
-                                --}}
                             </div>
                         </td>
                     </tr>

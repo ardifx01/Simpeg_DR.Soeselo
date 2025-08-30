@@ -59,6 +59,13 @@
                             <a href="{{ route('edaran.export', $edaran->id) }}" class="btn btn-success btn-sm">
                                 <i class="fas fa-file-word"></i> Export
                             </a>
+                            <form action="{{ route('edaran.destroy', $edaran->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin hapus surat edaran ini?')">
+                                @csrf
+                                @method('DELETE')
+                                <button class="btn btn-danger btn-sm">
+                                    <i class="bi bi-trash"></i> Hapus
+                                </button>
+                            </form>
                         </td>
                     </tr>
                 @empty

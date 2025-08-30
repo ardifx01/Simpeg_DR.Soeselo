@@ -139,7 +139,43 @@ class HukumanController extends Controller
      */
     public function destroy(Hukuman $hukuman)
     {
-        //
+        $hukuman->delete();
+        return back()->with('success', 'Data hukuman dipindahkan ke tong sampah.');
+    }
+
+    public function trash(Request $request)
+    {
+        $search = $request->input('search');
+
+        $hukumans = Hukuman::onlyTrashed()
+            ->when($search, function ($q) use ($search) {
+                $q->where('jenis_hukuman', 'like', "%{$search}%")
+                    ->orWhere('waktu', 'like', "%{$search}%")
+                    ->orWhereHas('pegawai', fn ($qp) =>
+                            $qp->where('nama', 'like', "%{$search}%")
+                            ->orWhere('nip', 'like', "%{$search}%")
+                    );
+            })
+            ->orderByDesc('deleted_at')
+            ->paginate(10);
+
+        return view('hukuman.trash', compact('hukumans', 'search'));
+    }
+
+    public function restore($id)
+    {
+        $hukuman = Hukuman::onlyTrashed()->findOrFail($id);
+        $hukuman->restore();
+
+        return back()->with('success', 'Data hukuman berhasil dipulihkan.');
+    }
+
+    public function forceDelete($id)
+    {
+        $hukuman = Hukuman::onlyTrashed()->findOrFail($id);
+        $hukuman->forceDelete();
+
+        return back()->with('success', 'Data hukuman dihapus permanen.');
     }
 
     public function export($id)

@@ -36,7 +36,6 @@ class KuasaController extends Controller
             });
         }
 
-        // Eksekusi + paginate
         $kuasas = $query->latest()->paginate(10)->withQueryString();
 
         return view('surat.kuasa.index', compact('kuasas'));
@@ -56,7 +55,6 @@ class KuasaController extends Controller
      */
     public function store(Request $request)
     {
-        // Validasi (polanya mirip Keterangan)
         $validated = $request->validate([
             'nomor'        => 'nullable|string|max:255|unique:kuasas,nomor',
             'tempat'       => 'nullable|string|max:255',
@@ -70,7 +68,6 @@ class KuasaController extends Controller
         // Konversi tanggal ke Y-m-d
         $validated['tanggal'] = Carbon::createFromFormat('d-m-Y', $validated['tanggal'])->format('Y-m-d');
 
-        // Ubah tembusan string -> array (model cast ke array/json)
         $validated['tembusan'] = !empty($validated['tembusan'])
             ? array_map('trim', explode(',', $validated['tembusan']))
             : [];
@@ -109,7 +106,49 @@ class KuasaController extends Controller
      */
     public function destroy(Kuasa $kuasa)
     {
-        //
+        $kuasa->delete();
+        return back()->with('success', 'Surat kuasa dipindahkan ke tong sampah.');
+    }
+
+    public function trash(Request $request)
+    {
+        $search = $request->input('search');
+
+        $kuasas = Kuasa::onlyTrashed()
+            ->when($search, function ($q) use ($search) {
+                $q->where('nomor', 'like', "%{$search}%")
+                    ->orWhere('tempat', 'like', "%{$search}%")
+                    ->orWhere('keperluan', 'like', "%{$search}%")
+                    ->orWhereHas('pemberi', fn($qp) =>
+                            $qp->where('nama', 'like', "%{$search}%")
+                            ->orWhere('nip', 'like', "%{$search}%")
+                    )
+                    ->orWhereHas('penerima', fn($qr) =>
+                            $qr->where('nama', 'like', "%{$search}%")
+                            ->orWhere('nip', 'like', "%{$search}%")
+                    );
+            })
+            ->orderByDesc('deleted_at')
+            ->paginate(10)
+            ->withQueryString();
+
+        return view('kuasa.trash', compact('kuasas', 'search'));
+    }
+
+    public function restore($id)
+    {
+        $kuasa = Kuasa::onlyTrashed()->findOrFail($id);
+        $kuasa->restore();
+
+        return back()->with('success', 'Surat kuasa berhasil dipulihkan.');
+    }
+
+    public function forceDelete($id)
+    {
+        $kuasa = Kuasa::onlyTrashed()->findOrFail($id);
+        $kuasa->forceDelete();
+
+        return back()->with('success', 'Surat kuasa dihapus permanen.');
     }
 
     public function export($id)

@@ -116,7 +116,56 @@ class PernyataanController extends Controller
      */
     public function destroy(Pernyataan $pernyataan)
     {
-        //
+        $pernyataan->delete();
+        return back()->with('success', 'Surat pernyataan dipindahkan ke tong sampah.');
+    }
+
+    public function trash(Request $request)
+    {
+        $search = $request->input('search');
+
+        $pernyataan = Pernyataan::onlyTrashed()
+            ->when($search, function ($q) use ($search) {
+                $q->where('nomor_surat', 'like', "%{$search}%")
+                    ->orWhere('tempat_surat', 'like', "%{$search}%")
+                    ->orWhere('peraturan_tugas', 'like', "%{$search}%")
+                    ->orWhere('nomor_peraturan', 'like', "%{$search}%")
+                    ->orWhere('tahun_peraturan', 'like', "%{$search}%")
+                    ->orWhere('tentang_peraturan', 'like', "%{$search}%")
+                    ->orWhere('jabatan_tugas', 'like', "%{$search}%")
+                    ->orWhere('lokasi_tugas', 'like', "%{$search}%")
+                    ->orWhereHas('pegawai', fn($qp) =>
+                            $qp->where('nama', 'like', "%{$search}%")
+                            ->orWhere('nama_lengkap', 'like', "%{$search}%")
+                            ->orWhere('nip', 'like', "%{$search}%")
+                    )
+                    ->orWhereHas('pejabat', fn($qj) =>
+                            $qj->where('nama', 'like', "%{$search}%")
+                            ->orWhere('nama_lengkap', 'like', "%{$search}%")
+                            ->orWhere('nip', 'like', "%{$search}%")
+                    );
+            })
+            ->orderByDesc('deleted_at')
+            ->paginate(10)
+            ->withQueryString();
+
+        return view('pernyataan.trash', compact('pernyataan', 'search'));
+    }
+
+    public function restore($id)
+    {
+        $pernyataan = Pernyataan::onlyTrashed()->findOrFail($id);
+        $pernyataan->restore();
+
+        return back()->with('success', 'Surat pernyataan berhasil dipulihkan.');
+    }
+
+    public function forceDelete($id)
+    {
+        $pernyataan = Pernyataan::onlyTrashed()->findOrFail($id);
+        $pernyataan->forceDelete();
+
+        return back()->with('success', 'Surat pernyataan dihapus permanen.');
     }
 
     public function export($id)

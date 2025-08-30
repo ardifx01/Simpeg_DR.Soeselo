@@ -20,6 +20,7 @@ return new class extends Migration
             $table->foreignId('pihak_pertama_id')->constrained('pegawais')->onDelete('cascade');
             $table->foreignId('pihak_kedua_id')->nullable()->constrained('pegawais')->onDelete('cascade');
             $table->foreignId('atasan_id')->nullable()->constrained('pegawais')->onDelete('set null');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

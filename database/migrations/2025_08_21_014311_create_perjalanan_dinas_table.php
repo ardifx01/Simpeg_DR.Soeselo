@@ -31,10 +31,8 @@ return new class extends Migration
             $table->string('kode_rekening_pembebanan');
             $table->text('keterangan_lain')->nullable();
             $table->date('tanggal_dikeluarkan');
-
-            // --- KOLOM BARU UNTUK RIWAYAT PERJALANAN ---
             $table->json('riwayat_perjalanan')->nullable();
-
+            $table->softDeletes();
             $table->timestamps();
         });
     }

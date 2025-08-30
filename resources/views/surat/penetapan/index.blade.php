@@ -75,6 +75,13 @@
                                 <a href="{{ route('penetapan.export', $item->id) }}" class="btn btn-sm btn-success">
                                     <i class="fas fa-file-word"></i> Export
                                 </a>
+                                <form action="{{ route('penetapan.destroy', $item->id) }}" method="POST" onsubmit="return confirm('Yakin hapus surat penetapan ini?')" class="d-inline">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button class="btn btn-sm btn-danger">
+                                        <i class="bi bi-trash"></i> Hapus
+                                    </button>
+                                </form>
                             </div>
                         </td>
                     </tr>

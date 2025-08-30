@@ -57,6 +57,13 @@
                     <a href="{{ route('rawat.export', $keteranganRawat->id) }}" class="btn btn-success btn-sm">
                         <i class="fas fa-file-word"></i> Export
                     </a>
+                    <form action="{{ route('rawat.destroy', $keteranganRawat->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin hapus keterangan ini?')">
+                        @csrf
+                        @method('DELETE')
+                        <button class="btn btn-sm btn-danger">
+                            <i class="bi bi-trash"></i> Hapus
+                        </button>
+                    </form>
                 </td>
             </tr>
             @empty

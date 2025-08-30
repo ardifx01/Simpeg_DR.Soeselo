@@ -101,9 +101,52 @@ class NotaDinasController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(notaDinas $notaDinas)
+    public function destroy(NotaDinas $notaDinas)
     {
-        //
+        $notaDinas->delete();
+        return back()->with('success', 'Nota dinas dipindahkan ke tong sampah.');
+    }
+
+    public function trash(Request $request)
+    {
+        $search = $request->input('search');
+
+        $notas = NotaDinas::onlyTrashed()
+            ->when($search, function ($q) use ($search) {
+                $q->where('nomor', 'like', "%{$search}%")
+                    ->orWhere('sifat', 'like', "%{$search}%")
+                    ->orWhere('hal', 'like', "%{$search}%")
+                    ->orWhere('keperluan', 'like', "%{$search}%")
+                    ->orWhereHas('pemberi', fn($qp) =>
+                            $qp->where('nama', 'like', "%{$search}%")
+                            ->orWhere('nip', 'like', "%{$search}%")
+                    )
+                    ->orWhereHas('penerima', fn($qr) =>
+                            $qr->where('nama', 'like', "%{$search}%")
+                            ->orWhere('nip', 'like', "%{$search}%")
+                    );
+            })
+            ->orderByDesc('deleted_at')
+            ->paginate(10)
+            ->withQueryString();
+
+        return view('nota_dinas.trash', compact('notas', 'search'));
+    }
+
+    public function restore($id)
+    {
+        $nota = NotaDinas::onlyTrashed()->findOrFail($id);
+        $nota->restore();
+
+        return back()->with('success', 'Nota dinas berhasil dipulihkan.');
+    }
+
+    public function forceDelete($id)
+    {
+        $nota = NotaDinas::onlyTrashed()->findOrFail($id);
+        $nota->forceDelete();
+
+        return back()->with('success', 'Nota dinas dihapus permanen.');
     }
 
     public function export($id)

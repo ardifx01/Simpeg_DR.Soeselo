@@ -46,6 +46,7 @@ use App\Http\Controllers\PernyataanController;
 use App\Http\Controllers\SertifikatController;
 use App\Http\Controllers\TelaahanController;
 use App\Http\Controllers\TugasController;
+use App\Http\Controllers\UndanganController;
 
 Route::middleware('guest')->group(function () {
     Route::redirect('/', '/login');
@@ -153,6 +154,8 @@ Route::middleware('auth')->group(function () {
     Route::get('telaahan/{id}/export', [TelaahanController::class, 'export'])->name('telaahan.export');
     Route::resource('tugas', TugasController::class);
     Route::get('tugas/{id}/export', [TugasController::class, 'export'])->name('tugas.export');
+    Route::resource('undangan', UndanganController::class);
+    Route::get('undangan/{id}/export', [UndanganController::class, 'export'])->name('undangan.export');
 
     
     Route::resource('skp', SkpController::class);

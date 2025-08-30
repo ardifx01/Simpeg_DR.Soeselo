@@ -17,7 +17,6 @@
 </div>
 
 <section class="row mt-4">
-    {{-- Toolbar + Search --}}
     <form method="GET" action="{{ route('perjalanan_dinas.index') }}" class="d-flex flex-wrap align-items-center justify-content-between w-100 gap-2 mb-4">
         <div class="d-flex align-items-center">
             <a href="{{ route('perjalanan_dinas.create') }}" class="btn btn-primary">
@@ -95,15 +94,10 @@
                                 <a href="{{ route('perjalanan_dinas.export', $item->id) }}" class="btn btn-sm btn-success">
                                     <i class="fas fa-file-word"></i> Export
                                 </a>
-                                {{-- Optional:
-                                <a href="{{ route('perjalanan_dinas.edit', $item->id) }}" class="btn btn-sm btn-warning">
-                                    <i class="bi bi-pencil-square"></i> Edit
-                                </a>
                                 <form action="{{ route('perjalanan_dinas.destroy', $item->id) }}" method="POST" onsubmit="return confirm('Yakin hapus data ini?')">
                                     @csrf @method('DELETE')
                                     <button class="btn btn-sm btn-danger"><i class="bi bi-trash"></i> Hapus</button>
                                 </form>
-                                --}}
                             </div>
                         </td>
                     </tr>

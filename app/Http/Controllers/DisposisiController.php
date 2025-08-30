@@ -28,7 +28,7 @@ class DisposisiController extends Controller
                     ->orWhere('hal', 'like', "%$search%")
                     ->orWhereHas('penandatangan', function ($q) use ($search) {
                         $q->where('name', 'like', "%$search%")
-                          ->orWhere('nip', 'like', "%$search%");
+                            ->orWhere('nip', 'like', "%$search%");
                     });
             });
         }
@@ -112,7 +112,45 @@ class DisposisiController extends Controller
      */
     public function destroy(Disposisi $disposisi)
     {
-        //
+        $disposisi->delete();
+        return back()->with('success', 'Disposisi dipindahkan ke tong sampah.');
+    }
+
+    public function trash(Request $request)
+    {
+        $search = $request->input('search');
+
+        $disposisis = Disposisi::onlyTrashed()
+            ->when($search, function ($q) use ($search) {
+                $q->where('hal', 'like', "%{$search}%")
+                    ->orWhere('no_surat', 'like', "%{$search}%")
+                    ->orWhere('sifat', 'like', "%{$search}%")
+                    ->orWhereHas('penandatangan', fn ($qp) =>
+                            $qp->where('nama', 'like', "%{$search}%")
+                            ->orWhere('nip', 'like', "%{$search}%")
+                    );
+            })
+            ->orderByDesc('deleted_at')
+            ->paginate(10)
+            ->withQueryString();
+
+        return view('disposisi.trash', compact('disposisis', 'search'));
+    }
+
+    public function restore($id)
+    {
+        $disposisi = Disposisi::onlyTrashed()->findOrFail($id);
+        $disposisi->restore();
+
+        return back()->with('success', 'Disposisi berhasil dipulihkan.');
+    }
+
+    public function forceDelete($id)
+    {
+        $disposisi = Disposisi::onlyTrashed()->findOrFail($id);
+        $disposisi->forceDelete();
+
+        return back()->with('success', 'Disposisi dihapus permanen.');
     }
 
     public function export($id)

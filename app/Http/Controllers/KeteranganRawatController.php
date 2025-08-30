@@ -107,7 +107,42 @@ class KeteranganRawatController extends Controller
      */
     public function destroy(KeteranganRawat $keteranganRawat)
     {
-        //
+        $keteranganRawat->delete();
+        return back()->with('success', 'Keterangan rawat dipindahkan ke tong sampah.');
+    }
+    public function trash(Request $request)
+    {
+        $search = $request->input('search');
+
+        $keteranganRawats = KeteranganRawat::onlyTrashed()
+            ->when($search, function ($q) use ($search) {
+                $q->where('jenis_keterangan', 'like', "%{$search}%")
+                    ->orWhere('alasan', 'like', "%{$search}%")
+                    ->orWhereHas('pegawai', fn ($qp) =>
+                            $qp->where('nama', 'like', "%{$search}%")
+                            ->orWhere('nip', 'like', "%{$search}%")
+                    );
+            })
+            ->orderByDesc('deleted_at')
+            ->paginate(10);
+
+        return view('rawat.trash', compact('keteranganRawats', 'search'));
+    }
+
+    public function restore($id)
+    {
+        $keteranganRawat = KeteranganRawat::onlyTrashed()->findOrFail($id);
+        $keteranganRawat->restore();
+
+        return back()->with('success', 'Keterangan rawat berhasil dipulihkan.');
+    }
+
+    public function forceDelete($id)
+    {
+        $keteranganRawat = KeteranganRawat::onlyTrashed()->findOrFail($id);
+        $keteranganRawat->forceDelete();
+
+        return back()->with('success', 'Keterangan rawat dihapus permanen.');
     }
 
     public function export($id)

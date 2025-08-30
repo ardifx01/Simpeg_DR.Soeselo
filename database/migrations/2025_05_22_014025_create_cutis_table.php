@@ -29,8 +29,8 @@ return new class extends Migration
             $table->string('atasan_nama')->nullable();
             $table->string('atasan_nip')->nullable();
             $table->string('atasan_jabatan')->nullable();
-            
-            $table->enum('status', ['diproses', 'disetujui', 'ditolak'])->default('diproses');
+            // $table->enum('status', ['diproses', 'disetujui', 'ditolak'])->default('diproses');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

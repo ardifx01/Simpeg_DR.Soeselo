@@ -96,9 +96,9 @@ class CutiController extends Controller
             'atasan_id' => 'required|exists:pegawais,id',
         ]);
         
-        $data = $request->except(['_token']); // Ambil semua data kecuali token CSRF
+        $data = $request->except(['_token']);
         if ($request->alasan !== 'lainnya') {
-            unset($data['alasan_lainnya']); // Hapus alasan_lainnya jika bukan 'lainnya'
+            unset($data['alasan_lainnya']);
         }
         
         // Ambil data pegawai dengan relasi jabatan
@@ -149,7 +149,41 @@ class CutiController extends Controller
      */
     public function destroy(Cuti $cuti)
     {
-        //
+        $cuti->delete();
+        return back()->with('success', 'Pengajuan cuti dipindahkan ke tong sampah.');
+    }
+
+    public function trash(Request $request)
+    {
+        $search = $request->input('search');
+
+        $cuti = Cuti::onlyTrashed()
+            ->when($search, function ($q) use ($search) {
+                $q->where('jenis_cuti', 'like', "%{$search}%")
+                ->orWhere('alasan', 'like', "%{$search}%")
+                ->orWhereHas('pegawai', fn($qp) =>
+                    $qp->where('nama', 'like', "%{$search}%")
+                        ->orWhere('nip', 'like', "%{$search}%")
+                );
+            })
+            ->orderByDesc('deleted_at')
+            ->paginate(10);
+
+        return view('cuti.trash', compact('cuti', 'search'));
+    }
+
+    public function restore($id)
+    {
+        $cuti = Cuti::onlyTrashed()->findOrFail($id);
+        $cuti->restore();
+        return back()->with('success', 'Pengajuan cuti berhasil dipulihkan.');
+    }
+
+    public function forceDelete($id)
+    {
+        $cuti = Cuti::onlyTrashed()->findOrFail($id);
+        $cuti->forceDelete();
+        return back()->with('success', 'Pengajuan cuti dihapus permanen.');
     }
 
     public function export($id)

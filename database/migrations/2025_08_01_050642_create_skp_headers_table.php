@@ -21,6 +21,7 @@ return new class extends Migration
             $table->float('nilai_perilaku')->nullable();
             $table->float('nilai_akhir')->nullable();
             $table->string('kategori')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

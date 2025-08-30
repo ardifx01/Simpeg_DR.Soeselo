@@ -55,38 +55,20 @@
                     <tr>
                         <td class="text-center">{{ $loop->iteration + $sertifikat->firstItem() - 1 }}</td>
                         <td class="text-start">{{ $item->nomor ?? '-' }}</td>
-                        <td class="text-start">
-                            {{ optional($item->penerima)->nama_lengkap ?? optional($item->penerima)->nama ?? 'N/A' }}<br>
-                            <small class="text-muted">NIP: {{ optional($item->penerima)->nip ?? '-' }}</small>
-                        </td>
+                        <td class="text-start">{{ optional($item->penerima)->nama_lengkap ?? optional($item->penerima)->nama ?? 'N/A' }}<br><small class="text-muted">NIP: {{ optional($item->penerima)->nip ?? '-' }}</small></td>
                         <td class="text-start">{{ \Illuminate\Support\Str::limit($item->nama_kegiatan ?? '-', 50) }}</td>
                         <td class="text-start">{{ $item->penyelenggara ?? '-' }}</td>
-                        <td class="text-start">
-                            {{ $item->tanggal_mulai?->translatedFormat('d F Y') ?? '-' }}
-                            s.d.
-                            {{ $item->tanggal_selesai?->translatedFormat('d F Y') ?? '-' }}<br>
-                            <small class="text-muted">{{ $item->lokasi ?? '-' }}</small>
-                        </td>
-                        <td class="text-start">
-                            {{ optional($item->penandatangan)->nama_lengkap ?? optional($item->penandatangan)->nama ?? 'N/A' }}<br>
-                            <small class="text-muted">NIP: {{ optional($item->penandatangan)->nip ?? '-' }}</small>
-                        </td>
+                        <td class="text-start">{{ $item->tanggal_mulai?->translatedFormat('d F Y') ?? '-' }} s.d. {{ $item->tanggal_selesai?->translatedFormat('d F Y') ?? '-' }}<br> <small class="text-muted">{{ $item->lokasi ?? '-' }}</small></td>   
+                        <td class="text-start">{{ optional($item->penandatangan)->nama_lengkap ?? optional($item->penandatangan)->nama ?? 'N/A' }}<br><small class="text-muted">NIP: {{ optional($item->penandatangan)->nip ?? '-' }}</small></td>
                         <td>
                             <div class="d-flex flex-wrap gap-1 justify-content-center">
                                 <a href="{{ route('sertifikat.export', $item->id) }}" class="btn btn-sm btn-success">
                                     <i class="fas fa-file-word"></i> Export
                                 </a>
-                                {{-- Optional: Edit / Delete --}}
-                                {{-- 
-                                <a href="{{ route('sertifikat.edit', $item->id) }}" class="btn btn-sm btn-warning">
-                                    <i class="bi bi-pencil-square"></i> Edit
-                                </a>
-                                <form action="{{ route('sertifikat.destroy', $item->id) }}" method="POST" 
-                                      onsubmit="return confirm('Yakin hapus data ini?')">
+                                <form action="{{ route('sertifikat.destroy', $item->id) }}" method="POST" onsubmit="return confirm('Yakin hapus data ini?')">
                                     @csrf @method('DELETE')
                                     <button class="btn btn-sm btn-danger"><i class="bi bi-trash"></i> Hapus</button>
                                 </form>
-                                --}}
                             </div>
                         </td>
                     </tr>

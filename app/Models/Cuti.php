@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Cuti extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'pegawai_id',
@@ -55,12 +56,15 @@ class Cuti extends Model
     // Accessor untuk status dalam bahasa Indonesia
     public function getStatusIndonesiaAttribute()
     {
-        $status = [
-            'diproses' => 'Diproses',
+        return [
+            'diproses'  => 'Diproses',
             'disetujui' => 'Disetujui',
-            'ditolak' => 'Ditolak'
-        ];
-
-        return $status[$this->status] ?? 'Tidak Diketahui';
+            'ditolak'   => 'Ditolak',
+        ][$this->status] ?? 'Tidak Diketahui';
     }
+    
+    protected $appends = [
+        'alasan_lengkap',
+        'status_indonesia',
+    ];
 }

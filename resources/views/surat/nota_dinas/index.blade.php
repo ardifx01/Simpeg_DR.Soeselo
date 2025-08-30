@@ -61,6 +61,13 @@
                             <a href="{{ route('nota_dinas.export', $nota->id) }}" class="btn btn-success btn-sm">
                                 <i class="fas fa-file-word"></i> Export
                             </a>
+                            <form action="{{ route('nota_dinas.destroy', $nota->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin hapus nota dinas ini?')">
+                                @csrf
+                                @method('DELETE')
+                                <button class="btn btn-danger btn-sm">
+                                    <i class="bi bi-trash"></i> Hapus
+                                </button>
+                            </form>
                         </td>
                     </tr>
                 @empty

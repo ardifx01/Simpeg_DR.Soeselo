@@ -18,7 +18,6 @@
 </div>
 
 <section class="row mt-4">
-    {{-- Toolbar + Search --}}
     <form method="GET" action="{{ route('tugas.index') }}" class="d-flex flex-wrap align-items-center justify-content-between w-100 gap-2 mb-4">
         <div class="d-flex align-items-center">
             <a href="{{ route('tugas.create') }}" class="btn btn-primary">
@@ -44,7 +43,7 @@
                     <th style="width:60px;">No</th>
                     <th>Nomor Surat</th>
                     <th>Tempat / Tanggal</th>
-                    <th>Pejabat / Pegawai</th>
+                    <th>Pegawai Ditugaskan</th>
                     <th>Dasar</th>
                     <th>Untuk</th>
                     <th style="width:140px;">Action</th>
@@ -58,13 +57,18 @@
                             : '-';
 
                         $dasarRingkas = \Illuminate\Support\Str::limit(
-                            implode(' | ', array_slice(preg_split('/\r\n|\n|\r|;/', $item->dasar), 0, 2)),
-                            80
+                            implode(' | ', array_slice(preg_split('/\r\n|\n|\r|;/', (string) $item->dasar), 0, 2)),
+                            90
                         );
                         $untukRingkas = \Illuminate\Support\Str::limit(
-                            implode(' | ', array_slice(preg_split('/\r\n|\n|\r|;/', $item->untuk), 0, 2)),
-                            80
+                            implode(' | ', array_slice(preg_split('/\r\n|\n|\r|;/', (string) $item->untuk), 0, 2)),
+                            90
                         );
+
+                        $arrPegawai = is_array($item->pegawai) ? $item->pegawai : [];
+                        $totalPegawai = count($arrPegawai);
+                        $namaList = collect($arrPegawai)->pluck('nama')->filter()->values();
+                        $namaPreview = $namaList->take(2)->implode(', ');
                     @endphp
                     <tr>
                         <td>{{ $loop->iteration + $tugas->firstItem() - 1 }}</td>
@@ -74,8 +78,15 @@
                             <small class="text-muted">{{ $tgl }}</small>
                         </td>
                         <td class="text-start">
-                            <strong>{{ optional($item->pegawai)->nama_lengkap ?? optional($item->pegawai)->nama ?? 'N/A' }}</strong><br>
-                            <small class="text-muted">NIP: {{ optional($item->pegawai)->nip ?? '-' }}</small>
+                            @if($item->total_pegawai === 0)
+                                -
+                            @else
+                                {{ $item->nama_preview }}
+                                @if($item->total_pegawai > 2)
+                                    dan {{ $item->total_pegawai - 2 }} lainnya
+                                @endif
+                                <br><small class="text-muted">Total: {{ $item->total_pegawai }} pegawai</small>
+                            @endif
                         </td>
                         <td class="text-start">{{ $dasarRingkas ?: '-' }}</td>
                         <td class="text-start">{{ $untukRingkas ?: '-' }}</td>
@@ -84,17 +95,10 @@
                                 <a href="{{ route('tugas.export', $item->id) }}" class="btn btn-sm btn-success">
                                     <i class="fas fa-file-word"></i> Export
                                 </a>
-                                {{-- Optional: Edit / Delete --}}
-                                {{-- <a href="{{ route('tugas.edit', $item->id) }}" class="btn btn-sm btn-warning">
-                                    <i class="bi bi-pencil-square"></i>
-                                </a>
-                                <form action="{{ route('tugas.destroy', $item->id) }}" method="POST" 
-                                      onsubmit="return confirm('Yakin hapus data ini?')">
+                                <form action="{{ route('tugas.destroy', $item->id) }}" method="POST" onsubmit="return confirm('Yakin hapus data ini?')">
                                     @csrf @method('DELETE')
-                                    <button class="btn btn-sm btn-danger">
-                                        <i class="bi bi-trash"></i>
-                                    </button>
-                                </form> --}}
+                                    <button class="btn btn-sm btn-danger"><i class="bi bi-trash"></i></button>
+                                </form>
                             </div>
                         </td>
                     </tr>

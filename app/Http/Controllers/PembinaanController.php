@@ -121,7 +121,43 @@ class PembinaanController extends Controller
      */
     public function destroy(Pembinaan $pembinaan)
     {
-        //
+        $pembinaan->delete();
+        return back()->with('success', 'Data pembinaan dipindahkan ke tong sampah.');
+    }
+
+    public function trash(Request $request)
+    {
+        $search = $request->input('search');
+
+        $pembinaans = Pembinaan::onlyTrashed()
+            ->when($search, function ($q) use ($search) {
+                $q->where('nama', 'like', "%{$search}%")
+                    ->orWhere('hubungan', 'like', "%{$search}%")
+                    ->orWhereHas('pegawai', fn ($qp) =>
+                            $qp->where('nama', 'like', "%{$search}%")
+                            ->orWhere('nip', 'like', "%{$search}%")
+                    );
+            })
+            ->orderByDesc('deleted_at')
+            ->paginate(10);
+
+        return view('pembinaan.trash', compact('pembinaans', 'search'));
+    }
+
+    public function restore($id)
+    {
+        $pembinaan = Pembinaan::onlyTrashed()->findOrFail($id);
+        $pembinaan->restore();
+
+        return back()->with('success', 'Data pembinaan berhasil dipulihkan.');
+    }
+
+    public function forceDelete($id)
+    {
+        $pembinaan = Pembinaan::onlyTrashed()->findOrFail($id);
+        $pembinaan->forceDelete();
+
+        return back()->with('success', 'Data pembinaan dihapus permanen.');
     }
 
     public function export($id)

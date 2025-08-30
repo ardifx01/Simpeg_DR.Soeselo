@@ -121,7 +121,44 @@ class TugasBelajarController extends Controller
      */
     public function destroy(TugasBelajar $tugasBelajar)
     {
-        //
+        $tugasBelajar->delete();
+        return back()->with('success', 'Tugas belajar dipindahkan ke tong sampah.');
+    }
+
+    public function trash(Request $request)
+    {
+        $search = $request->input('search');
+
+        $tugasbelajars = TugasBelajar::onlyTrashed()
+            ->when($search, function ($q) use ($search) {
+                $q->where('program', 'like', "%{$search}%")
+                    ->orWhere('lembaga', 'like', "%{$search}%")
+                    ->orWhere('fakultas', 'like', "%{$search}%")
+                    ->orWhereHas('pegawai', fn ($qp) =>
+                            $qp->where('nama', 'like', "%{$search}%")
+                            ->orWhere('nip', 'like', "%{$search}%")
+                    );
+            })
+            ->orderByDesc('deleted_at')
+            ->paginate(10);
+
+        return view('tugas_belajar.trash', compact('tugasbelajars', 'search'));
+    }
+
+    public function restore($id)
+    {
+        $tugasBelajar = TugasBelajar::onlyTrashed()->findOrFail($id);
+        $tugasBelajar->restore();
+
+        return back()->with('success', 'Tugas belajar berhasil dipulihkan.');
+    }
+
+    public function forceDelete($id)
+    {
+        $tugasBelajar = TugasBelajar::onlyTrashed()->findOrFail($id);
+        $tugasBelajar->forceDelete();
+
+        return back()->with('success', 'Tugas belajar dihapus permanen.');
     }
 
     public function export($id)
